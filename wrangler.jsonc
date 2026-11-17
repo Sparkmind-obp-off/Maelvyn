@@ -1,0 +1,25 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  // MAELVYN development environment ONLY (Clerk Development, synthetic data).
+  // Production is blocked until domain ownership + release gates (docs/FINAL-STACK-DECISION.md).
+  "name": "maelvyn-dev",
+  "compatibility_date": "2026-11-01",
+  "compatibility_flags": ["nodejs_compat"],
+  "pages_build_output_dir": "./dist",
+  "vars": {
+    "APP_ENV": "development",
+    "ALLOW_SELF_SERVICE_WORKSPACES": "true",
+    "CLERK_ISSUER": "https://organic-stinkbug-2628.clerk.accounts.dev",
+    "CLERK_JWKS_URL": "https://organic-stinkbug-2628.clerk.accounts.dev/.well-known/jwks.json",
+    "CLERK_PUBLISHABLE_KEY": "pk_test_b3JnYW5pYy1zdGlua2J1Zy0yNjI4LmNsZXJrLmFjY291bnRzLmRldiQ",
+    "CLERK_AUTHORIZED_PARTIES": "http://localhost:3000,https://maelvyn-dev.pages.dev,https://main.maelvyn-dev.pages.dev"
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "maelvyn-dev-db",
+      "database_id": "ad21e923-f1f2-4a77-b5f7-d9b85afe217b",
+      "migrations_dir": "migrations"
+    }
+  ]
+}
