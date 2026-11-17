@@ -1,6 +1,6 @@
-# MAELVYN — Full-Stack Implementation Blueprint
+# MAELVYN — Agentic Shared Venture Studio OS Full-Stack Blueprint
 
-**Version:** 1.0  
+**Version:** 2.0  
 **Status:** Proposed engineering plan; no production implementation implied
 
 ## Runtime architecture
@@ -114,3 +114,45 @@ Implement one authenticated, read-only research workflow before building a multi
 
 ### Implementation order
 Start with schema and policy tests, then read-only tool gateway, one agent, durable workflow, evaluation harness, and UI. Add specialist agents only after the first vertical slice demonstrates correct scoping, reliable recovery, source-grounded output, and bounded cost. Do not connect payment execution, public publishing, or production mutation tools in the initial runtime.
+
+
+---
+
+## Agentic OS implementation extension
+
+### Additional backend modules
+Agent Registry; Agent Versions; Agent Grants; Task Orchestration; Task Runs; Task Artifacts; Tool Broker; Provider Registry; Model Routing; Memory & Retrieval; Policy Decisions; Evaluations; Agent Incidents; Usage & Cost Ledger.
+
+### Additional request/task flow
+1. Authenticate the human requester or trusted system trigger.
+2. Resolve workspace and venture scope.
+3. Create a task contract and persist it before dispatch.
+4. Resolve eligible registered agent(s) and approved provider route.
+5. Evaluate data classification, permissions, autonomy, budget, quota, and approvals.
+6. Dispatch asynchronously; record each task/run transition.
+7. Broker each tool call through allowlist, idempotency, redaction, and audit.
+8. Persist checkpoints and artifacts; validate output schema and provenance.
+9. Run reviewer/evaluation checks; route to human approval when required.
+10. Mark completed only after authoritative verification; otherwise fail, pause, or escalate.
+
+### Additional repository modules (when justified)
+~~~text
+packages/agents/             Agent contracts, registry types, policies
+packages/orchestration/      Task graph, state transitions, delegation
+packages/providers/          Model/search/storage/identity adapters
+packages/tool-broker/        Allowlist, scopes, idempotency, redaction
+packages/evaluations/        Agent test suites and quality checks
+apps/worker/src/agents/      Agent API and task handlers
+migrations/                  Agent/task/provider/audit schema migrations
+tests/agents/                Permission, isolation, reliability, quality tests
+~~~
+
+### Engineering constraints
+- Persist before dispatch; use queue/workflow-based execution for long-running tasks.
+- Avoid keeping critical run state only in memory.
+- Separate agent definition from agent run and task state.
+- Store secret references, never raw API keys, in operational records.
+- Add per-task/provider usage and cost accounting.
+- Enforce parent-to-child permission narrowing.
+- Treat generated memory as non-authoritative; use source records for rights, finance, and approvals.
+- Start with one low-risk agent vertical slice; do not build a large agent fleet before orchestration and security are proven.
