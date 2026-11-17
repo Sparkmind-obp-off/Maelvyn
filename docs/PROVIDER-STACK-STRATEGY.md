@@ -128,3 +128,24 @@ Failover is capability-aware and policy-aware. A fallback must be approved for t
 
 ### Selection policy
 Use the smallest stack that meets a demonstrated requirement. Prefer current Cloudflare-first infrastructure for the first prototype, but keep business logic and provider interfaces portable. Do not add every listed candidate. Each adoption requires a proof-of-concept, decision record, security/terms review, cost estimate, failure test, and exit plan.
+
+
+---
+
+## Final stack decision — canonical precedence
+
+As of 2026-11-17, docs/FINAL-STACK-DECISION.md is the authoritative decision and supersedes any earlier candidate-only or "identity not selected" wording in this document.
+
+- Identity provider: Clerk selected. Development instance now for synthetic local/development use only. Production instance later after domain ownership and full production setup.
+- First-party inference: Cloudflare Workers AI adapter required for supported model tasks.
+- Research/search: Tavily adapter required.
+- Web retrieval/crawl: Firecrawl adapter required.
+- Actor extraction: Apify adapter required.
+- Alternative extraction: Scrape.ly adapter required.
+- Runtime: Cloudflare Workers + Hono; D1; private R2; Queues; Workflows.
+- Frontend: React + TypeScript + Vite.
+- Validation: Zod.
+- Tests: Vitest + integration tests + Playwright.
+- Source/deployment: GitHub + Cloudflare.
+
+All providers must have typed contracts, disabled/unconfigured states, mocks, cost/quota enforcement, provenance, and kill switches. Real provider calls are enabled selectively. No paid actor, API plan, billing, production deployment, or production identity activation is implied by this architecture decision.
