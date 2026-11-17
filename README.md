@@ -34,6 +34,11 @@ Its working model combines:
 | [Venture Creation & Portfolio Operating Framework](docs/VENTURE-OPERATING-FRAMEWORK.md) | Venture lifecycle, portfolio model, and operating procedures |
 | [90-Day Foundation Roadmap](docs/90-DAY-ROADMAP.md) | Staged, evidence-based initial execution plan |
 
+| [System Architecture](docs/SYSTEM-ARCHITECTURE.md) | Application boundaries, stack proposal, security invariants, release gates |
+| [Database Schema](docs/DATABASE-SCHEMA.md) | Initial relational domain model and data integrity rules |
+| [API Contract](docs/API-CONTRACT.md) | MVP endpoints, approval states, permissions, and finance posting rules |
+| [Initial SQL Migration](migrations/0001_initial.sql) | D1/SQLite schema baseline; structure only, no participant or financial data |
+
 ## Current status
 
 **Concept and design stage.** MAELVYN is a working project identity and operating concept. This repository does not establish a legal entity, partnership, investment offer, ownership interest, or binding commitment by any person.
