@@ -1,6 +1,6 @@
 # MAELVYN — Agentic Shared Venture Studio OS Master System
 
-**Version:** 2.0.0  
+**Version:** 2.1.0  
 **Status:** Foundational system specification  
 **Product:** MAELVYN — Agentic Shared Venture Studio OS  
 **Operating model:** Agentic Shared Venture Studio  
@@ -288,3 +288,61 @@ MAELVYN owns canonical provider-neutral interfaces and maintains a provider regi
 
 ### Implementation status
 The agentic OS is a target architecture, not a claim that agent runtime, provider accounts, credentials, billing, or deployment are already enabled. Move each capability through Proposed → Evaluated → Approved → Implemented → Tested → Production-enabled.
+
+
+---
+
+## 18. Complete product capability map and implementation governance
+
+The canonical feature inventory is maintained in [CAPABILITY-INVENTORY-AND-UPGRADE-ROADMAP.md](CAPABILITY-INVENTORY-AND-UPGRADE-ROADMAP.md). It is the authoritative register for current implementation status, missing capabilities, dependencies, priorities, and completion evidence. This section defines the complete target product scope; it does not claim every module is already implemented.
+
+### 18.1 Target operating system modules
+
+MAELVYN must evolve into an integrated, modular operating system with these capability domains:
+
+1. **Portfolio Command Center:** Evidence-Backed Active Ventures, venture health, portfolio exposure, upcoming decisions, budgets, risk, provider spend, and operational reliability.
+2. **Identity, Workspace & Membership:** Clerk identity, workspace lifecycle, invitations, membership, role grants, access review, suspension, recovery, and offboarding.
+3. **Venture Studio:** opportunity intake, research, validation experiments, venture charter, stage gates, milestones, reviews, scale/hold/restructure/exit decisions.
+4. **Governance & Approval:** decision register, authority matrix, approval inbox, multi-party thresholds, conflict declarations, reserved matters, expiry, revocation, and immutable decision history.
+5. **Finance Core:** budget proposals and versions, approval, double-entry journals, payment intent records, liabilities, reserves, reconciliation, cashflow and reporting. No custody or automatic money movement by default.
+6. **Rights, Agreements & IP:** contributor roles, contribution classification, agreement metadata, ownership register, licenses, IP provenance, effective dates, restrictions, and dispute/exit records.
+7. **Assets & Resources:** asset register, owner, custodian, location, condition, utilization, inventory, maintenance, insurance metadata, and controlled transfer/disposal.
+8. **Revenue & Commerce:** customer/lead records, offers, pricing, sales pipeline, orders, invoices/receivables metadata, refunds, revenue evidence and unit economics.
+9. **Research & Intelligence:** research projects, source library, provenance, evidence grading, competitor/customer analysis, validation tests, decision briefs and exports.
+10. **Agentic Workbench:** agent catalog, task center, task contracts, plans, delegation, execution timeline, human checkpoints, evaluations, retries, cancellation and approvals.
+11. **Provider Control Plane:** provider registry, capabilities, credential references, verified price/quota/terms, allowlists, health history, cost limits, circuit breakers and kill switches.
+12. **Knowledge & Scoped Memory:** venture/workspace scopes, provenance, access-controlled retrieval, versioning, retention, correction and deletion workflows.
+13. **Documents & Deliverables:** private R2 artifacts, versioning, metadata, secure access, expiring share links, export controls and audit.
+14. **Automation & Integrations:** event registry, schedules, webhooks, connector scopes, workflow templates, execution receipts and recovery.
+15. **Notifications & Collaboration:** assignments, mentions, approval reminders, due dates, incident notices and activity feed.
+16. **Analytics & Reporting:** venture funnel, EBAV, unit economics, portfolio concentration, cash runway, agent quality, provider spend and operational service levels.
+17. **Security, Privacy & Administration:** policy management, access review, data inventory, retention, export/deletion, incident response, audit export, backup/restore and environment health.
+
+### 18.2 Capability implementation states
+
+Every feature must use one explicit state: PROPOSED, FOUNDATION_ONLY, IMPLEMENTED_PARTIAL, IMPLEMENTED_VERIFIED, BLOCKED, NOT_AUTHORIZED, or DEPRECATED. Status changes require repository/test/environment evidence. A route, UI shell, table, provider interface, or generated artifact alone is not proof of a complete capability.
+
+### 18.3 Completion contract
+
+A feature is complete only when:
+- behavior, actor, scope, data classification, exclusions and acceptance criteria are specified;
+- schema and versioned migration are implemented where needed;
+- server-side API, authorization and state transition rules exist;
+- UI supports loading, empty, error, success and forbidden states;
+- audit, observability, idempotency and recovery paths are covered;
+- unit, integration, negative authorization and relevant browser tests pass;
+- docs, environment examples and runbooks are updated;
+- no unauthorized spend, production operation, data sharing or external side effect occurred.
+
+### 18.4 Implementation priority
+
+The sequence is dependency-aware: P0 stabilize the current development app and Clerk Core 3 migration; P1 complete workspace membership, venture charter/lifecycle, governance and approvals; P2 finance, contribution, agreement, ownership and IP foundations; P3 tasks, assets, revenue and operating reviews; P4 durable agent orchestration, scoped memory and research validation; P5 R2 files, automation, notifications, analytics, backup and incident controls; P6 production readiness. See the capability roadmap for detailed deliverables and acceptance criteria.
+
+### 18.5 Additional non-negotiable controls
+
+- Approval is a server-side workflow with requester/approver separation, authority source, scope, threshold, expiry, revocation and immutable events—not a UI checkbox.
+- Finance separates proposal, budget approval, payment instruction, payment execution, and ledger posting. No payment provider integration is authorized by default.
+- Ownership and IP records require an executed agreement reference, effective date, rights scope, restrictions and evidence. An agent must never infer ownership from contribution or activity.
+- Every artifact and retrieval path must be authorized before bytes or content are fetched.
+- External integrations require per-connector scopes, data minimization, secret references, rate limits, idempotency, audit and revocation.
+- Production data, production Clerk, public onboarding, billing and paid provider execution remain blocked until their explicit readiness and approval gates are satisfied.
