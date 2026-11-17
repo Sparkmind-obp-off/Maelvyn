@@ -58,3 +58,35 @@ Maintain a provider registry with purpose, owner, verified plan limits, paid tri
 
 ## Architecture decision records
 Store material choices in docs/decisions with context, options, decision, consequences, cost, and review trigger.
+
+## Agentic provider and runtime strategy
+
+### Preferred platform composition
+| Concern | Preferred option | Status / decision rule |
+|---|---|---|
+| API and policy gateway | Cloudflare Workers + Hono | Preferred foundation |
+| Canonical business data | Cloudflare D1 | Preferred; versioned migrations |
+| Private files/artifacts | Cloudflare R2 | Use when private artifact delivery is required and enabled |
+| Independent background jobs | Cloudflare Queues | Use for decoupled jobs; assume at-least-once delivery and enforce idempotency |
+| Durable multi-step orchestration | Cloudflare Workflows | Preferred for checkpoints, retries, schedules, and human approval waits |
+| Stateful agent/session runtime | Cloudflare Agents SDK + Durable Objects | Candidate only; validate with a small proof of concept before adoption |
+| Model inference | Provider-neutral model adapter | Choose by quality, data terms, latency, cost, and fallback; no model vendor lock-in |
+| Research/search | Existing approved Tavily / Firecrawl / Apify / Scrape.ly connectors | Route by task and actual access/quota; do not add overlapping tools without measured benefit |
+| Identity | Provider-neutral adapter; Clerk or Better Auth candidates | No final choice until auth requirements and test results |
+| Email/payment | Add adapters only when a real workflow and compliance need exist | Not required for the first agent runtime proof of concept |
+
+### Provider registry requirements
+Track provider, capability, purpose, enabled status, quota/limits, cost model, commercial/data terms, credential reference, last health check, fallback policy, and allowed ventures/tasks. Suggested states: Available, Limited, Exhausted, Disabled, Review Required, Fallback Active. Store no raw secrets in registry records.
+
+### Routing policy
+1. Prefer a currently approved and available provider already connected.
+2. Select the least costly provider that meets the task's quality, freshness, and data requirements.
+3. Check quota and cost ceiling before every call.
+4. Use a fallback only if it is explicitly approved for that capability and data class.
+5. Record provider, model, usage, estimated/actual cost, source URLs, and outcome.
+6. If quota, terms, or cost is unknown, stop before paid execution and request review.
+
+### Explicit exclusions from the initial build
+No provider proliferation, no paid scraping actors by default, no automatic model marketplace routing, no multi-cloud runtime, no external vector database until retrieval volume proves D1/R2 insufficient, and no payment/custody integration in the agent runtime MVP.
+
+The Cloudflare Agents SDK documentation describes stateful Agents on Durable Objects and integration with Workflows for durable execution and human-in-the-loop approvals. These capabilities justify a proof of concept, not an unconditional production commitment. References: [Cloudflare Agents](https://developers.cloudflare.com/agents/), [Agents + Workflows](https://developers.cloudflare.com/agents/concepts/workflows), [Human-in-the-loop](https://developers.cloudflare.com/agents/concepts/agentic-patterns/human-in-the-loop), [Durable Agents with Workflows](https://developers.cloudflare.com/workflows/get-started/durable-agents).
