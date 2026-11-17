@@ -1,8 +1,8 @@
-# MAELVYN — Master System
+# MAELVYN — Agentic Shared Venture Studio OS Master System
 
-**Version:** 1.0.0  
+**Version:** 2.0.0  
 **Status:** Foundational system specification  
-**Product:** MAELVYN — Shared Venture Studio  
+**Product:** MAELVYN — Agentic Shared Venture Studio OS  
 **Operating model:** Active Venture Studio  
 **Internal architecture:** Shared Economic Core
 
@@ -244,3 +244,20 @@ When uncertain, stop the affected action, preserve evidence, and request clarifi
 ## 15. Master rule
 
 **MAELVYN creates value through evidence-backed venture building while preserving individual consent, separate property, explicit agreements, transparent finances, and accountable human decisions.**
+
+
+## 16. Agentic Shared Venture Studio OS — canonical product direction
+
+The canonical product identity is now **MAELVYN — Agentic Shared Venture Studio OS**. The former Shared Venture Studio descriptor remains useful as the venture-studio operating concept. Shared Economic Core remains the coordination/control plane; Active Venture Studio remains the execution model. The agentic OS is the intelligence and execution layer across them.
+
+MAELVYN may coordinate specialist agents for research, venture creation, operations, finance preparation, assets, revenue, automation, and growth. Each agent is a scoped software capability—not a participant, employee, owner, director, or legal representative. Agents must follow the separate [Agent Operating Constitution](AGENT-OPERATING-CONSTITUTION.md) and [Agentic OS Architecture](AGENTIC-OS-ARCHITECTURE.md).
+
+Agent autonomy is classified L1 Assist, L2 Prepare, L3 Bounded Execute, and L4 Governed Autonomy. L3/L4 are allowed only for individually allowlisted, reversible or low-risk workflows with explicit scope, limits, monitoring, audit, and kill switch. Reserved matters remain human-only.
+
+Every task must have an owner, venture scope, objective, acceptance criteria, source references, tool/read/write scopes, autonomy level, data classification, budget ceiling, approval requirements, retry policy, and verification outcome. Cross-venture access is denied by default. Agent memory is scoped, provenance-aware, reviewable, and subordinate to approved policy and executed agreements.
+
+Cloudflare-first remains the preferred deployment strategy. Cloudflare Agents SDK and Durable Objects are candidates for the runtime/coordination layer pending a proof of concept; D1 remains the canonical business record store, R2 private artifact store, Queues asynchronous job transport, and Workflows durable orchestration/approval mechanism. No provider lock-in or paid resource is authorized by this specification.
+
+## 17. Agentic North Star guardrail
+
+EBAV remains the primary portfolio North Star. Agent counts, prompts, tool calls, generated artifacts, and autonomous task volume are not success metrics by themselves. Agentic capability is successful only when it improves verified venture outcomes without weakening rights, governance, privacy, financial integrity, or reliability.
