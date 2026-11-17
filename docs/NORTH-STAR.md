@@ -63,3 +63,17 @@ Clarity before commitment; explicit consent; project-level truth; evidence over 
 
 ## Decision rule
 When convenience conflicts with consent, ownership clarity, financial integrity, or safety, preserve the latter and redesign the workflow.
+
+## Agentic OS success measures
+
+EBAV remains the North Star. Do not replace venture outcomes with agent activity. Add operational diagnostics:
+- **Verified Task Completion Rate:** tasks meeting their acceptance criteria with evidence.
+- **Human Rework Rate:** outputs requiring material correction.
+- **Policy Compliance Rate:** allowed vs denied tool actions, with zero tolerance for unauthorized execution.
+- **Cross-Venture Isolation Violations:** target zero.
+- **Approval Integrity:** reserved actions with valid, scoped, unexpired approval; target 100%.
+- **Cost per Verified Outcome:** model/provider cost divided by accepted task outcomes.
+- **Recovery Rate:** transient failures recovered without duplicate side effects.
+- **Escalation Quality:** critical ambiguity and policy conflicts correctly stopped and routed to humans.
+
+Agent count, message count, tool-call volume, tokens generated, and artifacts created are not North Star metrics. Scale autonomy only when evidence shows improved venture outcomes and safety tests remain green.
