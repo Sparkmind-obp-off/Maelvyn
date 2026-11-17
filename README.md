@@ -28,23 +28,36 @@ Its working model combines:
 
 ## Documentation
 
+### Strategy and product
 | Document | Purpose |
 |---|---|
-| [Master Blueprint & Operating Constitution](docs/MASTER-BLUEPRINT.md) | Vision, architecture, governance, rights, and safeguards |
-| [Venture Creation & Portfolio Operating Framework](docs/VENTURE-OPERATING-FRAMEWORK.md) | Venture lifecycle, portfolio model, and operating procedures |
+| [Master Blueprint & Operating Constitution](docs/MASTER-BLUEPRINT.md) | Vision, governance, rights, and safeguards |
+| [North Star & Product Principles](docs/NORTH-STAR.md) | Product mission, North Star Metric, users, principles, non-goals |
+| [Product Requirements & MVP Scope](docs/PRODUCT-REQUIREMENTS.md) | Information architecture, features, states, acceptance criteria |
+| [User Journeys & Service Blueprint](docs/CUSTOMER-JOURNEYS.md) | Participant, venture, finance, approval, and offboarding journeys |
+| [UI/UX & Design System](docs/UX-UI-SYSTEM.md) | App shell, dashboard, module patterns, accessibility, content style |
+| [Venture Operating Framework](docs/VENTURE-OPERATING-FRAMEWORK.md) | Venture lifecycle, portfolio model, and operating procedures |
 | [90-Day Foundation Roadmap](docs/90-DAY-ROADMAP.md) | Staged, evidence-based initial execution plan |
 
-| [System Architecture](docs/SYSTEM-ARCHITECTURE.md) | Application boundaries, stack proposal, security invariants, release gates |
+### Engineering and operations
+| Document | Purpose |
+|---|---|
+| [System Architecture](docs/SYSTEM-ARCHITECTURE.md) | Application boundaries, trust model, and security invariants |
+| [Provider Stack Strategy](docs/PROVIDER-STACK-STRATEGY.md) | Proposed technology stack, provider criteria, and cost controls |
+| [Full-Stack Implementation Blueprint](docs/FULL-STACK-IMPLEMENTATION.md) | Runtime, repository layout, backend/frontend modules, tests, build sequence |
 | [Database Schema](docs/DATABASE-SCHEMA.md) | Initial relational domain model and data integrity rules |
 | [API Contract](docs/API-CONTRACT.md) | MVP endpoints, approval states, permissions, and finance posting rules |
+| [Security, Privacy & Operations](docs/SECURITY-PRIVACY-OPERATIONS.md) | Data classification, access, privacy, audit, incident, backup controls |
 | [Initial SQL Migration](migrations/0001_initial.sql) | D1/SQLite schema baseline; structure only, no participant or financial data |
 
 ## Current status
 
 **Concept and design stage.** MAELVYN is a working project identity and operating concept. This repository does not establish a legal entity, partnership, investment offer, ownership interest, or binding commitment by any person.
 
+The documentation now covers product strategy, user journeys, UX/UI, provider strategy, full-stack implementation, and security baseline. The application itself is not yet implemented or deployed; the SQL migration has not been executed against a development D1 database.
+
 No venture, shared account, pooled fund, or joint asset should be represented as active until the relevant participants have freely agreed and the necessary legal and operational steps are complete.
 
 ## Change control
 
-Material changes to governance, ownership principles, capital rules, or participant rights should be documented, versioned, and approved by the people affected before implementation.
+Material changes to governance, ownership principles, capital rules, participant rights, architecture, or security controls should be documented, versioned, and reviewed before implementation.
