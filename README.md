@@ -1,9 +1,9 @@
 # MAELVYN
 
-**Shared Venture Studio**  
+**Agentic Shared Venture Studio OS**  
 *Building Businesses. Creating Assets. Growing Together.*
 
-MAELVYN is a proposed active venture studio and shared economic ecosystem designed to discover opportunities, validate business models, build ventures, operate them responsibly, and develop productive assets over time.
+MAELVYN is an agentic shared venture studio operating system designed to coordinate opportunity discovery, venture creation, asset development, and responsible operations through specialized agents under explicit human governance.
 
 > **Participation by Choice. Ownership by Agreement.**
 
@@ -14,9 +14,9 @@ MAELVYN is a framework for creating and developing ventures—not merely a share
 Its working model combines:
 - **Shared Economic Core** — strategy, governance, financial controls, capital allocation, records, and oversight.
 - **Active Venture Studio** — opportunity discovery through validation, building, launch, operations, and portfolio decisions.
-- **Portfolio System** — independent ventures and productive assets with explicit project-level records, rights, obligations, and risks.
+- **Portfolio System** — independent ventures and productive assets with explicit project-level records, rights, obligations, and risks.\n- **Agentic OS** — specialist agents, orchestration, scoped memory, provider adapters, durable workflows, and auditable bounded execution.
 
-## Operating principles
+## Agentic operating principle\n\nAgents can research, plan, coordinate, prepare, and execute only within explicit technical permissions. Humans retain authority over ownership, rights, capital, money movement, legal commitments, and material risk. Cross-venture data access is denied by default.\n\n## Operating principles
 
 1. Voluntary participation; no person is presumed to have joined.
 2. No contribution, investment, borrowing, or transfer without informed consent.
@@ -31,7 +31,7 @@ Its working model combines:
 ### Master control documents
 | Document | Purpose |
 |---|---|
-| [Master System](docs/MASTER-SYSTEM.md) | Canonical operating constitution, architecture, rights, finance, lifecycle gates, North Star, and change control |
+| [Master System](docs/MASTER-SYSTEM.md) | Canonical operating constitution, architecture, rights, finance, lifecycle gates, North Star, and change control |\n| [Agentic OS Architecture](docs/AGENTIC-OS-ARCHITECTURE.md) | Seven-layer multi-agent architecture, runtime, task contracts, memory, isolation, autonomy, and rollout gates |\n| [Agent Operating Constitution](docs/AGENT-OPERATING-CONSTITUTION.md) | Agent identity, permissions, reserved decisions, approvals, tool protocol, memory, and audit policy |
 | [Master System Prompt](docs/MASTER-PROMPT.md) | Reusable governing instructions for AI assistants, coding agents, researchers, and automation |
 
 ### Strategy and product
@@ -60,7 +60,7 @@ Its working model combines:
 
 **Concept and design stage.** MAELVYN is a working project identity and operating concept. This repository does not establish a legal entity, partnership, investment offer, ownership interest, or binding commitment by any person.
 
-The documentation now covers product strategy, user journeys, UX/UI, provider strategy, full-stack implementation, and security baseline. The application itself is not yet implemented or deployed; the SQL migration has not been executed against a development D1 database.
+The documentation now covers the agentic OS constitution, agent governance, multi-agent architecture, product strategy, provider strategy, implementation, and security baseline. The application itself is not yet implemented or deployed; the SQL migration has not been executed against a development D1 database.
 
 No venture, shared account, pooled fund, or joint asset should be represented as active until the relevant participants have freely agreed and the necessary legal and operational steps are complete.
 
