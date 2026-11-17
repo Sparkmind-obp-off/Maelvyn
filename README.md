@@ -28,6 +28,12 @@ Its working model combines:
 
 ## Documentation
 
+### Master control documents
+| Document | Purpose |
+|---|---|
+| [Master System](docs/MASTER-SYSTEM.md) | Canonical operating constitution, architecture, rights, finance, lifecycle gates, North Star, and change control |
+| [Master System Prompt](docs/MASTER-PROMPT.md) | Reusable governing instructions for AI assistants, coding agents, researchers, and automation |
+
 ### Strategy and product
 | Document | Purpose |
 |---|---|
