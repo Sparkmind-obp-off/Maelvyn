@@ -8,6 +8,8 @@ import ResearchPage from './pages/Research'
 import ProvidersPage from './pages/Providers'
 import AgentsPage from './pages/Agents'
 import AuditPage from './pages/Audit'
+import MembersPage from './pages/Members'
+import AcceptInvitePage from './pages/AcceptInvite'
 
 function WorkspaceNav() {
   const { wid } = useParams()
@@ -16,6 +18,7 @@ function WorkspaceNav() {
   return (
     <nav aria-label="Workspace" className="mb-6 flex flex-wrap gap-1 border-b border-slate-800 pb-3">
       <NavLink end to={`/w/${wid}`} className={cls}>Ringkasan &amp; Venture</NavLink>
+      <NavLink to={`/w/${wid}/members`} className={cls}>Anggota</NavLink>
       <NavLink to={`/w/${wid}/providers`} className={cls}>Provider &amp; Kill switch</NavLink>
       <NavLink to={`/w/${wid}/agents`} className={cls}>Registry Agen</NavLink>
       <NavLink to={`/w/${wid}/audit`} className={cls}>Audit</NavLink>
@@ -57,6 +60,8 @@ export default function App({ environment, identityInstance, dataPolicy }: { env
           <Route path="/" element={<Landing />} />
           <Route path="/workspaces" element={<Protected><WorkspacesPage /></Protected>} />
           <Route path="/w/:wid" element={<Protected><WithNav><WorkspacePage /></WithNav></Protected>} />
+          <Route path="/invite" element={<Protected><AcceptInvitePage /></Protected>} />
+          <Route path="/w/:wid/members" element={<Protected><WithNav><MembersPage /></WithNav></Protected>} />
           <Route path="/w/:wid/providers" element={<Protected><WithNav><ProvidersPage /></WithNav></Protected>} />
           <Route path="/w/:wid/agents" element={<Protected><WithNav><AgentsPage /></WithNav></Protected>} />
           <Route path="/w/:wid/audit" element={<Protected><WithNav><AuditPage /></WithNav></Protected>} />

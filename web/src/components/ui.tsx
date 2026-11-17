@@ -19,7 +19,7 @@ const TONES: Record<string, string> = {
   accepted: 'bg-emerald-900/60 text-emerald-200', succeeded: 'bg-emerald-900/60 text-emerald-200', AVAILABLE: 'bg-emerald-900/60 text-emerald-200', ready: 'bg-emerald-900/60 text-emerald-200',
   awaiting_review: 'bg-amber-900/60 text-amber-200', running: 'bg-sky-900/60 text-sky-200', draft: 'bg-slate-800 text-slate-300', REVIEW_REQUIRED: 'bg-amber-900/60 text-amber-200', LIMITED: 'bg-amber-900/60 text-amber-200',
   rejected: 'bg-rose-900/60 text-rose-200', failed: 'bg-rose-900/60 text-rose-200', blocked: 'bg-orange-900/60 text-orange-200', denied: 'bg-orange-900/60 text-orange-200', ERROR: 'bg-rose-900/60 text-rose-200', EXHAUSTED: 'bg-rose-900/60 text-rose-200',
-  UNVERIFIED: 'bg-slate-800 text-slate-300', skipped: 'bg-slate-800 text-slate-300', synthetic: 'bg-violet-900/60 text-violet-200', live: 'bg-sky-900/60 text-sky-200',
+  UNVERIFIED: 'bg-slate-800 text-slate-300', pending: 'bg-amber-900/60 text-amber-200', revoked: 'bg-rose-900/60 text-rose-200', expired: 'bg-slate-800 text-slate-400', workspace_admin: 'bg-sky-900/60 text-sky-200', skipped: 'bg-slate-800 text-slate-300', synthetic: 'bg-violet-900/60 text-violet-200', live: 'bg-sky-900/60 text-sky-200',
 }
 
 export function Badge({ value }: { value: string | null | undefined }) {
