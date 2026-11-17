@@ -195,7 +195,7 @@ CREATE TABLE journal_entries (
   entry_date TEXT NOT NULL,
   description TEXT NOT NULL,
   currency TEXT NOT NULL CHECK (length(currency) = 3),
-  status TEXT NOT NULL DEFAULT 'draft' CHECK (status IN ('draft','posted','reversed')),
+  status TEXT NOT NULL DEFAULT 'draft' CHECK (status IN ('draft','posted')),
   source_type TEXT,
   source_id TEXT,
   reversal_of_entry_id TEXT REFERENCES journal_entries(id) ON DELETE RESTRICT,
@@ -256,3 +256,93 @@ CREATE INDEX idx_journal_venture_date ON journal_entries(venture_id, entry_date,
 CREATE INDEX idx_journal_lines_entry ON journal_lines(journal_entry_id);
 CREATE INDEX idx_audit_workspace_created ON audit_events(workspace_id, created_at);
 CREATE INDEX idx_audit_target ON audit_events(target_type, target_id);
+
+
+-- Append-only safeguards for records that become legally or financially material.
+CREATE TRIGGER trg_audit_events_no_update
+BEFORE UPDATE ON audit_events
+BEGIN
+  SELECT RAISE(ABORT, 'audit_events are append-only');
+END;
+
+CREATE TRIGGER trg_audit_events_no_delete
+BEFORE DELETE ON audit_events
+BEGIN
+  SELECT RAISE(ABORT, 'audit_events are append-only');
+END;
+
+CREATE TRIGGER trg_approval_votes_no_update
+BEFORE UPDATE ON approval_votes
+BEGIN
+  SELECT RAISE(ABORT, 'approval_votes are immutable; supersede through a new decision workflow');
+END;
+
+CREATE TRIGGER trg_approval_votes_no_delete
+BEFORE DELETE ON approval_votes
+BEGIN
+  SELECT RAISE(ABORT, 'approval_votes are immutable');
+END;
+
+CREATE TRIGGER trg_posted_journal_entries_no_update
+BEFORE UPDATE ON journal_entries
+WHEN OLD.status = 'posted'
+BEGIN
+  SELECT RAISE(ABORT, 'posted journal entries are immutable; create a reversal entry');
+END;
+
+CREATE TRIGGER trg_posted_journal_entries_no_delete
+BEFORE DELETE ON journal_entries
+WHEN OLD.status = 'posted'
+BEGIN
+  SELECT RAISE(ABORT, 'posted journal entries cannot be deleted');
+END;
+
+CREATE TRIGGER trg_posted_journal_lines_no_insert
+BEFORE INSERT ON journal_lines
+WHEN (SELECT status FROM journal_entries WHERE id = NEW.journal_entry_id) = 'posted'
+BEGIN
+  SELECT RAISE(ABORT, 'cannot add lines to a posted journal entry');
+END;
+
+CREATE TRIGGER trg_posted_journal_lines_no_update
+BEFORE UPDATE ON journal_lines
+WHEN (SELECT status FROM journal_entries WHERE id = OLD.journal_entry_id) = 'posted'
+  OR (SELECT status FROM journal_entries WHERE id = NEW.journal_entry_id) = 'posted'
+BEGIN
+  SELECT RAISE(ABORT, 'posted journal lines are immutable');
+END;
+
+CREATE TRIGGER trg_posted_journal_lines_no_delete
+BEFORE DELETE ON journal_lines
+WHEN (SELECT status FROM journal_entries WHERE id = OLD.journal_entry_id) = 'posted'
+BEGIN
+  SELECT RAISE(ABORT, 'posted journal lines are immutable');
+END;
+
+CREATE TRIGGER trg_executed_agreements_no_update
+BEFORE UPDATE ON agreements
+WHEN OLD.status = 'executed'
+BEGIN
+  SELECT RAISE(ABORT, 'executed agreements are immutable; create a new version');
+END;
+
+CREATE TRIGGER trg_executed_agreements_no_delete
+BEFORE DELETE ON agreements
+WHEN OLD.status = 'executed'
+BEGIN
+  SELECT RAISE(ABORT, 'executed agreements cannot be deleted');
+END;
+
+CREATE TRIGGER trg_effective_ownership_no_update
+BEFORE UPDATE ON ownership_interests
+WHEN OLD.status = 'effective'
+BEGIN
+  SELECT RAISE(ABORT, 'effective ownership records are immutable; record a transfer or superseding interest');
+END;
+
+CREATE TRIGGER trg_effective_ownership_no_delete
+BEFORE DELETE ON ownership_interests
+WHEN OLD.status = 'effective'
+BEGIN
+  SELECT RAISE(ABORT, 'effective ownership records cannot be deleted');
+END;
