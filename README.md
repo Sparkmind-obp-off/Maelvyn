@@ -120,7 +120,7 @@ npm run check                           # typecheck + lint + 38 tests + build
 npm run db:migrate:local
 npm run build && pm2 start ecosystem.config.cjs   # http://localhost:3000
 ```
-Tests run the real migrations against an in-memory SQLite D1 shim (`tests/d1shim.ts`). Deploy to dev: `npm run deploy:dev`. Secrets are set with `wrangler pages secret put` and are never committed.
+After the regenerated package-lock.json is committed and verified, use npm ci for reproducible installs. Tests run the real migrations against an in-memory SQLite D1 shim (`tests/d1shim.ts`). Deploy to dev: `npm run deploy:dev`. Secrets are set with `wrangler pages secret put` and are never committed.
 
 Provider candidates are not claims of approved spend or production readiness.
 
