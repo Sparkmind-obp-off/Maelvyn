@@ -21,15 +21,15 @@ This document turns the MAELVYN Master System into an actionable product backlog
 
 The development application has React/Vite/Tailwind, Clerk Development integration, Hono API, D1 migrations 0001/0002, workspace and venture pages, provider/kill-switch controls, agent registry, audit/usage views, and a synchronous Research Brief Agent. The research flow uses source provenance, prompt-injection flags, idempotency, credit limits, and human accept/reject. Provider adapters exist for Tavily, Firecrawl, Apify, Scrape.ly, Workers AI, and mocks; live usage is separately gated.
 
-**Important current blockers:** the Clerk Core 3 migration has been committed, but the npm lockfile was removed and must be regenerated; clean install, typecheck/lint/test/build, new Pages deployment, and browser sign-in verification are still required. Do not mark authentication fixed in production or claim the latest deployed app is verified until those checks pass. Clerk Development only; synthetic data only.
+**Clerk Core 3 (2026-11-17):** lockfile regenerated, all checks green, dev deployment verified in a real browser (ClerkJS 6.43.0, ticket sign-in, sign-out, API JWT accept/tamper-reject). See docs/CLERK-CORE-3-UPGRADE.md. Clerk Development only; synthetic data only. Production remains blocked.
 
 ## Capability register
 
 | Domain | Required capability | Current status | Next deliverable |
 |---|---|---|---|
-| Identity | Clerk Dev sign-in, server JWT validation | IMPLEMENTED-PARTIAL; Core 3 patch awaiting clean verification | Regenerate lockfile; build; deploy; verify browser + API |
+| Identity | Clerk Dev sign-in, server JWT validation | IMPLEMENTED-VERIFIED (dev; browser E2E `npm run test:e2e`) | Sign-in UI journeys in Playwright CI once CI is enabled |
 | Identity | Production Clerk, custom domain, OAuth hardening | BLOCKED | Domain ownership and release gate |
-| Workspace | Workspace creation and membership | IMPLEMENTED-PARTIAL | Invitations, role assignment, member removal, recovery |
+| Workspace | Workspace creation and membership | IMPLEMENTED-VERIFIED (migration 0003: hashed single-use invitations, explicit acceptance, role change, offboarding/leave, last-admin guard; 5 tests + live dev check) | Admin recovery procedure; invitation email (requires approval for external messages) |
 | Venture | Venture registry and detail | IMPLEMENTED-PARTIAL | Charter, lifecycle gates, operator assignment, stage history |
 | Governance | Decision register and authority source | NOT-IMPLEMENTED | Decision records, approver matrix, conflict declaration |
 | Governance | Approval inbox and multi-party approvals | NOT-IMPLEMENTED | Versioned requests, quorum/threshold, expiry, reject/withdraw |

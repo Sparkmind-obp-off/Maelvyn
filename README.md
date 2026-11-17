@@ -74,12 +74,13 @@ Agents may research, plan, coordinate, prepare, and execute only within explicit
 |---|---|
 | Development URL | https://maelvyn-dev.pages.dev (Cloudflare Pages, user-owned account) |
 | Identity | Clerk **Development** instance only. Synthetic data only. Clerk Production is **blocked** until domain ownership and release gates are met |
-| Database | D1 `maelvyn-dev-db` (development). Migrations `0001` and `0002` applied |
+| Database | D1 `maelvyn-dev-db` (development). Migrations `0001`–`0003` applied |
 | Production | **Not created and not deployed** |
 | Costs incurred | None that were intentionally triggered. Health checks call free read-only endpoints only |
 
 ### What works today
-- React + Vite + Tailwind web app with Clerk Development sign-in. Pages: workspaces, venture, research brief, providers & kill switches, agent registry, audit & usage.
+- React + Vite + Tailwind web app with Clerk Development sign-in (Clerk Core 3, `@clerk/react`; browser-verified — see docs/CLERK-CORE-3-UPGRADE.md).
+- Workspace membership lifecycle: single-use hashed invitation links, explicit acceptance by the invitee, role changes with reason, offboarding and voluntary leave (ends venture access), last-admin protection, full audit. Pages: workspaces, venture, research brief, providers & kill switches, agent registry, audit & usage.
 - Hono API on a Cloudflare Pages Worker at `/api/v1`. Every response has a standard error shape, a `request_id`, and security headers. CSP follows Clerk's documented directives.
 - Clerk session JWTs are verified on the server (RS256 via JWKS, issuer, expiry, `azp` allowlist). A valid session alone grants **no** access.
 - Deny-by-default authorization, resolved from the database. Cross-venture access is denied and logged in `permission_decisions`.
@@ -97,6 +98,7 @@ Agents may research, plan, coordinate, prepare, and execute only within explicit
 ### API (base `/api/v1`)
 - **Public:** `GET /health`, `GET /ready`, `GET /config`
 - **Session & workspaces:** `GET /session` · `GET|POST /workspaces` (self-service, dev only) · `GET /workspaces/:wid`
+- **Members:** `GET /workspaces/:wid/members` · `POST /workspaces/:wid/invitations` · `POST /workspaces/:wid/invitations/:iid/revoke` · `POST /invitations/accept` · `PUT /workspaces/:wid/members/:pid` · `POST /workspaces/:wid/members/:pid/offboard`
 - **Ventures:** `GET|POST /workspaces/:wid/ventures` · `GET /ventures/:vid`
 - **Research:** `POST /ventures/:vid/research` (needs `Idempotency-Key` header) · `GET /research/:tid` · `POST /research/:tid/review`
 - **Providers:** `GET /workspaces/:wid/providers` · `POST /workspaces/:wid/providers/:pid/health` · `PUT /workspaces/:wid/providers/:pid`
@@ -108,15 +110,14 @@ Agents may research, plan, coordinate, prepare, and execute only within explicit
 - R2 artifacts, Queues and Workflows. Research currently runs synchronously within one request.
 - Workers AI binding and model registry.
 - Live Apify / Scrape.ly Actor runs. These need an approved Actor allowlist and budget.
-- Membership invitations UI.
-- Playwright browser tests.
+- Playwright browser suite beyond the sign-in E2E (`npm run test:e2e`, runs against the dev deployment).
 - Active GitHub CI: the workflow template is in `ops/github-workflows/`. Activating it requires `workflows` permission.
 
 ### Local development
 ```bash
 cp .dev.vars.example .dev.vars          # fill with DEVELOPMENT credentials only (git-ignored)
 npm ci
-npm run check                           # typecheck + lint + 38 tests + build
+npm run check                           # typecheck + lint + 43 tests + build
 npm run db:migrate:local
 npm run build && pm2 start ecosystem.config.cjs   # http://localhost:3000
 ```
