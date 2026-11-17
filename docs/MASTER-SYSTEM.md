@@ -3,8 +3,8 @@
 **Version:** 2.0.0  
 **Status:** Foundational system specification  
 **Product:** MAELVYN — Agentic Shared Venture Studio OS  
-**Operating model:** Active Venture Studio  
-**Internal architecture:** Shared Economic Core
+**Operating model:** Agentic Shared Venture Studio  
+**Coordination and control plane:** Shared Economic Core
 
 > Building Businesses. Creating Assets. Growing Together.  
 > Participation by Choice. Ownership by Agreement.
@@ -261,3 +261,30 @@ Cloudflare-first remains the preferred deployment strategy. Cloudflare Agents SD
 ## 17. Agentic North Star guardrail
 
 EBAV remains the primary portfolio North Star. Agent counts, prompts, tool calls, generated artifacts, and autonomous task volume are not success metrics by themselves. Agentic capability is successful only when it improves verified venture outcomes without weakening rights, governance, privacy, financial integrity, or reliability.
+
+
+---
+
+## 16. Agentic Shared Venture Studio OS — target operating architecture
+
+MAELVYN's product identity is **Agentic Shared Venture Studio OS**. The Shared Economic Core remains its coordination and control plane; the Active Venture Studio remains its venture execution model. The new identity expands the operating capability; it does not replace the foundational rights, consent, finance, and legal safeguards above.
+
+The system uses seven layers: Experience & Workspace; Intelligence Core; Agent Orchestration; Specialist Agents; Venture & Shared Operations; Provider & Tool Adapters; Governance, Permission & Audit Control Plane. The detailed architecture is maintained in `docs/AGENTIC-OS-ARCHITECTURE.md`.
+
+### Agent operating rules
+- Agents are registered, versioned service identities, never human participants or rights-holders.
+- Every agent has an accountable owner, purpose, scope, allowed tools, autonomy level, memory policy, budget, evaluation suite, and disable path.
+- Every task has a durable contract, requester, accountable human, venture scope, allowed data/tools, output schema, acceptance criteria, budget, deadline, retries, and approval gates.
+- Delegation can narrow but never expand parent permissions, data scope, budget, or authority.
+- No cross-venture data or memory access by default.
+- Every tool call is policy-checked, logged, bounded, and verified.
+- Agent-generated content and records remain drafts/proposals until the relevant authorized human or controlled workflow approves them.
+
+### Autonomy policy
+L1 Assist; L2 Prepare; L3 Bounded Execute; L4 Governed Autonomy. Autonomy is granted per action class and scope, not as a blanket permission. Payments, asset/IP transfers, ownership changes, debt/guarantees, investments, distributions, binding legal commitments, and reserved governance decisions require authorized human approval.
+
+### Provider policy
+MAELVYN owns canonical provider-neutral interfaces and maintains a provider registry for capabilities, status, verified pricing/quotas, data terms, credential references, limits, fallbacks, owners, and exit paths. Cloudflare-first remains the proposed infrastructure direction, not a mandate to use every Cloudflare service. Agent frameworks and model gateways remain candidates until proof-of-concept, cost, security, reliability, and portability tests pass.
+
+### Implementation status
+The agentic OS is a target architecture, not a claim that agent runtime, provider accounts, credentials, billing, or deployment are already enabled. Move each capability through Proposed → Evaluated → Approved → Implemented → Tested → Production-enabled.
