@@ -125,3 +125,26 @@ Pause or stop a pilot if:
 ## Closing principle
 
 The first 90 days should reduce uncertainty and create disciplined evidence. A well-documented decision to stop an unviable idea is a successful outcome of the validation process.
+
+
+## Agentic OS upgrade — revised execution sequence
+
+The roadmap is governed by dependency gates, not by a promise that every phase fits a calendar deadline. Keep the existing 90-day plan as an indicative foundation; use this agentic sequence as the implementation authority.
+
+1. **Phase 0 — Architecture & Governance:** canonical identity; agent registry; task contract; permission matrix; L1–L4 autonomy policy; venture isolation; memory/data classification; provider registry; threat model; acceptance tests.
+2. **Phase 1 — Secure Platform Foundation:** app shell, identity adapter, workspace/venture scoping, D1 migrations in development, audit events, R2 private artifact boundary, secrets broker, approval inbox skeleton.
+3. **Phase 2 — Agent Runtime Proof of Concept:** one read-only research agent, one orchestrator, one provider adapter, task ledger, cost ceiling, trace IDs, Durable Object/Agents SDK evaluation, Workflows pause/retry test, synthetic data only.
+4. **Phase 3 — Orchestration & Specialist Teams:** task graph, delegation, dependency handling, model routing, memory retrieval with access checks, specialist agent registry, evaluations and failure queue.
+5. **Phase 4 — Venture Execution:** opportunity research, validation, venture charter drafting, product/build planning, launch readiness, evidence capture, operator dashboard.
+6. **Phase 5 — Governed Economic Operations:** budget proposals, asset/IP registers, finance preparation and reconciliation, revenue/operations reporting, approval-controlled actions. No money custody or autonomous transfers.
+7. **Phase 6 — Bounded Autonomy & Portfolio Intelligence:** scheduled L4 workflows for approved low-risk tasks, provider health/fallback, cross-venture aggregate insights, cost optimization, monitoring, incident recovery.
+
+### Exit criteria before a phase advances
+- Security and permission tests pass, including adversarial cross-venture access attempts.
+- Every agent has owner, version, tool allowlist, autonomy level, cost ceiling, and kill switch.
+- Tool calls and approvals are traceable end-to-end.
+- Workflow retries are idempotent; failures are visible and recoverable.
+- Evaluation suite meets agreed quality, groundedness, privacy, latency, and cost thresholds.
+- No paid provider, production deployment, or live financial side effect without explicit approval.
+
+Do not begin with a swarm of agents. Prove one narrow agent workflow end-to-end before adding roles or increasing autonomy.
