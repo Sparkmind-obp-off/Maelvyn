@@ -169,3 +169,8 @@ A feature is complete only when all apply:
 9. No unapproved paid or production side effect occurred.
 
 Update this register after each implementation batch with commit, test evidence and remaining blockers. Do not mark planned features as implemented.
+
+
+## Account and administrator boundary (mandatory policy)
+
+Only `sparkmind.support@gmail.com` is the platform administrator/Platform Owner. `elfares621@gmail.com` and `elmatador0197@gmail.com` are account-only identities, not workspace members, venture members or assigned functional roles by default. No auto-membership on signup/first login. Account identity, platform role, workspace membership and venture assignment must be separate. See [Platform Account & Administrator Boundary Policy](PLATFORM-IDENTITY-AND-ROLE-BOUNDARIES.md). Add this invariant to P1 acceptance tests and reconcile existing development memberships before modifying records.
