@@ -66,7 +66,7 @@ Agents may research, plan, coordinate, prepare, and execute only within explicit
 | [Security, Privacy & Operations](docs/SECURITY-PRIVACY-OPERATIONS.md) | Data classification, access, privacy, audit, incident, and backup controls |
 | [Initial SQL Migration](migrations/0001_initial.sql) | D1/SQLite schema baseline; structure only, no participant or financial data |
 
-## Current status
+## Authentication SDK upgrade\n\nThe browser client now targets Clerk Core 3 via `@clerk/react` (Node.js >=20.9.0). The previous `@clerk/clerk-react` Core 2 package was deprecated and used ClerkJS 5, which is blocked by Clerk's minimum-version protection on newer instances. See [Clerk Core 3 upgrade and verification](docs/CLERK-CORE-3-UPGRADE.md). The stale npm lockfile was removed and must be regenerated with `npm install` before the next clean CI/install; do not use `npm ci` until the generated lockfile is committed.\n\n## Current status
 
 **Development foundation: implemented, tested, and deployed to a development environment.** MAELVYN is a working project identity and operating concept. This repository does not establish a legal entity, partnership, investment offer, ownership interest, or binding commitment by any person.
 
