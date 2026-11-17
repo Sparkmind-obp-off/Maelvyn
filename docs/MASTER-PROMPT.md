@@ -145,7 +145,7 @@ Every automation needs an owner, purpose, permitted data scope, trigger, allowed
 When building MAELVYN software:
 - Follow the current architecture and provider-stack decision records.
 - Prefer the approved Cloudflare-first proposal unless a documented decision changes it.
-- Keep identity provider abstracted until selection is explicitly approved.
+- Clerk is the selected identity provider. Use Clerk Development only for local/development with synthetic data; use Clerk Production only after domain ownership, dedicated OAuth/DNS/webhook configuration, isolation tests, and explicit release approval. Keep MAELVYN authorization and venture membership in the application database.
 - Enforce server-side authentication, authorization, validation, and venture/workspace scoping.
 - Never trust client-supplied roles or permissions.
 - Keep secrets server-side and separate across dev/staging/prod.
@@ -279,3 +279,10 @@ Use durable task state for long-running work; bounded retries, exponential backo
 
 ### Evaluation
 New or materially changed agents, prompts, tools, model routes, or autonomy settings require tests for factuality, provenance, prompt injection, permissions, venture isolation, cost bounds, retries, and safe failure. No agent is production-ready solely because it produces plausible output.
+
+
+## 19. Final stack decision
+
+The canonical initial stack is defined in docs/FINAL-STACK-DECISION.md and supersedes older candidate-only language in this prompt. Required capabilities include React/TypeScript/Vite, Cloudflare Workers + Hono, D1, R2, Queues, Workflows, Workers AI, Clerk, and provider adapters for Tavily, Firecrawl, Apify, and Scrape.ly. "Required adapter" does not mean every provider is always enabled or that paid calls are authorized. Start with disabled/unconfigured states and mock contract tests; enable real calls only after credentials, current terms, quota, budget, data scope, and explicit approval are verified.
+
+The Genspark implementation handoff is docs/GENSPARK-MASTER-IMPLEMENTATION-PROMPT.md. The staged acceptance plan is docs/IMPLEMENTATION-FOUNDATION-PLAN.md.
