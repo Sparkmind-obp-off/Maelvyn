@@ -77,3 +77,14 @@ No venture, shared account, pooled fund, or joint asset should be represented as
 ## Change control
 
 Material changes to governance, ownership principles, capital rules, participant rights, agent permissions, provider selection, architecture, or security controls must be documented, versioned, and reviewed before implementation.
+
+
+### Final implementation baseline
+
+| Document | Purpose |
+|---|---|
+| [Final Initial Stack Decision](docs/FINAL-STACK-DECISION.md) | Locked initial stack, Clerk environment policy, mandatory provider adapters, cost and release gates |
+| [Genspark Master Implementation Prompt](docs/GENSPARK-MASTER-IMPLEMENTATION-PROMPT.md) | Copy-ready instruction for Genspark to inspect and implement the repository |
+| [Implementation Foundation Plan](docs/IMPLEMENTATION-FOUNDATION-PLAN.md) | Staged build sequence and first milestone acceptance criteria |
+
+The initial stack decision supersedes earlier provider-selection language where there is a conflict. Clerk is selected; Development is for synthetic development only, and Production remains blocked until the domain and release gates are ready.
