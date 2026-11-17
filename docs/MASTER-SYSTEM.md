@@ -347,8 +347,6 @@ The sequence is dependency-aware: P0 stabilize the current development app and C
 - External integrations require per-connector scopes, data minimization, secret references, rate limits, idempotency, audit and revocation.
 - Production data, production Clerk, public onboarding, billing and paid provider execution remain blocked until their explicit readiness and approval gates are satisfied.
 
-## 17. Canonical platform identity and role boundaries
+## 17. Canonical platform identity and account boundaries
 
-The approved platform identity and account-role assignments are governed by [Platform Identity & Role Boundary Policy](PLATFORM-IDENTITY-AND-ROLE-BOUNDARIES.md). The sole designated Platform Owner is `sparkmind.support@gmail.com`. `elfares621@gmail.com` is assigned the scoped `venture_operations_lead` role; `elmatador0197@gmail.com` is assigned the scoped `venture_contributor` role. Neither account is a Platform Admin or Super Admin.
-
-These are governance assignments, not proof of live technical enforcement. The application must bind the owner to a verified Clerk primary email and stable Clerk subject ID through controlled bootstrap, then enforce all platform, workspace, and venture permissions server-side. Never seed or change live account records until identities are verified. Exactly one active platform owner is permitted. Workspace and venture roles remain separately scoped; no role or invitation grants cross-scope access by implication.
+Follow [Platform Account & Administrator Boundary Policy](PLATFORM-IDENTITY-AND-ROLE-BOUNDARIES.md). The sole platform administrator/owner is `sparkmind.support@gmail.com`. The accounts `elfares621@gmail.com` and `elmatador0197@gmail.com` are account identities only: no administrator role, no default workspace membership, no venture membership, and no functional role. Account existence and login do not imply membership or access. No first-login auto-membership. All private access is denied unless a separately authorized, scoped membership is explicitly accepted and recorded. These assignments are approved policy, not a claim that current Clerk IDs/database rows have already been reconciled.
