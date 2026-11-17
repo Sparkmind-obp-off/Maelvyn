@@ -33,6 +33,8 @@ Its working model combines:
 |---|---|
 | [Master System](docs/MASTER-SYSTEM.md) | Canonical operating constitution, architecture, rights, finance, lifecycle gates, North Star, and change control |\n| [Agentic OS Architecture](docs/AGENTIC-OS-ARCHITECTURE.md) | Seven-layer multi-agent architecture, runtime, task contracts, memory, isolation, autonomy, and rollout gates |\n| [Agent Operating Constitution](docs/AGENT-OPERATING-CONSTITUTION.md) | Agent identity, permissions, reserved decisions, approvals, tool protocol, memory, and audit policy |
 | [Master System Prompt](docs/MASTER-PROMPT.md) | Reusable governing instructions for AI assistants, coding agents, researchers, and automation |
+| [Agentic OS Architecture](docs/AGENTIC-OS-ARCHITECTURE.md) | Seven-layer multi-agent architecture, agent teams, autonomy, memory, provider strategy, reliability, and roadmap |
+| [Agent Registry & Permission Model](docs/AGENT-REGISTRY-AND-PERMISSION-MODEL.md) | Agent identity, scoped permissions, task contracts, tool-call policy, memory, evaluation, and kill switch |
 
 ### Strategy and product
 | Document | Purpose |
