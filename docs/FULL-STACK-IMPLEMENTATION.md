@@ -86,3 +86,31 @@ Typecheck/lint/unit/integration/E2E pass; migrations tested; backup/restore demo
 
 ## Not implemented by this document
 No code, deployment, provisioning, identity-provider selection, migration execution, or legal entity is created by this specification. Each requires separate implementation and approval.
+
+## Agentic runtime implementation extension
+
+### Recommended first vertical slice
+Implement one authenticated, read-only research workflow before building a multi-agent swarm:
+1. User creates a research task inside a venture workspace.
+2. API verifies identity, venture membership, task scope, and provider budget.
+3. Orchestrator creates a task contract and an agent run record.
+4. A single research agent uses one approved search adapter through the tool gateway.
+5. Results are stored as evidence with source URL, timestamp, and provenance; large artifacts go to private R2.
+6. A durable Workflow checkpoints each step, applies retry limits, and pauses if human review is required.
+7. A verifier checks source coverage and acceptance criteria.
+8. UI displays findings, citations, usage/cost, status, and audit trace.
+
+### Suggested module boundaries
+- `agents/registry`: definitions, versions, roles, release status.
+- `agents/orchestrator`: planning, routing, dependency graph, budgets.
+- `agents/runtime`: model adapter and execution loop.
+- `agents/policy`: permissions, autonomy, approvals, venture isolation.
+- `agents/memory`: scoped retrieval and provenance-aware writes.
+- `tools/gateway`: schemas, allowlists, idempotency, provider adapters.
+- `workflows`: durable orchestration, retry, escalation, human waits.
+- `providers`: health, quota, usage, fallback, credential references.
+- `evaluations`: golden tasks, adversarial tests, scorecards.
+- `audit`: append-only event trail and trace correlation.
+
+### Implementation order
+Start with schema and policy tests, then read-only tool gateway, one agent, durable workflow, evaluation harness, and UI. Add specialist agents only after the first vertical slice demonstrates correct scoping, reliable recovery, source-grounded output, and bounded cost. Do not connect payment execution, public publishing, or production mutation tools in the initial runtime.
