@@ -1,4 +1,4 @@
-import { SignedIn, SignedOut, SignInButton, UserButton } from '@clerk/clerk-react'
+import { Show, SignInButton, UserButton } from '@clerk/react'
 import { Link, NavLink, Route, Routes, useParams } from 'react-router-dom'
 import Landing from './pages/Landing'
 import WorkspacesPage from './pages/Workspaces'
@@ -42,13 +42,13 @@ export default function App({ environment, identityInstance, dataPolicy }: { env
             <span className="hidden text-xs font-normal text-slate-500 sm:inline">Agentic Shared Venture Studio OS</span>
           </Link>
           <div className="flex items-center gap-3">
-            <SignedIn>
+            <Show when="signed-in">
               <Link to="/workspaces" className="text-sm text-slate-300 hover:text-white">Workspace</Link>
               <UserButton />
-            </SignedIn>
-            <SignedOut>
+            </Show>
+            <Show when="signed-out">
               <SignInButton mode="modal"><button className="btn-primary">Masuk</button></SignInButton>
-            </SignedOut>
+            </Show>
           </div>
         </div>
       </header>
@@ -75,13 +75,13 @@ export default function App({ environment, identityInstance, dataPolicy }: { env
 function Protected({ children }: { children: React.ReactNode }) {
   return (
     <>
-      <SignedIn>{children}</SignedIn>
-      <SignedOut>
+      <Show when="signed-in">{children}</Show>
+      <Show when="signed-out">
         <div className="card mx-auto max-w-md text-center">
           <p className="mb-4 text-slate-300">Silakan masuk untuk mengakses workspace.</p>
           <SignInButton mode="modal"><button className="btn-primary">Masuk dengan Clerk (Development)</button></SignInButton>
         </div>
-      </SignedOut>
+      </Show>
     </>
   )
 }
