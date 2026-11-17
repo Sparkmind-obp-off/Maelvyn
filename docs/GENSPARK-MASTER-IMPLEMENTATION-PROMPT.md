@@ -1,6 +1,6 @@
 # MAELVYN — Genspark Master Implementation Prompt
 
-**Version:** 1.0.0  
+**Version:** 2.0.0  
 **Target:** Genspark.ai coding/research workspace  
 **Repository:** https://github.com/Sparkmind-obp-off/Maelvyn  
 **Default branch:** main  
@@ -284,3 +284,47 @@ Use Indonesian. Report:
 11. Next single action.
 
 Never claim that MAELVYN is production-ready while Clerk Production, domain, production resources, privacy/security review, and release gates remain incomplete.
+
+
+---
+
+## 13. Mandatory current-state repair and full product completion
+
+This section supplements and takes precedence over any older stage order where the current repository has advanced. Do not restart or scaffold over the existing working application.
+
+### 13.1 P0 — Finish the Clerk Core 3 repair first
+
+The current branch contains a source migration from @clerk/clerk-react to @clerk/react and replaces SignedIn/SignedOut with Show. The old package-lock.json was removed because it locked the Core 2 dependency tree. This is an incomplete source-level repair until a new lockfile is generated and verified.
+
+Perform these steps in order:
+1. Check Node.js >=20.9.0 and npm version.
+2. Regenerate package-lock.json with npm install from the current package.json. Do not use npm ci before a valid lockfile exists.
+3. Inspect npm ls for @clerk/react, @clerk/clerk-react and @clerk/clerk-js; remove stale package references and resolve peer conflicts.
+4. Inspect the installed React SDK's official compatibility and bundled ClerkJS runtime version. Do not assume @clerk/react package version and ClerkJS version are identical.
+5. Run the repository's actual scripts for typecheck, lint, tests and build. Fix all regressions.
+6. Inspect generated JS for secrets and old Clerk package/runtime references.
+7. Deploy only to the existing development Pages project if the build is green and the deployment is a no-cost action within the existing authorization.
+8. Verify the real browser runtime version, sign-in, sign-out, valid JWT, tampered/expired JWT rejection, API authorization, and cross-venture denial.
+9. Preserve Clerk bot/security protections. Never lower the minimum ClerkJS requirement as a workaround.
+10. Commit the regenerated lockfile and any fixes. Update docs/CLERK-CORE-3-UPGRADE.md with exact verified versions, commands, results and deployment ID.
+
+If the available environment cannot run npm or browser verification, stop and report the exact blocker. Do not claim the fix is complete.
+
+### 13.2 P1–P6 — Build the complete MAELVYN product
+
+Use docs/CAPABILITY-INVENTORY-AND-UPGRADE-ROADMAP.md as the canonical feature backlog. Inspect the current repository before implementing each batch. Implement in this dependency order:
+
+- P1: complete workspace membership/invites/roles/offboarding; venture charter and lifecycle stage gates; governance decision register; approval engine with authority, thresholds, expiry, revocation and immutable events.
+- P2: venture budgets and approvals; balanced double-entry finance ledger; immutable posted journals and reversal corrections; reconciliation; contribution classification; agreement metadata; ownership and IP register.
+- P3: general task center and milestones; asset custody/maintenance register; customer/offer/order/receivable records; revenue evidence and unit economics; venture review and hold/scale/restructure/exit.
+- P4: durable task state machine, agent delegation and evaluation; Cloudflare Queues and Workflows; checkpoint/resume, bounded retries, dead-letter, cancellation and idempotency; venture-scoped memory and knowledge retrieval; research validation experiments; Workers AI model registry after approved configuration.
+- P5: private R2 file/artifact management; event registry, schedules, webhooks and connector permissions; notifications; analytics/reporting; data export/deletion/retention; backups, restore drill and incident runbooks.
+- P6: owned domain, Clerk Production, isolated production resources/secrets, privacy/terms review, security assessment, monitoring, cost limits and explicit release approval.
+
+### 13.3 Required product behavior
+
+Every new module must have a coherent data model, sequential migration, server API, server-side authorization, UI states, audit events, idempotency where side effects exist, error/recovery behavior, tests and documentation. Enforce workspace and venture scope before retrieving data. Keep personal/pre-existing ventures excluded by default. No inferred consent, default equity, pooled money, autonomous reserved decisions or unapproved transfers.
+
+### 13.4 Execution and reporting
+
+Do not return only a plan when repository tools can safely implement the next slice. Make incremental commits, verify each change, and update the feature register. Prioritize a working, secure vertical slice over a large set of fake screens. Report exact file paths, commits, tests actually executed, deployed state, provider live/mock status, Clerk status, and unresolved gaps. Never create a domain, activate billing, spend provider credits, run paid Actors, use production data, or deploy production without explicit authorization.
