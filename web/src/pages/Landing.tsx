@@ -1,4 +1,4 @@
-import { SignedIn, SignedOut, SignInButton } from '@clerk/clerk-react'
+import { Show, SignInButton } from '@clerk/react'
 import { Link } from 'react-router-dom'
 
 const PILLARS = [
@@ -29,8 +29,8 @@ export default function Landing() {
           review manusia, registry provider & agen, anggaran kredit, dan audit append-only.
         </p>
         <div className="mt-6 flex gap-3">
-          <SignedIn><Link to="/workspaces" className="btn-primary">Buka workspace</Link></SignedIn>
-          <SignedOut><SignInButton mode="modal"><button className="btn-primary">Masuk untuk mulai</button></SignInButton></SignedOut>
+          <Show when="signed-in"><Link to="/workspaces" className="btn-primary">Buka workspace</Link></Show>
+          <Show when="signed-out"><SignInButton mode="modal"><button className="btn-primary">Masuk untuk mulai</button></SignInButton></Show>
           <a className="btn-ghost" href="https://github.com/Sparkmind-obp-off/Maelvyn" target="_blank" rel="noreferrer noopener">Dokumentasi</a>
         </div>
       </section>
