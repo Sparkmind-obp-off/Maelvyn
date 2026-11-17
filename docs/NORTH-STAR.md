@@ -1,6 +1,6 @@
-# MAELVYN — North Star & Product Principles
+# MAELVYN — Agentic OS North Star & Product Principles
 
-**Version:** 1.0  
+**Version:** 2.0  
 **Status:** Product strategy baseline
 
 ## North Star
@@ -77,3 +77,21 @@ EBAV remains the North Star. Do not replace venture outcomes with agent activity
 - **Escalation Quality:** critical ambiguity and policy conflicts correctly stopped and routed to humans.
 
 Agent count, message count, tool-call volume, tokens generated, and artifacts created are not North Star metrics. Scale autonomy only when evidence shows improved venture outcomes and safety tests remain green.
+
+
+---
+
+## Agentic OS product direction
+
+MAELVYN is the **Agentic Shared Venture Studio OS**: a governed operating system that coordinates humans, specialist agents, venture workspaces, shared operations, evidence, providers, and approvals.
+
+### Agentic outcome measures
+Add these supporting measures without replacing EBAV:
+- **Verified Agent Task Completion:** accepted tasks with valid outputs, provenance, and passing checks / tasks completed.
+- **Human Approval Integrity:** reserved actions correctly held for authorized approval.
+- **Venture Isolation Pass Rate:** successful cross-venture access-denial and memory-isolation tests.
+- **Cost per Accepted Outcome:** verified provider/runtime cost per accepted task or venture deliverable.
+- **Recovery Reliability:** resumable/recovered tasks without duplicate side effects.
+- **Evidence Coverage:** material agent recommendations with traceable sources and review status.
+
+Do not optimize for agent count, tool-call volume, token volume, or autonomous action count. Agentic capability is valuable only when it improves verified venture outcomes safely and economically.
