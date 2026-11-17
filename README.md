@@ -131,7 +131,7 @@ No venture, shared account, pooled fund, or joint asset should be represented as
 Material changes to governance, ownership principles, capital rules, participant rights, agent permissions, provider selection, architecture, or security controls must be documented, versioned, and reviewed before implementation.
 
 
-### Final implementation baseline
+### Capability coverage and upgrade roadmap\n\n[Capability Inventory & Upgrade Roadmap](docs/CAPABILITY-INVENTORY-AND-UPGRADE-ROADMAP.md) is the canonical feature-gap register, target module map, P0-P6 implementation sequence and definition of done.\n\n### Final implementation baseline
 
 | Document | Purpose |
 |---|---|
