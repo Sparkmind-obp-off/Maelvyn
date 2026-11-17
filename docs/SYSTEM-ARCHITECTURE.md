@@ -1,8 +1,8 @@
-# MAELVYN System Architecture
+# MAELVYN Agentic Shared Venture Studio OS — System Architecture
 
-**Version:** 0.1.0  
+**Version:** 1.0.0  
 **Status:** Proposed technical baseline — not yet production-approved  
-**Scope:** Governance, venture portfolio, contributions, approvals, project finance, auditability
+**Scope:** Agentic orchestration, governance, venture portfolio, finance, providers, auditability
 
 ## 1. Architecture decision
 
@@ -192,3 +192,38 @@ Use durable steps for long-running processes, idempotency keys for external side
 Add logical records for agent definitions/versions/runs, tasks/dependencies, tool definitions/calls, permission grants, approval requests/decisions, workflow runs, provider capabilities/usage, scoped memory, evidence/artifacts, evaluation runs, and audit events. Preserve venture_id and actor provenance. Financial records remain immutable after posting and are corrected by reversal.
 
 This extension is a target design, not evidence that the runtime, bindings, database, or production resources have been provisioned.
+
+
+---
+
+## 12. Agentic runtime and orchestration
+
+The target is a multi-agent OS with durable task state, not a long-running in-memory request. Preserve the existing React/Workers/Hono/D1/R2 proposal as the first infrastructure candidate while adding asynchronous and durable execution behind explicit adapters.
+
+### Runtime responsibilities
+- **Agent registry/policy service:** approved agent identity, version, scopes, tools, autonomy, budget, evaluation status.
+- **Task orchestrator:** task contracts, delegation, state transitions, checkpoints, retries, cancellation, escalation.
+- **Model gateway:** provider-neutral inference/embedding/reranking interfaces and policy-based routing.
+- **Tool broker:** scoped credentials, allowlisted tools, policy checks, idempotency, redaction, and audit.
+- **Memory service:** workspace/venture/task-scoped retrieval with provenance and retention.
+- **Evaluation service:** schema, quality, factuality, security, permission, and cost tests.
+- **Audit/observability:** correlated task, agent, tool, provider, cost, and outcome events.
+
+### Candidate infrastructure mapping
+- Workers + Hono: API, domain services, policy enforcement.
+- D1: canonical task, agent registry, approval, provider registry, usage, and audit metadata.
+- R2: private artifacts, evidence, run outputs, and evaluation fixtures.
+- Queues: asynchronous task dispatch and bounded concurrency.
+- Workflows: multi-step durable processes, waits, retries, and human checkpoints.
+- Durable Objects / Cloudflare Agents SDK: candidate per-agent or per-conversation coordination runtime; evaluate hibernation, storage, concurrency, cost, and isolation before adoption.
+- External durable engines (e.g. Temporal/DBOS) and agent frameworks (e.g. LangGraph, Mastra, OpenAI Agents SDK, Google ADK, CrewAI) remain alternatives for proof-of-concept, not dependencies selected by this document.
+
+Avoid synchronous Worker requests for long-running agent tasks. Persist state before dispatch and after each meaningful transition. External side effects require idempotency keys and authoritative result verification.
+
+### Suggested agentic data entities
+`AgentDefinition`, `AgentVersion`, `AgentGrant`, `AgentToolGrant`, `AgentEvaluation`, `Task`, `TaskRun`, `TaskDependency`, `TaskArtifact`, `ToolCall`, `ApprovalRequest`, `Provider`, `ProviderCapability`, `ProviderCredentialRef`, `ProviderUsage`, `ModelRoute`, `MemoryItem`, `PolicyDecision`, `AgentIncident`.
+
+All records require workspace/venture scoping where applicable, least-privilege access, retention policy, and audit metadata. Never store raw provider secrets in D1 or logs; store secret-manager references only.
+
+### Required isolation tests
+Test cross-workspace and cross-venture reads, child-task privilege escalation, agent impersonation, memory leakage, tool allowlist bypass, duplicate side effects, retries after process loss, provider exhaustion, approval bypass, and kill-switch behavior.
