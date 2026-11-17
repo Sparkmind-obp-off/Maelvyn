@@ -2,31 +2,19 @@ import { Hono, type Context } from 'hono'
 import { z } from 'zod'
 import { audit, auditStatement } from './audit/audit'
 import { authorizeVenture, authorizeWorkspace, listVisibleVentures } from './authorization/policy'
-import type { AppEnv, Principal } from './env'
+import type { AppEnv } from './env'
 import { fetchClerkDisplayName, verifyClerkToken, type TokenVerifier } from './identity/clerk'
 import { resolvePrincipal } from './identity/principal'
 import { AppError, errorBody, newId, nowIso, ok, redact, todayUtc } from './lib/http'
 import { rateLimit } from './lib/ratelimit'
+import { parseJson, principalOf } from './lib/request'
+import { registerMemberRoutes } from './members/routes'
 import { getAdapter } from './providers/registry'
 import { CreateResearchInput, createAndRunResearch, reviewResearch, ReviewInput, type RunDeps } from './research/agent'
 
 export type AppDeps = { verifier?: TokenVerifier; lookupName?: (subject: string) => Promise<string | null>; run?: RunDeps }
 
-const EXPECTED_MIGRATIONS = ['0001_initial.sql', '0002_agentic_foundation.sql']
-
-async function parseJson<T extends z.ZodType>(c: Context<AppEnv>, schema: T): Promise<z.infer<T>> {
-  let body: unknown
-  try { body = await c.req.json() } catch { throw new AppError('VALIDATION_ERROR', 'Request body must be valid JSON.') }
-  const r = schema.safeParse(body)
-  if (!r.success) throw new AppError('VALIDATION_ERROR', 'Request validation failed.', { issues: r.error.issues.map((i) => ({ path: i.path.join('.'), message: i.message })) })
-  return r.data
-}
-
-const principalOf = (c: Context<AppEnv>): Principal => {
-  const p = c.get('principal')
-  if (!p) throw new AppError('UNAUTHENTICATED', 'Authentication required.')
-  return p
-}
+const EXPECTED_MIGRATIONS = ['0001_initial.sql', '0002_agentic_foundation.sql', '0003_workspace_invitations.sql']
 
 export function createApp(deps: AppDeps = {}) {
   const verifier = deps.verifier ?? verifyClerkToken
@@ -95,6 +83,8 @@ export function createApp(deps: AppDeps = {}) {
     ).bind(p.personId).all()).results
     return ok(c, { principal: { person_id: p.personId, display_name: p.displayName }, memberships })
   })
+
+  registerMemberRoutes(app)
 
   // ---- Workspaces ------------------------------------------------------------
   app.get('/workspaces', async (c) => {

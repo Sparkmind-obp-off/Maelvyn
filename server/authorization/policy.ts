@@ -5,11 +5,11 @@ export type WorkspaceRole = 'workspace_admin' | 'governance_approver' | 'venture
 
 export type Action =
   | 'workspace.read' | 'workspace.audit.read' | 'workspace.providers.manage' | 'workspace.killswitch.manage'
-  | 'venture.create' | 'venture.read' | 'research.create' | 'research.review'
+  | 'workspace.members.manage' | 'venture.create' | 'venture.read' | 'research.create' | 'research.review'
 
 /** Workspace-level capability matrix (docs/API-CONTRACT.md, narrowed for the first slice). */
 const WORKSPACE_ACTIONS: Record<WorkspaceRole, Action[]> = {
-  workspace_admin: ['workspace.read', 'workspace.audit.read', 'workspace.providers.manage', 'workspace.killswitch.manage', 'venture.create', 'venture.read', 'research.create', 'research.review'],
+  workspace_admin: ['workspace.read', 'workspace.audit.read', 'workspace.providers.manage', 'workspace.killswitch.manage', 'workspace.members.manage', 'venture.create', 'venture.read', 'research.create', 'research.review'],
   governance_approver: ['workspace.read', 'workspace.audit.read', 'venture.create', 'venture.read', 'research.create', 'research.review'],
   venture_operator: ['workspace.read', 'venture.create', 'venture.read', 'research.create', 'research.review'],
   finance_operator: ['workspace.read', 'venture.read'],
