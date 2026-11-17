@@ -1,4 +1,4 @@
-import { useAuth } from '@clerk/clerk-react'
+import { useAuth } from '@clerk/react'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { ApiRequestError, createApi, type Api } from './api'
 
