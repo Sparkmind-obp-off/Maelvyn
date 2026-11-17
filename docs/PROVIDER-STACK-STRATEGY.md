@@ -1,6 +1,6 @@
-# MAELVYN — Technology & Provider Stack Strategy
+# MAELVYN — Agentic OS Technology & Provider Stack Strategy
 
-**Version:** 1.0  
+**Version:** 2.0  
 **Status:** Proposed baseline; proof-of-fit required
 
 ## Stack principles
@@ -90,3 +90,41 @@ Track provider, capability, purpose, enabled status, quota/limits, cost model, c
 No provider proliferation, no paid scraping actors by default, no automatic model marketplace routing, no multi-cloud runtime, no external vector database until retrieval volume proves D1/R2 insufficient, and no payment/custody integration in the agent runtime MVP.
 
 The Cloudflare Agents SDK documentation describes stateful Agents on Durable Objects and integration with Workflows for durable execution and human-in-the-loop approvals. These capabilities justify a proof of concept, not an unconditional production commitment. References: [Cloudflare Agents](https://developers.cloudflare.com/agents/), [Agents + Workflows](https://developers.cloudflare.com/agents/concepts/workflows), [Human-in-the-loop](https://developers.cloudflare.com/agents/concepts/agentic-patterns/human-in-the-loop), [Durable Agents with Workflows](https://developers.cloudflare.com/workflows/get-started/durable-agents).
+
+
+---
+
+## Agentic provider and stack strategy
+
+### Core rule
+MAELVYN owns domain logic, canonical contracts, permissions, task records, audit, and portability. Providers are replaceable infrastructure capabilities. Do not let a framework or model provider become the source of truth for governance, venture records, ownership, finance, or permissions.
+
+### Capability-based provider catalog
+| Capability | Existing/proposed candidate | Additional candidates | Selection test |
+|---|---|---|---|
+| Agent runtime | Cloudflare Agents SDK + Durable Objects (evaluate) | LangGraph, Mastra, OpenAI Agents SDK, Google ADK, CrewAI | Durable state, handoffs, tool controls, testability, portability |
+| Durable workflow | Cloudflare Workflows | Temporal, DBOS, Inngest | Resume, human wait, retries, replay, operating cost |
+| Async queue | Cloudflare Queues | Managed queue service | Delivery guarantees, retries, dead-letter, concurrency |
+| Model inference | Direct provider adapters | OpenRouter, LiteLLM, gateway alternatives | Quality, cost, latency, retention, availability, commercial terms |
+| Search/research | Tavily, Firecrawl | Native search APIs, other research providers | Source quality, citation/provenance, quota, terms |
+| Extraction/automation | Apify, Scrape.ly, Firecrawl | First-party APIs and manual review | Site terms, actor cost, data quality, reliability |
+| Database | D1 | PostgreSQL/Neon | Query/transaction needs, scale, portability, cost |
+| Object storage | R2 | S3-compatible storage | Private access, lifecycle, egress, portability |
+| Identity | Provider-neutral adapter | Clerk, Better Auth | Session controls, recovery, MFA, Workers fit, pricing |
+| Telemetry | Cloudflare observability | Sentry, OpenTelemetry-compatible stack | Correlation, retention, redaction, export |
+
+### Provider registry and failover
+Every provider capability must include a verified plan/price/quota source, last-checked date, owner, data policy, credential reference, limits, usage counters, budget cap, fallback, and disable path. The registry state must distinguish Available, Limited, Exhausted, Disabled, Review Required, Fallback Active, and Unverified.
+
+Failover is capability-aware and policy-aware. A fallback must be approved for the same data classification and task purpose. Never silently route restricted data to another provider. Never turn a quota failure into unapproved paid usage.
+
+### Cost-control rules
+- Set per-task and per-agent caps before dispatch.
+- Enforce daily/monthly provider budgets and concurrency limits.
+- Estimate cost before execution; reconcile actual usage afterward.
+- Stop, queue for later, or ask for approval when a cap is reached.
+- Keep paid actors, scraping, model routes, storage, and messaging disabled until purpose and spend are approved.
+- Do not describe free tiers as permanent or unlimited; re-check current provider terms before launch.
+
+### Selection policy
+Use the smallest stack that meets a demonstrated requirement. Prefer current Cloudflare-first infrastructure for the first prototype, but keep business logic and provider interfaces portable. Do not add every listed candidate. Each adoption requires a proof-of-concept, decision record, security/terms review, cost estimate, failure test, and exit plan.
