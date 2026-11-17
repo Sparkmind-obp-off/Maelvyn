@@ -68,9 +68,61 @@ Agents may research, plan, coordinate, prepare, and execute only within explicit
 
 ## Current status
 
-**Concept and design stage.** MAELVYN is a working project identity and operating concept. This repository does not establish a legal entity, partnership, investment offer, ownership interest, or binding commitment by any person.
+**Development foundation: implemented, tested, and deployed to a development environment.** MAELVYN is a working project identity and operating concept. This repository does not establish a legal entity, partnership, investment offer, ownership interest, or binding commitment by any person.
 
-The documentation defines the target agentic OS architecture and governance model. The application and agent runtime are not yet implemented or deployed. The initial SQL migration has not been executed against a development D1 database. Provider candidates are not claims of enabled integrations, approved spend, or production readiness.
+| Item | Status |
+|---|---|
+| Development URL | https://maelvyn-dev.pages.dev (Cloudflare Pages, user-owned account) |
+| Identity | Clerk **Development** instance only. Synthetic data only. Clerk Production is **blocked** until domain ownership and release gates are met |
+| Database | D1 `maelvyn-dev-db` (development). Migrations `0001` and `0002` applied |
+| Production | **Not created and not deployed** |
+| Costs incurred | None that were intentionally triggered. Health checks call free read-only endpoints only |
+
+### What works today
+- React + Vite + Tailwind web app with Clerk Development sign-in. Pages: workspaces, venture, research brief, providers & kill switches, agent registry, audit & usage.
+- Hono API on a Cloudflare Pages Worker at `/api/v1`. Every response has a standard error shape, a `request_id`, and security headers. CSP follows Clerk's documented directives.
+- Clerk session JWTs are verified on the server (RS256 via JWKS, issuer, expiry, `azp` allowlist). A valid session alone grants **no** access.
+- Deny-by-default authorization, resolved from the database. Cross-venture access is denied and logged in `permission_decisions`.
+- **Research Brief Agent (L2 Prepare):**
+  1. Creates a task contract, enforcing idempotency and a credit budget.
+  2. Routes to a provider, either synthetic mock or live Tavily. Live Tavily runs only when an admin enables it with credit caps.
+  3. Optionally extracts the top source with Firecrawl.
+  4. Stores evidence with provenance and flags prompt-injection attempts.
+  5. Produces an extractive draft brief that separates source statements, agent inferences, and gaps. No LLM is used.
+  6. Requires human accept/reject.
+- Provider adapters for **Tavily, Firecrawl, Apify, Scrape.ly, Workers AI**, plus a mock. All live execution is off by default, with no automatic fallback between providers. Apify, Scrape.ly and Workers AI cannot be enabled until an Actor/model allowlist and budget are approved.
+- Kill switches at system, workspace, agent and provider level. Database rate limits.
+- Append-only audit, usage, executions and evidence. Reviewed briefs are immutable. All enforced by DB triggers.
+
+### API (base `/api/v1`)
+- **Public:** `GET /health`, `GET /ready`, `GET /config`
+- **Session & workspaces:** `GET /session` · `GET|POST /workspaces` (self-service, dev only) · `GET /workspaces/:wid`
+- **Ventures:** `GET|POST /workspaces/:wid/ventures` · `GET /ventures/:vid`
+- **Research:** `POST /ventures/:vid/research` (needs `Idempotency-Key` header) · `GET /research/:tid` · `POST /research/:tid/review`
+- **Providers:** `GET /workspaces/:wid/providers` · `POST /workspaces/:wid/providers/:pid/health` · `PUT /workspaces/:wid/providers/:pid`
+- **Agents & controls:** `GET /agents` · `GET|PUT /workspaces/:wid/kill-switches`
+- **Audit & usage:** `GET /workspaces/:wid/audit` · `GET /workspaces/:wid/usage`
+
+### Not implemented yet
+- Approval engine for reserved matters (charter/budget votes), finance journals, agreements/contributions/ownership registries.
+- R2 artifacts, Queues and Workflows. Research currently runs synchronously within one request.
+- Workers AI binding and model registry.
+- Live Apify / Scrape.ly Actor runs. These need an approved Actor allowlist and budget.
+- Membership invitations UI.
+- Playwright browser tests.
+- Active GitHub CI: the workflow template is in `ops/github-workflows/`. Activating it requires `workflows` permission.
+
+### Local development
+```bash
+cp .dev.vars.example .dev.vars          # fill with DEVELOPMENT credentials only (git-ignored)
+npm ci
+npm run check                           # typecheck + lint + 38 tests + build
+npm run db:migrate:local
+npm run build && pm2 start ecosystem.config.cjs   # http://localhost:3000
+```
+Tests run the real migrations against an in-memory SQLite D1 shim (`tests/d1shim.ts`). Deploy to dev: `npm run deploy:dev`. Secrets are set with `wrangler pages secret put` and are never committed.
+
+Provider candidates are not claims of approved spend or production readiness.
 
 No venture, shared account, pooled fund, or joint asset should be represented as active until the relevant participants have freely agreed and the necessary legal and operational steps are complete.
 
