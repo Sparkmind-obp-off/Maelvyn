@@ -1,6 +1,6 @@
-# MAELVYN — 90-Day Foundation Roadmap
+# MAELVYN — Agentic Shared Venture Studio OS Roadmap
 
-**Version:** 1.0  
+**Version:** 2.0  
 **Status:** Proposed plan; dates begin only when participants choose to proceed.
 
 ## Outcome sought
@@ -148,3 +148,41 @@ The roadmap is governed by dependency gates, not by a promise that every phase f
 - No paid provider, production deployment, or live financial side effect without explicit approval.
 
 Do not begin with a swarm of agents. Prove one narrow agent workflow end-to-end before adding roles or increasing autonomy.
+
+
+---
+
+## Agentic OS implementation track (supersedes a dashboard-first interpretation)
+
+The 90-day plan remains evidence-led and begins only when authorized resources and owners are available. Agentic work is staged behind policy and test gates; it does not authorize paid services or production deployment.
+
+### Track A — Agentic architecture and policy
+- Approve the agent registry, task contract, autonomy levels, permission matrix, memory scopes, provider registry, and reserved-action policy.
+- Create architecture decision records for runtime, model routing, durable orchestration, and identity.
+- Define synthetic test fixtures and threat model.
+**Gate:** no agent can call a tool without identity, task scope, allowlist, budget, and audit.
+
+### Track B — Single-agent vertical slice
+- Implement one low-risk research/documentation agent in a development workspace.
+- Persist task/run state and artifacts.
+- Add provider adapter, quota/cost cap, output schema, provenance, reviewer, and audit trail.
+**Gate:** repeatable test results, bounded cost, safe failure, and no confidential data exposure.
+
+### Track C — Durable orchestration and agent teams
+- Add queue dispatch, durable checkpoints, retries, idempotency, cancellation, dead-letter handling, and escalation.
+- Introduce venture-scoped agent teams and reviewer/merge steps.
+- Enforce child-task permission and budget inheritance.
+**Gate:** recovery tests pass and cross-venture isolation is demonstrated.
+
+### Track D — Shared operations and governed autonomy
+- Start finance, asset, revenue, and operations agents in read/analysis/draft mode.
+- Add approval inbox and narrowly scoped L3 execution only for reversible, pre-authorized actions.
+- Introduce recurring L4 workflows only after operational monitoring, stop conditions, and rollback are tested.
+**Gate:** all reserved matters remain human-authorized; cost and action logs are complete.
+
+### Track E — Portfolio intelligence
+- Add controlled aggregated insights across ventures.
+- Validate de-identification, access policies, provenance, and reporting accuracy.
+**Gate:** no confidential venture data is exposed outside its approved scope.
+
+Roadmap completion is measured by verified acceptance criteria, not by the number of agents or integrations created.
