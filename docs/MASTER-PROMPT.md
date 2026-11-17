@@ -1,6 +1,6 @@
 # MAELVYN — Agentic Shared Venture Studio OS Master Prompt
 
-**Version:** 2.0.0  
+**Version:** 2.1.0  
 **Use:** Primary instruction for AI assistants, coding agents, researchers, analysts, and automation agents working on MAELVYN.  
 **Authority:** Subordinate to applicable law, executed agreements, approved governance decisions, and `docs/MASTER-SYSTEM.md`.
 
@@ -286,3 +286,37 @@ New or materially changed agents, prompts, tools, model routes, or autonomy sett
 The canonical initial stack is defined in docs/FINAL-STACK-DECISION.md and supersedes older candidate-only language in this prompt. Required capabilities include React/TypeScript/Vite, Cloudflare Workers + Hono, D1, R2, Queues, Workflows, Workers AI, Clerk, and provider adapters for Tavily, Firecrawl, Apify, and Scrape.ly. "Required adapter" does not mean every provider is always enabled or that paid calls are authorized. Start with disabled/unconfigured states and mock contract tests; enable real calls only after credentials, current terms, quota, budget, data scope, and explicit approval are verified.
 
 The Genspark implementation handoff is docs/GENSPARK-MASTER-IMPLEMENTATION-PROMPT.md. The staged acceptance plan is docs/IMPLEMENTATION-FOUNDATION-PLAN.md.
+
+
+---
+
+## 21. Capability coverage and upgrade execution
+
+Use [CAPABILITY-INVENTORY-AND-UPGRADE-ROADMAP.md](CAPABILITY-INVENTORY-AND-UPGRADE-ROADMAP.md) as the canonical gap register. Before proposing a new module, compare it with that register and the live repository to avoid duplicate or conflicting implementations.
+
+### Required target modules
+
+The target product includes Portfolio Command Center; Identity/Workspace/Membership; Venture Studio; Governance/Approvals; Finance Core; Rights/Agreements/IP; Assets/Resources; Revenue/Commerce; Research/Intelligence; Agentic Workbench; Provider Control Plane; Knowledge/Scoped Memory; Documents/Deliverables; Automation/Integrations; Notifications/Collaboration; Analytics/Reporting; Security/Privacy/Administration.
+
+Do not treat this target scope as an implementation claim. Report every module as IMPLEMENTED-VERIFIED, IMPLEMENTED-PARTIAL, FOUNDATION-ONLY, NOT-IMPLEMENTED, BLOCKED, or NOT-AUTHORIZED with evidence.
+
+### Mandatory execution order
+
+1. **P0 — Stabilize:** finish Clerk Core 3 upgrade, regenerate npm lockfile using Node >=20.9, clean install, typecheck, lint, tests, build, development deployment and browser/API auth verification.
+2. **P1 — Governance:** workspace membership/invitations, venture charter and lifecycle, decision register, approval engine and access review.
+3. **P2 — Rights and finance:** budgets, approval, double-entry ledger, reconciliation, contribution classification, agreements, ownership and IP registry.
+4. **P3 — Operations:** task center, milestones, asset registry, revenue/customer/order records, unit economics and venture reviews.
+5. **P4 — Agentic runtime:** durable orchestration, delegation, queue/workflow, scoped memory, knowledge retrieval and validation experiments.
+6. **P5 — Platform services:** R2 private artifacts, automation/events/webhooks, notifications, analytics, backup/restore and incident controls.
+7. **P6 — Production:** domain, Clerk Production, isolated production resources, privacy/legal/security review and explicit release approval.
+
+### Clerk Core 3 verification rules
+
+- Use official Core 3 migration guidance. The React package is renamed from @clerk/clerk-react to @clerk/react; SignedIn/SignedOut/Protect are consolidated into Show; Node.js >=20.9.0 is required.
+- Do not assume an SDK package version equals the bundled ClerkJS version. Verify the actual browser runtime version against the Clerk instance's minimum-version protection.
+- Never reduce or disable Clerk's minimum-version/bot protections to make an old client appear to work.
+- Do not call the upgrade complete until a clean dependency install, build, browser sign-in/sign-out, server token verification, tampered/expired-token rejection, and cross-venture tests pass.
+
+### Engineering execution rules
+
+Inspect repository, migration history, current APIs and deployment state before every implementation batch. Use new sequential migrations; never rewrite applied migrations. Implement complete vertical slices rather than UI-only placeholders. Keep providers disabled until current official endpoint/terms, credentials, data scope and budgets are verified. Stop before paid actions or production changes unless explicitly authorized. Update the capability register and README after every batch. Report exact commits and executed test commands; never infer test success from code inspection.
