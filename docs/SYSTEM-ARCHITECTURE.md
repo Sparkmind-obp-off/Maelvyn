@@ -168,3 +168,27 @@ Only add accounting exports, payment providers, automation, or AI agents after d
 - Document retention, privacy notices, and data-subject request handling.
 - Approval thresholds and reserved matters, approved per venture.
 - Production budget, service limits, recovery objectives, and operational owner.
+
+
+## Agentic OS architecture extension
+
+MAELVYN's target runtime is multi-agent but policy-enforced. Use the seven layers in [Agentic OS Architecture](AGENTIC-OS-ARCHITECTURE.md): experience/workspace, intelligence core, orchestration, specialist agents, execution/integrations, durable data/workflows, and cross-cutting governance/security/audit.
+
+### Runtime responsibilities
+- Workers + Hono: authenticated API, policy enforcement, typed tool gateway, and request/response endpoints.
+- Cloudflare Agents SDK + Durable Objects: candidate stateful agent/session and coordination runtime, subject to proof-of-concept and operational evaluation. Do not make this a hard dependency before tests.
+- D1: canonical business records, agent/task/approval/provider registry, and audit metadata. Do not treat model conversation history as the business ledger.
+- R2: private generated artifacts, source snapshots where licensed, reports, and large execution outputs.
+- Queues: independent asynchronous jobs with at-least-once delivery assumptions, idempotent consumers, and dead-letter handling.
+- Workflows: durable multi-step processes, retries/checkpoints, scheduled work, and human approval waits.
+
+### Isolation and enforcement
+All agent/tool execution must pass server-side authorization. Scope every task, retrieval, artifact, tool call, and memory item to the venture or shared control-plane domain. Child tasks inherit the intersection of permissions, never a broader scope. Use credential references and a server-side broker; secrets never enter model prompts, browser-visible payloads, or logs.
+
+### Reliability
+Use durable steps for long-running processes, idempotency keys for external side effects, bounded retries with backoff, provider circuit breakers, dead-letter queues, explicit escalation, and independently verified postconditions. Do not use a synchronous Worker request as the container for a long-running agent loop.
+
+### Data model extension
+Add logical records for agent definitions/versions/runs, tasks/dependencies, tool definitions/calls, permission grants, approval requests/decisions, workflow runs, provider capabilities/usage, scoped memory, evidence/artifacts, evaluation runs, and audit events. Preserve venture_id and actor provenance. Financial records remain immutable after posting and are corrected by reversal.
+
+This extension is a target design, not evidence that the runtime, bindings, database, or production resources have been provisioned.
