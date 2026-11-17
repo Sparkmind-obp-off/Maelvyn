@@ -1,116 +1,99 @@
-# MAELVYN — Platform Identity & Role Boundary Policy
+# MAELVYN — Platform Account & Administrator Boundary Policy
 
-**Version:** 1.0.0  
-**Status:** Approved governance decision; implementation and identity binding must be verified separately  
-**Effective decision date:** 2026-11-17  
-**Applies to:** All MAELVYN environments, workspaces, ventures, APIs, agents, automations, and administrative interfaces
+**Version:** 1.1.0  
+**Status:** Approved governance decision; live identity binding remains to be verified  
+**Applies to:** All MAELVYN environments, accounts, workspaces, ventures, APIs, agents and administrative interfaces
 
-## 1. Canonical platform authority
+## 1. The one administrator rule
 
-Exactly one account is designated as the **Platform Owner / Super Admin**:
+Exactly one account is the MAELVYN platform administrator / Platform Owner:
 
-- **Canonical owner email:** `sparkmind.support@gmail.com`
-- **Platform role:** `platform_owner`
-- **Cardinality:** exactly one active platform owner
-- **Authority:** platform-wide governance and security administration, including appointing scoped administrators, managing platform configuration, and reviewing platform audit records.
+- Canonical account: `sparkmind.support@gmail.com`
+- Canonical platform role: `platform_owner`
+- Cardinality: exactly one active Platform Owner.
 
-No other account may receive `platform_owner` or `super_admin` by invitation, workspace membership, venture assignment, UI selection, agent recommendation, or default seeding.
+No other account is a platform administrator, Super Admin, delegated platform admin, Workspace Admin, or Venture Admin by default.
 
-This designation is a governance decision. It is not proof that the Clerk account has been securely bound yet. Implementation must resolve the verified Clerk identity to a stable Clerk subject ID; email text alone is not an authorization credential. The owner binding must require a verified primary email matching the canonical address and an explicit server-side bootstrap/configuration record. Do not grant ownership based only on a client-supplied email claim.
+The owner account is the only account with platform administration authority. Do not create a second administrator role for convenience, fallback, or operational coverage. Any future succession must be a separately authorized, audited owner-transfer procedure; it is not ordinary role assignment.
 
-## 2. Named account role assignments
+## 2. Named accounts that are accounts only
 
-### 2.1 `elfares621@gmail.com`
+The following are recognized account identities, but are **not administrators and are not workspace/venture members by virtue of being listed here**:
 
-**Assigned role:** `venture_operations_lead` (scoped; not platform admin)
+- `elfares621@gmail.com`
+- `elmatador0197@gmail.com`
 
-Allowed, only within workspaces and ventures explicitly assigned:
-- View permitted operational workspace and venture information.
-- Create and edit draft opportunities, venture plans, charter drafts, tasks, milestones, research briefs, and operating reports.
-- Coordinate assigned contributors and submit items for authorized review.
-- View non-restricted operational metrics and records within assigned scope.
+Their current MAELVYN status is **ACCOUNT_ONLY / NO_MEMBERSHIP**:
+- They may have an authenticated account identity in Clerk.
+- They have no default workspace membership.
+- They have no default venture membership.
+- They have no operational role, contributor role, viewer role, finance role, or administrative role.
+- They cannot access private workspace or venture data unless a separate, explicit, future membership grant is approved and accepted under the membership policy.
+- Their account existence must not create or imply participation, employment, partnership, ownership, investment, profit share, or other rights.
 
-Not allowed by default:
-- Platform configuration, platform-wide user administration, or owner succession.
-- Granting/revoking workspace membership or changing another user's role.
-- Approving their own or others' reserved decisions.
-- Creating or changing ownership/equity/profit rights, legal agreements, or participant obligations.
-- Approving budgets, payments, transfers, debt, investments, distributions, or financial journal posting.
-- Accessing another venture, workspace, restricted personal data, credentials, or private finance records without a separate explicit grant.
+Do not automatically convert either account into a Member, Contributor, Viewer, Workspace Admin, Venture Lead, or any other role. Do not infer permission from email address, prior conversation, login, account creation, or presence in a user list.
 
-This role does not automatically imply Workspace Admin, Venture Owner, legal representative, employee, investor, or equity holder.
+## 3. Account identity versus membership
 
-### 2.2 `elmatador0197@gmail.com`
+These concepts must be represented separately in the data model and UI:
 
-**Assigned role:** `venture_contributor` (scoped; not platform admin)
+1. **Account / Identity:** an authenticated principal known to MAELVYN, resolved from a verified Clerk session and stable Clerk subject ID.
+2. **Platform role:** platform-wide authority. Only the canonical owner has `platform_owner`.
+3. **Workspace membership:** an explicit relationship to one workspace, created only through an approved invitation/acceptance or explicit owner-authorized grant.
+4. **Venture assignment:** an explicit relationship to one venture, separately granted within a workspace.
+5. **Functional role:** a permission set attached only to an explicit workspace or venture scope, never automatically to the account itself.
 
-Allowed, only within workspaces and ventures explicitly assigned:
-- View assigned tasks, milestones, and permitted venture materials.
-- Create and edit own drafts, research notes, deliverables, and task updates.
-- Submit work for review and see feedback relevant to assigned work.
-
-Not allowed by default:
-- Platform or workspace administration, member invitations, role changes, or offboarding.
-- Venture-wide permission changes or access to unassigned ventures.
-- Approval of budgets, payments, contracts, ownership, IP transfers, or reserved matters.
-- Access to restricted financial, identity, security, or confidential records unless separately granted.
-
-This role does not automatically imply employment, partnership, ownership, investment, or profit entitlement.
-
-## 3. Role hierarchy and scope
-
-Roles are not interchangeable. Platform roles and resource-scoped roles must be separate authorization dimensions.
-
-| Role | Scope | Default capability |
-|---|---|---|
-| `platform_owner` | Entire MAELVYN platform | Sole platform-wide owner authority |
-| `platform_admin` | Platform functions explicitly delegated | No owner succession or reserved owner powers |
-| `workspace_admin` | One named workspace | Membership and workspace settings only within that workspace |
-| `venture_operations_lead` | Explicitly assigned ventures | Operational drafts and coordination |
-| `venture_lead` | One named venture | Venture execution within approved charter and budget |
-| `venture_contributor` | Assigned venture/tasks | Contribute drafts and updates |
-| `finance_preparer` | Explicit finance scope | Prepare/reconcile draft finance records; no payment approval |
-| `finance_approver` | Explicit delegated approval scope | Approve only within documented thresholds; cannot approve own request |
-| `researcher` | Assigned research scope | Research and evidence preparation |
-| `viewer` | Explicitly assigned read scope | Read-only access |
-
-Workspace and venture roles must be stored with their scope identifiers. A workspace role never implies platform-wide access. A venture role never grants access to sibling ventures.
+An account is not a member. A login is not an invitation acceptance. An account listing is not a permission grant. A workspace membership does not automatically grant membership in every venture.
 
 ## 4. Authorization invariants
 
-1. Deny by default; enforce authorization server-side on every private read and write.
-2. Resolve principal from a verified Clerk session and stable Clerk subject ID.
-3. Resolve role and scope from MAELVYN's server-side records, never from browser state, user metadata, request body, or a role label supplied by an agent.
-4. Match the canonical owner email only after Clerk confirms it as verified primary email; bind and persist the stable Clerk subject ID during controlled bootstrap.
-5. Enforce exactly one active `platform_owner`. Prevent demotion, deletion, suspension, or replacement through ordinary membership endpoints.
-6. Owner succession is a separate break-glass governance procedure with strong re-authentication, explicit evidence, audit event, and recovery controls; never an ordinary role dropdown.
-7. Do not seed named emails into a live database until the corresponding Clerk subject IDs are verified and the account owner confirms access.
-8. Workspace invitation grants only the explicitly selected workspace membership and does not automatically grant venture membership.
-9. Offboarding revokes active scoped access while retaining audit and business records according to retention policy.
-10. Every role grant, change, revocation, and scope change records actor, subject, old/new role, scope, reason, timestamp, and correlation ID.
+1. Deny by default. Every private API read/write and artifact retrieval is authorized server-side.
+2. Resolve principal from a verified Clerk session and stable Clerk subject ID; never trust client-supplied email or role.
+3. Resolve platform authority and scoped memberships from MAELVYN server-side records.
+4. The owner binding requires verified primary email matching `sparkmind.support@gmail.com`, plus a persisted stable Clerk subject ID and controlled bootstrap evidence. Email text alone is not authorization.
+5. Enforce exactly one active `platform_owner`. Protect it from ordinary role, membership, invitation, offboarding and user-management endpoints.
+6. `elfares621@gmail.com` and `elmatador0197@gmail.com` remain `ACCOUNT_ONLY / NO_MEMBERSHIP` until a separate explicit authorization is made. Do not seed workspace or venture membership for them.
+7. Workspace invitations are scoped to one workspace and activate only after the invitee explicitly accepts. Venture access requires its own explicit assignment.
+8. No cross-workspace or cross-venture access by implication.
+9. Revoking membership removes access but preserves records and audit history under retention policy.
+10. Every grant, acceptance, role/scope change, revocation and owner action records actor, subject, old/new state, scope, reason, timestamp and correlation ID.
+11. Agents, automations and delegated child tasks cannot grant themselves or others a platform role or membership.
+12. A person cannot approve their own reserved decision or use account existence as consent.
 
-## 5. Approval separation
+## 5. Future grants
 
-The person preparing a request cannot approve their own request. Operational role does not equal financial authority. Finance preparation does not equal payment execution. The platform owner role does not silently override rights reserved to venture participants or executed agreements; reserved decisions still require the applicable rights-holders' explicit approval.
+A future workspace or venture role for either account requires:
+- a distinct, explicit authorization by the Platform Owner;
+- named workspace and (where relevant) named venture scope;
+- a defined functional role and permission list;
+- invite/acceptance or equivalent recorded acknowledgement;
+- reason, effective date, expiry/review date where appropriate;
+- an immutable audit event.
 
-## 6. Implementation and rollout
+Until all required steps are complete, status remains **ACCOUNT_ONLY / NO_MEMBERSHIP**.
 
-Required implementation sequence:
-1. Add canonical role constants and typed permission matrix.
-2. Add a one-time owner bootstrap binding using verified Clerk identity and stable subject ID.
-3. Separate platform roles from workspace and venture membership roles in the database and API.
-4. Add server-side policy helpers and route guards; remove any reliance on client-supplied role fields.
-5. Add UI labels that clearly show scope (Platform / Workspace / Venture).
-6. Add regression tests for owner uniqueness, unverified email rejection, cross-workspace and cross-venture denial, self-promotion denial, member invitation boundaries, role-change audit, and owner-protection.
-7. Reconcile existing development memberships before applying named account roles. Do not silently overwrite current records.
-8. Deploy to development only after tests pass. Production remains blocked until its separate readiness gates are met.
+## 6. Required implementation
 
-## 7. Current implementation status
+1. Separate account identity, platform role, workspace membership and venture assignment in schema/API.
+2. Add the single-owner bootstrap binding to verified Clerk subject ID.
+3. Ensure new signups and Clerk users receive no workspace/venture membership by default.
+4. Remove any automatic membership creation on first login, account discovery, or email allowlist.
+5. Enforce owner-only platform administration on server routes, not just UI.
+6. Ensure invite endpoints cannot grant platform roles and cannot auto-assign venture access.
+7. Add an account directory view that clearly distinguishes Account Only, Workspace Member and Venture Assigned.
+8. Add regression tests: only owner can administer; account-only user sees no workspace/venture data; first login creates no membership; no self-promotion; no email spoofing; invite acceptance is scoped; no cross-venture access; owner cannot be removed through ordinary routes.
+9. Reconcile development records before any migration/backfill. Never silently change existing users or memberships.
+10. Deploy to development only after all tests pass. Production remains blocked until independent readiness gates pass.
 
-The assignments above are approved policy decisions. They must not be reported as technically enforced until:
-- Clerk subject IDs for the three named accounts are verified;
-- the platform owner bootstrap binding is persisted;
-- server-side authorization and membership records are reconciled;
-- automated permission tests pass against the deployed development application.
+## 7. Verification status
 
-Until then, the policy is authoritative for new design and implementation, but the live database's actual role state is **UNVERIFIED**.
+This policy records the approved intended state. It does not prove the live Clerk identities or database rows have already been changed.
+
+The following remain **UNVERIFIED** until inspected and tested:
+- stable Clerk subject ID bound to the owner account;
+- whether the two account-only identities currently exist in Clerk;
+- whether either account currently has legacy workspace memberships;
+- whether signup/first-login code auto-creates memberships;
+- server-side enforcement and deployed negative authorization tests.
+
+Do not claim technical enforcement until repository code, database records, tests and development deployment provide evidence.
