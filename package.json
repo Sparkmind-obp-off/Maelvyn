@@ -16,16 +16,17 @@
     "db:migrate:local": "wrangler d1 migrations apply maelvyn-dev-db --local",
     "db:migrate:dev": "wrangler d1 migrations apply maelvyn-dev-db --remote",
     "deploy:dev": "npm run build && wrangler pages deploy dist --project-name maelvyn-dev --branch main",
-    "clean-port": "fuser -k 3000/tcp 2>/dev/null || true"
+    "clean-port": "fuser -k 3000/tcp 2>/dev/null || true",
+    "test:e2e": "node tests/e2e/clerk-signin.e2e.mjs"
   },
   "dependencies": {
+    "@clerk/react": "^6.18.9",
     "hono": "^4.13.19",
     "jose": "^6.2.17",
     "react": "^19.3.1",
     "react-dom": "^19.3.1",
     "react-router-dom": "^7.18.5",
-    "zod": "^4.6.7",
-    "@clerk/react": "^6.18.9"
+    "zod": "^4.6.7"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^5.20261117.1",
@@ -38,6 +39,7 @@
     "esbuild": "^0.28.2",
     "eslint": "^10.15.0",
     "globals": "^17.14.0",
+    "playwright": "^1.65.1",
     "tailwindcss": "^4.3.5",
     "typescript": "5.9",
     "typescript-eslint": "^8.73.0",
