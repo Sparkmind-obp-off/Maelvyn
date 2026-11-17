@@ -320,3 +320,7 @@ Do not treat this target scope as an implementation claim. Report every module a
 ### Engineering execution rules
 
 Inspect repository, migration history, current APIs and deployment state before every implementation batch. Use new sequential migrations; never rewrite applied migrations. Implement complete vertical slices rather than UI-only placeholders. Keep providers disabled until current official endpoint/terms, credentials, data scope and budgets are verified. Stop before paid actions or production changes unless explicitly authorized. Update the capability register and README after every batch. Report exact commits and executed test commands; never infer test success from code inspection.
+
+## 14. Platform identity and role enforcement
+
+Follow [Platform Identity & Role Boundary Policy](PLATFORM-IDENTITY-AND-ROLE-BOUNDARIES.md) as the canonical account-role decision. The only designated Platform Owner is `sparkmind.support@gmail.com`. `elfares621@gmail.com` has scoped `venture_operations_lead` permissions only; `elmatador0197@gmail.com` has scoped `venture_contributor` permissions only. Neither is a Super Admin. Do not infer live identity binding or modify live memberships from email text alone. Verify Clerk's primary email and stable subject ID, reconcile existing records, and enforce roles server-side. Never permit self-promotion, cross-venture access by implication, or ordinary endpoint changes to the sole owner.
