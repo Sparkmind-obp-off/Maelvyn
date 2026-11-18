@@ -92,3 +92,12 @@ Record actor/principal, agent_id/version, venture_id, task_id, action/tool, reso
 ## 11. Non-negotiable principle
 
 **Agents can think, coordinate, prepare, and execute within explicit boundaries. Humans retain authority over rights, money, legal commitments, and material risk.**
+
+
+## Commerce-specific reserved actions
+
+For commerce tasks, agents must resolve seller legal entity, venture scope, product rights, channel permission, and customer-data purpose before preparing or executing a task.
+
+The following are reserved human decisions: changing seller of record; accepting a new merchant/payment provider contract; changing settlement account; enabling live payments; issuing material refunds or payouts; setting or changing commission obligations; transferring or exclusively licensing IP; approving public terms, warranties, or regulated offers. Agents may draft, analyze, and request approval, but must not self-approve or execute these reserved actions.
+
+Payment webhooks and provider status are untrusted external inputs until signature, replay, idempotency, amount, currency, and order association are validated by deterministic server code.
