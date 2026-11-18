@@ -390,3 +390,18 @@ The canonical execution contract is now `docs/GENSPARK-WRANGLER-EXECUTION-MASTER
 - CI may validate code, but CI/CD is not a deployment mechanism. The manual GitHub Actions Production deployment workflow has been removed. Do not recreate it.
 - Never use Dashboard upload, Cloudflare API scripts, or another hosting provider for the Production deployment.
 - Keep Development project/database and root/www domains unchanged.
+
+
+## 17. Production continuation decision — 2026-11-18
+
+MAELVYN already has dedicated Production infrastructure. The release task is to deploy the existing application into the existing `maelvyn-production` Pages project, using its existing `maelvyn-production-db` D1 and `maelvyn-production-private` R2 bindings. Do not create duplicate Production resources or rebuild the environment.
+
+The eight D1 schema migrations (0001–0008) are already recorded in Production. Do not blindly rerun them. A reported non-standard `d1_migrations` ledger layout must be inspected and repaired only through a backed-up, lossless, owner-approved procedure. It does not justify replacing the database.
+
+A wholesale Development-to-Production data migration is not required. Development and Production remain isolated; migrate only specifically approved records if a documented business requirement later exists. Pages deployment, D1 schema migration, and data migration are separate operations and must not be conflated.
+
+Production deployment, Pages secret installation, and any approved D1 migration use Wrangler CLI only. CI is validation-only. The live Clerk secret must be rotated if exposed and entered by the owner through Wrangler's hidden interactive prompt; never place secrets in prompts, source, logs, GitHub, or chat.
+
+Current root/www domain assignment is disputed by the latest execution report and must be inspected read-only. No custom-domain or DNS change is permitted without explicit owner approval. Initial Production verification uses the isolated `maelvyn-production.pages.dev` hostname.
+
+The detailed execution authority is `docs/PRODUCTION-CONTINUATION-MASTER-SYSTEM-AND-GENSPARK-PROMPT.md`. Where older notes conflict with this section on the existing Production resources, migration scope, or no-bulk-data-migration rule, this dated section and the continuation document govern. Security, human approval, and Development isolation rules remain in force.
