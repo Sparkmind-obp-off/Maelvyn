@@ -10,6 +10,16 @@ import AgentsPage from './pages/Agents'
 import AuditPage from './pages/Audit'
 import MembersPage from './pages/Members'
 import AcceptInvitePage from './pages/AcceptInvite'
+import GovernancePage from './pages/Governance'
+import PortfolioPage from './pages/Portfolio'
+import PlatformPage from './pages/Platform'
+import MePage from './pages/Me'
+import VentureGovernance from './pages/VentureGovernance'
+import VentureFinance from './pages/VentureFinance'
+import VentureRights from './pages/VentureRights'
+import VentureOps from './pages/VentureOps'
+import VentureMemory from './pages/VentureMemory'
+import VentureTeam from './pages/VentureTeam'
 
 function WorkspaceNav() {
   const { wid } = useParams()
@@ -18,12 +28,35 @@ function WorkspaceNav() {
   return (
     <nav aria-label="Workspace" className="mb-6 flex flex-wrap gap-1 border-b border-slate-800 pb-3">
       <NavLink end to={`/w/${wid}`} className={cls}>Ringkasan &amp; Venture</NavLink>
+      <NavLink to={`/w/${wid}/portfolio`} className={cls}>Portofolio</NavLink>
+      <NavLink to={`/w/${wid}/governance`} className={cls}>Governance</NavLink>
       <NavLink to={`/w/${wid}/members`} className={cls}>Anggota</NavLink>
       <NavLink to={`/w/${wid}/providers`} className={cls}>Provider &amp; Kill switch</NavLink>
       <NavLink to={`/w/${wid}/agents`} className={cls}>Registry Agen</NavLink>
       <NavLink to={`/w/${wid}/audit`} className={cls}>Audit</NavLink>
     </nav>
   )
+}
+
+function VentureNav() {
+  const { wid, vid } = useParams()
+  const cls = ({ isActive }: { isActive: boolean }) => `rounded-md px-3 py-1 text-xs ${isActive ? 'bg-sky-900/60 text-sky-100' : 'text-slate-400 hover:text-white'}`
+  const base = `/w/${wid}/v/${vid}`
+  return (
+    <nav aria-label="Venture" className="mb-6 flex flex-wrap gap-1">
+      <NavLink end to={base} className={cls}>Riset</NavLink>
+      <NavLink to={`${base}/governance`} className={cls}>Charter &amp; Lifecycle</NavLink>
+      <NavLink to={`${base}/team`} className={cls}>Tim</NavLink>
+      <NavLink to={`${base}/finance`} className={cls}>Keuangan</NavLink>
+      <NavLink to={`${base}/rights`} className={cls}>Kontribusi &amp; Hak</NavLink>
+      <NavLink to={`${base}/ops`} className={cls}>Operasi</NavLink>
+      <NavLink to={`${base}/memory`} className={cls}>Memori</NavLink>
+    </nav>
+  )
+}
+
+function V({ children }: { children: React.ReactNode }) {
+  return <Protected><WorkspaceNav /><VentureNav />{children}</Protected>
 }
 
 function WithNav({ children }: { children: React.ReactNode }) {
@@ -47,6 +80,7 @@ export default function App({ environment, identityInstance, dataPolicy }: { env
           <div className="flex items-center gap-3">
             <Show when="signed-in">
               <Link to="/workspaces" className="text-sm text-slate-300 hover:text-white">Workspace</Link>
+              <Link to="/me" className="text-sm text-slate-300 hover:text-white">Saya</Link>
               <UserButton />
             </Show>
             <Show when="signed-out">
@@ -65,7 +99,17 @@ export default function App({ environment, identityInstance, dataPolicy }: { env
           <Route path="/w/:wid/providers" element={<Protected><WithNav><ProvidersPage /></WithNav></Protected>} />
           <Route path="/w/:wid/agents" element={<Protected><WithNav><AgentsPage /></WithNav></Protected>} />
           <Route path="/w/:wid/audit" element={<Protected><WithNav><AuditPage /></WithNav></Protected>} />
-          <Route path="/w/:wid/v/:vid" element={<Protected><WithNav><VenturePage /></WithNav></Protected>} />
+          <Route path="/me" element={<Protected><MePage /></Protected>} />
+          <Route path="/platform" element={<Protected><PlatformPage /></Protected>} />
+          <Route path="/w/:wid/portfolio" element={<Protected><WithNav><PortfolioPage /></WithNav></Protected>} />
+          <Route path="/w/:wid/governance" element={<Protected><WithNav><GovernancePage /></WithNav></Protected>} />
+          <Route path="/w/:wid/v/:vid" element={<V><VenturePage /></V>} />
+          <Route path="/w/:wid/v/:vid/governance" element={<V><VentureGovernance /></V>} />
+          <Route path="/w/:wid/v/:vid/team" element={<V><VentureTeam /></V>} />
+          <Route path="/w/:wid/v/:vid/finance" element={<V><VentureFinance /></V>} />
+          <Route path="/w/:wid/v/:vid/rights" element={<V><VentureRights /></V>} />
+          <Route path="/w/:wid/v/:vid/ops" element={<V><VentureOps /></V>} />
+          <Route path="/w/:wid/v/:vid/memory" element={<V><VentureMemory /></V>} />
           <Route path="/w/:wid/research/:tid" element={<Protected><WithNav><ResearchPage /></WithNav></Protected>} />
           <Route path="*" element={<p className="text-slate-400">Halaman tidak ditemukan.</p>} />
         </Routes>

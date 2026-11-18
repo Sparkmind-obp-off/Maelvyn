@@ -29,6 +29,7 @@ export function createApi(getToken: TokenGetter) {
     get: <T,>(p: string) => request<T>('GET', p),
     post: <T,>(p: string, b?: unknown, h?: Record<string, string>) => request<T>('POST', p, b ?? {}, h),
     put: <T,>(p: string, b: unknown) => request<T>('PUT', p, b),
+    patch: <T,>(p: string, b: unknown) => request<T>('PATCH', p, b),
   }
 }
 
