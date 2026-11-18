@@ -170,3 +170,19 @@ Use the live application contract:
 Never put the Production secret key into GitHub, Genspark, prompts, ordinary Pages vars, browser configuration, logs or ChatGPT. Do not use a secret from another Clerk app. The Production instance currently has zero users as of the audit snapshot. The owner must personally sign in and complete the audited owner claim after secure bindings and recovery are verified.
 
 The existing E2E script is Development-only and refuses live keys. A separate Production-safe smoke test must be created with safeguards and must not automate the owner claim.
+
+
+## 13. Cloudflare Production project provisioned — 2026-11-18
+
+A dedicated Cloudflare Pages project has been created:
+- Project: `maelvyn-production`.
+- Project ID: `77cd5d42-5667-4ac4-9dbd-edb60c5ea249`.
+- Hostname: `https://maelvyn-production.pages.dev`.
+- R2 bucket: `maelvyn-production-private`, bound as `ARTIFACTS`.
+- Production vars: `APP_ENV=production`, Clerk Production issuer/JWKS, Production publishable key and authorized party `https://maelvyn-production.pages.dev`.
+- `fail_open=false` for preview and production; preview has no production variables.
+- No custom domains attached; no deployment yet.
+
+**D1 provisioning is blocked:** Cloudflare rejected creation of `maelvyn-production-db` because the account is at its 10-database limit (error 7406). Do not use `maelvyn-dev-db` or another venture's database. A currently empty-looking `test-permission-check-invalid` database exists but must not be deleted without explicit owner approval.
+
+**Still required:** add `CLERK_SECRET_KEY` as Cloudflare secret-text directly (never in chat/GitHub/Genspark); create or free a dedicated Production D1 slot; bind it as `DB`; apply migrations only after verifying the new database is empty and isolated; deploy and run smoke/E2E; owner personally signs in and claims owner; complete backup/restore and release gates. Root/www remain on the Development project until explicit cutover approval.
