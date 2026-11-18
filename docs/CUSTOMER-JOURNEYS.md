@@ -72,3 +72,16 @@ Operator reviews receipts, costs, margin, cash, payables, liabilities, budget va
 
 ## Public website journey
 Visitor understands what MAELVYN is/is not, reads principles and lifecycle, sees only approved public case studies, and submits a non-binding inquiry. Never publish private participant lists, cap tables, internal opportunities, balances, or unapproved venture claims.
+
+## Commerce customer and seller journeys
+
+### Buyer journey
+Discover listing → review seller and offer terms → checkout with the identified legal seller → payment confirmation → fulfillment → support/refund/dispute if needed → post-purchase follow-up.
+
+### Venture seller journey
+Register venture and legal seller → verify product rights → create versioned offer → publish to approved storefront/channel → receive order event → fulfill → reconcile provider settlement → review margin and customer feedback.
+
+### Partner journey
+Apply/receive approval → accept written channel and commission terms → receive scoped attribution link/code → view only own referrals and payable commissions → reconcile approved commission → offboard with access revocation.
+
+Every journey must disclose the responsible seller and support party. Customer consent and lawful data access must be checked before cross-channel marketing or sharing.
