@@ -182,3 +182,10 @@ Production release additionally requires domain ownership, Clerk Production, pro
 - Scrape.ly pricing: https://scrape.ly/pricing
 
 Pricing and quotas change. Re-check official sources on the date an integration is enabled.
+
+
+## Commerce and production stack extension
+
+The existing Cloudflare-first stack remains the target baseline. Commerce should be implemented as a modular domain within the current Worker/Hono application initially, with provider adapters for payments, delivery, shipping, and notifications. D1 remains the transactional source for the initial scope; private R2 is required for protected digital artifacts. Do not add a new database, queue, or service without a concrete workload and verified operational need.
+
+Environment isolation is mandatory: development Pages/Worker, D1, R2, and Clerk Development are separate from production equivalents. The currently attached root/www custom domains are not a production release while the Pages project is configured with development app settings. See `docs/DOMAIN-AND-ENVIRONMENT-STRATEGY.md`.
