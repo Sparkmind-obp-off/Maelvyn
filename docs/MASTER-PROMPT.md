@@ -353,3 +353,15 @@ When implementing:
 - Verify Google OAuth callback, token validation, owner bootstrap, no implicit membership, cross-venture isolation, recovery, backup/restore and rollback.
 - Do not attach root/www or announce public launch until release gates pass and the user explicitly approves cutover.
 - Never claim a feature is live based only on a prompt, configuration file or resource creation; attach test and live-state evidence.
+
+
+## 15. Mandatory Wrangler-only execution route — 2026-11-18
+
+For Genspark execution, use `docs/GENSPARK-WRANGLER-EXECUTION-MASTER-PROMPT.md` as the canonical task prompt. It supersedes older deployment workflow instructions.
+
+**Wrangler is mandatory.** Execute Production migration and deployment through:
+- `npm run db:migrate:production` only if the migration ledger is incomplete.
+- `npm run deploy:production` for the Pages deployment.
+- `npx wrangler pages secret put CLERK_SECRET_KEY --project-name maelvyn-production` for the Clerk Production secret, using its hidden interactive terminal prompt and owner-entered value.
+
+Do not deploy through CI/CD, GitHub Actions, Cloudflare Dashboard upload, direct Cloudflare API calls or other hosting. CI can run tests only. Do not place secrets in prompts, chat, files, source code, environment files or command arguments. If Genspark cannot provide a private interactive terminal for owner secret entry, stop and let the owner run that Wrangler command locally.
