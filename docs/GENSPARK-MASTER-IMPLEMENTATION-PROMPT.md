@@ -372,3 +372,23 @@ The existing Pages project `maelvyn-dev` is still Development-configured: `APP_E
 
 ### Non-negotiable stop conditions
 Stop without guessing if the Cloudflare session cannot create/configure the dedicated resources, the production Clerk key cannot be placed securely, the build cannot be proven, the owner cannot complete sign-in/claim, the schema migration/backup path is uncertain, or any release gate fails. Do not use another venture's resources or credentials. Do not change Clerk's live sign-up/MFA/bot settings without an explicit reviewed change and tested owner recovery path.
+
+
+---
+
+## 15. Mandatory Wrangler-only deployment override — 2026-11-18
+
+This section supersedes any earlier workflow instructions in this prompt that suggest CI/CD, GitHub Actions or Dashboard deployment.
+
+Read and follow `docs/GENSPARK-WRANGLER-EXECUTION-MASTER-PROMPT.md` as the single source of truth for execution. Wrangler CLI is mandatory for Production migration, secret installation and deployment.
+
+Required:
+- `npm run check` before deployment.
+- `npm run db:migrate:production` only if Production migration ledger is incomplete.
+- `npx wrangler pages secret put CLERK_SECRET_KEY --project-name maelvyn-production` with the owner entering the secret directly into the hidden interactive prompt.
+- `npx wrangler pages secret list --project-name maelvyn-production` to verify secret name only.
+- `npm run deploy:production` to deploy.
+- `npx wrangler pages deployment list --project-name maelvyn-production --environment production --json` to inspect deployment.
+- Live OAuth/JWT/owner/recovery/isolation/health/backup tests before marking Production Verified.
+
+Do not use GitHub Actions/CI as a deployment route, Cloudflare Dashboard uploads, direct Cloudflare API deployment, or another hosting provider. CI remains optional code verification only. Never expose or collect the Clerk Production secret in Genspark prompts, chat, logs, source, files or command arguments. If secret entry cannot be performed privately by the owner, stop and ask the owner to run the Wrangler command locally.
