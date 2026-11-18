@@ -167,3 +167,21 @@ Creating `maelvyn-production-db` was attempted and Cloudflare returned HTTP 403 
 - No deployment, migration, E2E, owner sign-in/claim or restore test completed.
 - R2 bucket exists and is bound, but the application has no R2 artifact implementation yet; do not advertise file delivery.
 - Root/www domain cutover remains intentionally untouched.
+
+
+## 12. Code hardening and CI evidence — 2026-11-18
+
+Implemented on `main`:
+- `server/identity/clerk.ts`: Production authorized-party validation now fails closed when the allowlist is empty, the JWT has no `azp`, or the `azp` is not an exact allowlisted origin. Development behavior remains compatible while still rejecting an explicitly unlisted origin.
+- `server/app.ts`: `/ready` now reports non-secret identity readiness flags for server-side Clerk secret presence, explicit authorized-party configuration, and environment-appropriate publishable-key prefix. Production readiness requires all three.
+- `tests/identity.test.ts`: tests cover missing allowlist, missing `azp`, origin mismatch, exact allowed origin, and development compatibility.
+- `tests/auth.test.ts`: tests cover production readiness with missing secret/allowlist and a test fixture with all required identity configuration.
+- `.github/workflows/ci.yml`: activated the verification workflow in the GitHub-recognized workflow directory. The prior `ops/github-workflows/ci.yml` remains as documentation/reference.
+
+GitHub Actions check run for latest audited commit `0aff275e1d86edba2e4dd60ada13499c91ed4d1f`:
+- Job: `verify`
+- Status: completed
+- Conclusion: **success**
+- Includes `npm ci`, typecheck, lint, Vitest and build.
+
+This is repository CI evidence only. It does not replace a deployed Production E2E test or a live owner bootstrap.
