@@ -137,3 +137,43 @@ The release owner must mark each gate PASS, FAIL, or NOT APPLICABLE with evidenc
 - [ ] Complete Clerk Production and domain verification.
 - [ ] Run end-to-end authentication, authorization, data-isolation, migration, backup, and rollback tests.
 - [ ] Cut over root/www only after all critical gates pass.
+
+
+## 13. Corrected live audit — 2026-11-18
+
+The MAELVYN Clerk Production instance is present and its custom domain is verified. This supersedes the earlier checklist statement that the MAELVYN Clerk application could not be identified.
+
+| Control | Verified result | Status |
+|---|---|---|
+| Clerk application | Maelvyn | <badge>Found</badge> |
+| Clerk Production instance | Exists | <badge>Found</badge> |
+| Clerk auth domain | `clerk.maelvyn.biz.id` | <badge color="success">Verified</badge> |
+| Accounts portal | `accounts.maelvyn.biz.id` | <badge color="success">Verified</badge> |
+| DNS / SSL / mail | Clerk reports complete | <badge color="success">Verified</badge> |
+| Google OAuth production credentials | Configured | <badge color="success">Configured</badge> |
+| Production users | 0 | <badge color="warning">Owner bootstrap pending</badge> |
+| Production Pages project | Not provisioned/verified | <badge color="warning">Blocked</badge> |
+| Current Pages root/www binding | Attached to `maelvyn-dev` with development auth settings | <badge color="danger">P0</badge> |
+| Production D1 | Not provisioned | <badge color="warning">Blocked</badge> |
+| MAELVYN-specific R2 | Not found in account bucket listing | <badge color="warning">Blocked if required</badge> |
+| Clerk Production secret bound to production Worker | Not verified; API redacts secret values | <badge color="warning">Blocked</badge> |
+
+**Release decision: NOT READY FOR PUBLIC PRODUCTION.** Clerk Production itself exists and its auth domain is verified, but the deployed MAELVYN web application still uses Development settings and the development D1 binding.
+
+### Security review items
+- Production sign-up mode is public; review against owner-only bootstrap and invitation policy.
+- Google OAuth is enabled; email and password authentication are disabled.
+- MFA is not enabled or required.
+- CAPTCHA/bot protection reports disabled.
+- Lockout is enabled (10 failed attempts / 60 minutes).
+- Maximum session lifetime is 7 days; inactivity timeout is disabled.
+- Terms/privacy URLs are not configured in Clerk.
+- Do not alter these settings until owner bootstrap/recovery is tested and a change is approved.
+
+### P0 execution plan
+- [ ] Create dedicated production Pages/Worker project, production D1, and MAELVYN-specific private R2 if needed.
+- [ ] Bind Clerk Production publishable key and issuer/JWKS to staging; securely set the Production secret key directly in Cloudflare.
+- [ ] Verify Google OAuth redirect/callback URL and owner bootstrap.
+- [ ] Confirm owner-only access and invitation authorization before changing sign-up mode.
+- [ ] Test MFA and bot protection configuration, session policy, authorization boundaries, audit trail, and recovery.
+- [ ] Move root/www domains only after staging acceptance and rollback plan.
