@@ -191,3 +191,10 @@ The current target architecture is documented in:
 The Production environment is isolated from Development. For Genspark execution, follow the canonical [Wrangler-only execution master prompt](docs/GENSPARK-WRANGLER-EXECUTION-MASTER-PROMPT.md). Production deployment, D1 migrations and Pages secret installation must use Cloudflare Wrangler CLI; GitHub Actions CI is validation-only and must never deploy Production.
 
 Current state and blockers: [Full repository and Production gap audit](docs/FULL-REPOSITORY-AND-PRODUCTION-GAP-AUDIT.md).
+
+
+### Production continuation
+
+| Document | Purpose |
+|---|---|
+| [Production Continuation Master System & Genspark Prompt](docs/PRODUCTION-CONTINUATION-MASTER-SYSTEM-AND-GENSPARK-PROMPT.md) | Authoritative clarification: reuse existing Production Pages/D1/R2, deploy the app with Wrangler, preserve the eight applied migrations, avoid bulk Development data migration, and follow security/domain release gates |
