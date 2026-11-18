@@ -227,3 +227,12 @@ All records require workspace/venture scoping where applicable, least-privilege 
 
 ### Required isolation tests
 Test cross-workspace and cross-venture reads, child-task privilege escalation, agent impersonation, memory leakage, tool allowlist bypass, duplicate side effects, retries after process loss, provider exhaustion, approval bypass, and kill-switch behavior.
+
+
+## Commerce domain boundaries
+
+Commerce is a bounded domain integrated with the Shared Economic Core. Keep registry, catalog, offer, store, channel, order, payment, fulfillment, customer, partner, finance, and audit responsibilities separate behind explicit service contracts.
+
+Use a modular monolith initially. Keep payment-provider adapters isolated from order logic; keep fulfillment adapters isolated from payment confirmation; keep the agent runtime outside transaction-critical code. A verified payment webhook may update payment state, but the order/fulfillment state machine must validate idempotency and legal business rules.
+
+Development and Production must use separate identity issuers, databases, storage, and secrets. Current observed domain/environment status and cutover requirements are recorded in `docs/DOMAIN-AND-ENVIRONMENT-STRATEGY.md`.
