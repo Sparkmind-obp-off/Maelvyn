@@ -1,0 +1,30 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  // MAELVYN isolated Production Pages environment.
+  // Keep all secret values in Cloudflare secret-text; never commit CLERK_SECRET_KEY.
+  "name": "maelvyn-production",
+  "compatibility_date": "2026-11-01",
+  "compatibility_flags": ["nodejs_compat"],
+  "pages_build_output_dir": "./dist",
+  "vars": {
+    "APP_ENV": "production",
+    "CLERK_ISSUER": "https://clerk.maelvyn.biz.id",
+    "CLERK_JWKS_URL": "https://clerk.maelvyn.biz.id/.well-known/jwks.json",
+    "CLERK_PUBLISHABLE_KEY": "pk_live_Y2xlcmsubWFlbHZ5bi5iaXouaWQk",
+    "CLERK_AUTHORIZED_PARTIES": "https://maelvyn-production.pages.dev"
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "maelvyn-production-db",
+      "database_id": "6b42d874-61c8-4ebe-8b79-de7432e094de",
+      "migrations_dir": "migrations"
+    }
+  ],
+  "r2_buckets": [
+    {
+      "binding": "ARTIFACTS",
+      "bucket_name": "maelvyn-production-private"
+    }
+  ]
+}
