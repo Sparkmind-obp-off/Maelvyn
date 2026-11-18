@@ -23,6 +23,7 @@ describe('health & readiness', () => {
       CLERK_PUBLISHABLE_KEY: 'pk_live_production',
       CLERK_SECRET_KEY: 'sk_live_test_fixture',
       CLERK_AUTHORIZED_PARTIES: 'https://app.maelvyn.biz.id',
+      ARTIFACTS: {} as never, // production readiness also requires the private R2 binding
     } })
     expect((await ready.call('GET', '/ready')).status).toBe(200)
   })

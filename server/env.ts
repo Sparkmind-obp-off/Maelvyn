@@ -1,8 +1,10 @@
-import type { D1Database } from '@cloudflare/workers-types'
+import type { D1Database, R2Bucket } from '@cloudflare/workers-types'
 
 /** Worker bindings. Secrets are only ever read server-side. */
 export interface Env {
   DB: D1Database
+  /** Private R2 bucket (Production only). Never public; accessed exclusively server-side. */
+  ARTIFACTS?: R2Bucket
   ASSETS?: { fetch: (req: Request) => Promise<Response> }
   APP_ENV: string
   SYSTEM_KILL_SWITCH?: string

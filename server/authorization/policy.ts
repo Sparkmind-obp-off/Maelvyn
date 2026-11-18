@@ -9,6 +9,7 @@ export type Action =
   | 'venture.create' | 'venture.read' | 'venture.manage' | 'research.create' | 'research.review'
   | 'governance.request' | 'governance.vote'
   | 'finance.read' | 'finance.draft' | 'finance.post' | 'rights.record' | 'memory.write'
+  | 'artifact.read' | 'artifact.write' | 'artifact.delete'
 
 /**
  * Workspace-level capability matrix. `workspace_admin` is held only by the Platform Owner
@@ -16,15 +17,15 @@ export type Action =
  */
 const ALL_ACTIONS: Action[] = ['workspace.read', 'workspace.audit.read', 'workspace.providers.manage', 'workspace.killswitch.manage', 'workspace.members.manage', 'workspace.access_review',
   'venture.create', 'venture.read', 'venture.manage', 'research.create', 'research.review', 'governance.request', 'governance.vote',
-  'finance.read', 'finance.draft', 'finance.post', 'rights.record', 'memory.write']
+  'finance.read', 'finance.draft', 'finance.post', 'rights.record', 'memory.write', 'artifact.read', 'artifact.write', 'artifact.delete']
 const WORKSPACE_ACTIONS: Record<WorkspaceRole, Action[]> = {
   workspace_admin: ALL_ACTIONS,
   governance_approver: ['workspace.read', 'workspace.audit.read', 'venture.create', 'venture.read', 'venture.manage', 'research.create', 'research.review',
-    'governance.request', 'governance.vote', 'finance.read', 'rights.record', 'memory.write'],
+    'governance.request', 'governance.vote', 'finance.read', 'rights.record', 'memory.write', 'artifact.read', 'artifact.write', 'artifact.delete'],
   venture_operator: ['workspace.read', 'venture.create', 'venture.read', 'venture.manage', 'research.create', 'research.review', 'governance.request',
-    'finance.read', 'finance.draft', 'rights.record', 'memory.write'],
-  finance_operator: ['workspace.read', 'venture.read', 'finance.read', 'finance.draft', 'finance.post', 'rights.record'],
-  viewer: ['workspace.read', 'venture.read'],
+    'finance.read', 'finance.draft', 'rights.record', 'memory.write', 'artifact.read', 'artifact.write', 'artifact.delete'],
+  finance_operator: ['workspace.read', 'venture.read', 'finance.read', 'finance.draft', 'finance.post', 'rights.record', 'artifact.read'],
+  viewer: ['workspace.read', 'venture.read', 'artifact.read'],
 }
 
 export const NON_ADMIN_ROLES = ['governance_approver', 'venture_operator', 'finance_operator', 'viewer'] as const

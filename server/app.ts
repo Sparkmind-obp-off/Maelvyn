@@ -14,6 +14,7 @@ import { registerOperationsRoutes } from './operations/routes'
 import { registerMemoryRoutes } from './memory/routes'
 import { registerPortfolioRoutes } from './portfolio/routes'
 import { registerMeRoutes } from './me/routes'
+import { registerArtifactDelivery, registerArtifactRoutes } from './artifacts/routes'
 import { AppError, errorBody, newId, nowIso, ok, redact, todayUtc } from './lib/http'
 import { rateLimit } from './lib/ratelimit'
 import { parseJson, principalOf } from './lib/request'
@@ -23,7 +24,7 @@ import { CreateResearchInput, createAndRunResearch, reviewResearch, ReviewInput,
 
 export type AppDeps = { verifier?: TokenVerifier; lookupProfile?: ProfileLookup; run?: RunDeps }
 
-const EXPECTED_MIGRATIONS = ['0001_initial.sql', '0002_agentic_foundation.sql', '0003_workspace_invitations.sql', '0004_platform_identity_boundaries.sql', '0005_governance.sql', '0006_finance_rights.sql', '0007_operations.sql', '0008_runtime_platform.sql']
+const EXPECTED_MIGRATIONS = ['0001_initial.sql', '0002_agentic_foundation.sql', '0003_workspace_invitations.sql', '0004_platform_identity_boundaries.sql', '0005_governance.sql', '0006_finance_rights.sql', '0007_operations.sql', '0008_runtime_platform.sql', '0009_private_artifacts.sql']
 
 export function createApp(deps: AppDeps = {}) {
   const verifier = deps.verifier ?? verifyClerkToken
@@ -61,6 +62,7 @@ export function createApp(deps: AppDeps = {}) {
       checks.schema = tables?.n === 3 ? 'ok' : 'missing_tables'
       checks.migrations = applied === null ? 'untracked' : EXPECTED_MIGRATIONS.every((m) => applied.includes(m)) ? 'ok' : `pending (${applied.length}/${EXPECTED_MIGRATIONS.length})`
     } catch { checks.database = 'error' }
+    checks.artifact_storage = c.env.ARTIFACTS ? 'configured' : 'not_configured'
     checks.identity = c.env.CLERK_ISSUER && c.env.CLERK_JWKS_URL ? 'configured' : 'not_configured'
     const production = c.env.APP_ENV === 'production'
     const authorizedParties = (c.env.CLERK_AUTHORIZED_PARTIES ?? '').split(',').map((s) => s.trim()).filter(Boolean)
@@ -76,7 +78,7 @@ export function createApp(deps: AppDeps = {}) {
       checks.publishable_key === 'configured'
     )
     // Production additionally requires a complete, tracked migration ledger.
-    const migrationsReady = !production || checks.migrations === 'ok'
+    const migrationsReady = !production || (checks.migrations === 'ok' && checks.artifact_storage === 'configured')
     const ready = checks.database === 'ok' && checks.schema === 'ok' && checks.identity === 'configured' && productionIdentityReady && migrationsReady
     return ok(c, { status: ready ? 'ready' : 'not_ready', checks }, ready ? 200 : 503)
   })
@@ -87,6 +89,9 @@ export function createApp(deps: AppDeps = {}) {
     identity_instance: c.env.CLERK_PUBLISHABLE_KEY?.startsWith('pk_test_') ? 'clerk-development' : c.env.CLERK_PUBLISHABLE_KEY ? 'clerk-production' : 'none',
     data_policy: c.env.APP_ENV === 'production' ? 'production' : 'synthetic-only',
   }))
+
+  // Single-use delivery tokens are their own credential (re-authorized at redemption); no bearer header.
+  registerArtifactDelivery(app)
 
   // ---- Authentication (everything below) ------------------------------------
   app.use('*', async (c, next) => {
@@ -118,6 +123,7 @@ export function createApp(deps: AppDeps = {}) {
   registerMemoryRoutes(app)
   registerPortfolioRoutes(app)
   registerMeRoutes(app)
+  registerArtifactRoutes(app)
 
   // ---- Workspaces ------------------------------------------------------------
   app.get('/workspaces', async (c) => {
