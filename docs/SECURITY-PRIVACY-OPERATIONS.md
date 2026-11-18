@@ -46,3 +46,11 @@ Deployment/rollback; migration; backup/restore; access review/offboarding; incid
 
 ## Production gate
 Do not store real participant agreements, identity data, or live finance records until privacy/terms are reviewed, responsibilities understood, access/audit tests pass, restore is demonstrated, production resources are isolated, incident/offboarding procedures exist, and legal/accounting review is complete.
+
+## Commerce security and privacy extension
+
+Commerce introduces customer, order, payment metadata, partner, and fulfillment data. Apply data minimization and purpose limitation. Separate public listing fields from private customer/order records. Record consent and marketing preference where required. Restrict customer exports and support access by seller/venture scope.
+
+Never store full card credentials or payment secrets. Verify provider webhook signatures, reject replayed events, and use idempotency. Keep payment status and accounting posting separate. Protect digital downloads with private object storage and short-lived access. Do not expose private R2 objects through public buckets.
+
+For each offer document the legal seller, controller/processor responsibilities, commercial rights, refund/support policy, retention period, and incident contact. Cross-venture analytics should use approved aggregates and be assessed for re-identification risk.
