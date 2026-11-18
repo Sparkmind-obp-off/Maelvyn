@@ -185,3 +185,14 @@ GitHub Actions check run for latest audited commit `0aff275e1d86edba2e4dd60ada13
 - Includes `npm ci`, typecheck, lint, Vitest and build.
 
 This is repository CI evidence only. It does not replace a deployed Production E2E test or a live owner bootstrap.
+
+
+## 13. Pages source integration note
+
+The `maelvyn-production` Pages project was created through Cloudflare's Direct Upload project flow. Its build command/output directory are configured, but it is not connected to GitHub source control. Cloudflare rejected an in-place `source` patch with error 8000069 because Direct Upload projects cannot be converted to Git-connected projects. No deployment was created.
+
+If Git-connected automatic deployment is required, the safe choices are:
+- Recreate the still-empty project using the GitHub source integration, after confirming Cloudflare's GitHub authorization; or
+- Keep this isolated project as Direct Upload and deploy a verified build artifact manually through Wrangler.
+
+Do not delete/recreate until the D1 blocker and deployment method are decided. Automatic production and preview deployments are not enabled.
