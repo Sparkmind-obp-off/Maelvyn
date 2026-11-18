@@ -48,3 +48,17 @@ Every module needs clear empty, loading, permission-denied, conflict, retry, and
 
 ## UX acceptance checklist
 New invitee understands and can decline; opportunity draft cannot create venture; contributor distinguishes role/contribution/compensation/ownership; approver sees impact; finance distinguishes cash/profit/liability/reserve/forecast; access denial does not leak data; every high-impact action is confirmed and audited.
+
+## Commerce UI extension
+
+Add the following role-aware surfaces when the commerce MVP is implemented:
+- Marketplace discovery and category navigation.
+- Venture storefront and product detail.
+- Seller/venture product catalogue.
+- Order and fulfillment workspace.
+- Payment/reconciliation status.
+- Customer support and refund queue.
+- Partner attribution and commission view.
+- Commerce analytics by venture and channel.
+
+Always display the responsible seller, currency, offer terms, fulfillment expectation, and support route before checkout. Distinguish pending payment, paid, fulfilled, refunded, disputed, and cancelled states. Do not expose another venture's customer, order, financial, or partner data in shared dashboards.
