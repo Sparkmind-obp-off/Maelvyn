@@ -52,6 +52,9 @@ Agents may research, plan, coordinate, prepare, and execute only within explicit
 | [User Journeys & Service Blueprint](docs/CUSTOMER-JOURNEYS.md) | Participant, venture, finance, approval, and offboarding journeys |
 | [UI/UX & Design System](docs/UX-UI-SYSTEM.md) | App shell, dashboard, module patterns, accessibility, content style |
 | [Venture Operating Framework](docs/VENTURE-OPERATING-FRAMEWORK.md) | Venture lifecycle, portfolio model, and operating procedures |
+| [Ecosystem Structure & Hierarchy](docs/ECOSYSTEM-STRUCTURE-AND-HIERARCHY.md) | Canonical hierarchy across Core, OS, Intelligence, Studio, Ventures, Products, Commerce, Shared Services, and Finance |
+| [Dynamic Product Portfolio & Taxonomy](docs/DYNAMIC-PRODUCT-PORTFOLIO-AND-TAXONOMY.md) | Evidence-led product taxonomy, lifecycle, SKU versioning, pricing, fulfillment, and category governance |
+| [Market Evidence & Opportunity Register](docs/MARKET-EVIDENCE-AND-OPPORTUNITY-REGISTER.md) | Traceable A–E market evidence and initial opportunity hypotheses |
 | [90-Day Foundation Roadmap](docs/90-DAY-ROADMAP.md) | Staged, evidence-based foundation and agentic OS implementation plan |
 
 ### Engineering and operations
@@ -79,11 +82,11 @@ The browser client now targets Clerk Core 3 via `@clerk/react` (Node.js >=20.9.0
 | Development URL | https://maelvyn-dev.pages.dev (Cloudflare Pages, user-owned account) |
 | Identity | Clerk Development and Production instances exist. Production auth domain is verified; application deployment is still Development-configured and not production-ready |
 | Database | D1 `maelvyn-dev-db` (development). Migrations `0001`–`0008` applied (remote, 2026-11-18; pre-migration export kept outside the repo) |
-| Production | **Not created and not deployed** |
+| Production | **Deployed / partially verified** on `maelvyn-production`; Clerk server secret is missing, so user sign-in and authenticated workflows remain blocked. See [Production verification](docs/MAELVYN-PRODUCTION-DEPLOYMENT-VERIFICATION.md). |
 | Costs incurred | None that were intentionally triggered. Health checks call free read-only endpoints only |
 
 ### What works today
-Verified by 63 automated tests (real migrations on an in-memory D1 shim), typecheck, lint, build, and a live browser E2E against the dev deployment.
+The latest repository verification reports 94 automated tests passing across 9 test files, plus typecheck, lint, and build. Production-specific end-user flows remain blocked pending Clerk secret installation; see the dated Production verification report.
 
 - **Identity boundary (migration 0004).** A singleton `platform_owner` is bound to `sparkmind.support@gmail.com`. The claim re-reads the primary email from Clerk's Backend API, requires it to be verified, and stores the stable Clerk subject.
   - Signup and first login create an account only, with no membership.
