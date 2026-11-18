@@ -120,3 +120,35 @@ A read-only listing of the currently connected Clerk workspaces returned applica
 The MAELVYN development deployment currently documents/uses the development issuer `https://organic-stinkbug-2628.clerk.accounts.dev`, but the corresponding Clerk application ID was not established from the connected workspace listing. This is an account-binding gap, not permission to use an unrelated app.
 
 **Required:** identify the exact Clerk workspace/application that owns the MAELVYN development instance. If it is not accessible through the current connection, connect the correct workspace before creating or configuring Production. Do not create a duplicate application in an unconfirmed workspace.
+
+
+## 11. Verified Clerk Production state — 2026-11-18 (supersedes sections 9–10)
+
+A read-only audit through the MAELVYN-specific Clerk connection found the correct application:
+- Application: `Maelvyn` (`app_3MGax1kdfbzSasqHwUlBO9E1DJ3`).
+- Development instance: `ins_3MGawyTIeUoXm52k4cQHMQ5YCrB`.
+- Production instance: `ins_3MGb1IDHmPZvgywrCn50QjHDaW4`.
+- Production domain: `maelvyn.biz.id`.
+- Frontend API: `https://clerk.maelvyn.biz.id`.
+- Accounts portal: `https://accounts.maelvyn.biz.id`.
+- Clerk reports domain verification `complete`; all five required CNAME records, SSL, and mail status report complete.
+- Google OAuth is enabled and its production credentials are configured.
+- Production user count at audit time: 0.
+
+### Production configuration findings
+
+The Production instance currently mirrors a development-oriented authentication posture:
+- Sign-up mode: `public`.
+- Google OAuth enabled.
+- Email and password sign-in disabled.
+- MFA is not enabled or required.
+- CAPTCHA/bot protection reports disabled.
+- User lockout is enabled (10 attempts / 60 minutes).
+- Maximum session lifetime is enabled (7 days); inactivity timeout is disabled.
+- Legal consent links are not configured in Clerk.
+
+No Clerk configuration was changed during this audit. In particular, do not switch sign-up to restricted or enforce MFA until the owner bootstrap path and recovery access have been tested. Public sign-up is a security decision that must be aligned with MAELVYN's owner-only/member-invite policy before launch.
+
+The Production publishable key is available from Clerk metadata. The Production secret key is not exposed by the connected read API and must never be copied into chat, repository files, or browser code. Add it directly as a Cloudflare secret through the authenticated Cloudflare dashboard or a secure secret-management path.
+
+**Clerk status:** Production instance exists and its auth domain is verified. This does not mean the MAELVYN web application is already using it.
