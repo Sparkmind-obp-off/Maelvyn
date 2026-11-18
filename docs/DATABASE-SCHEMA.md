@@ -55,3 +55,19 @@ The service should write the posting status and audit event in the same atomic d
 ## Migration
 
 The initial SQL migration is at `migrations/0001_initial.sql`. It creates structure only; it contains no real participant, ownership, or financial data.
+
+
+## Commerce schema extension (proposed; not yet migrated)
+
+Required commerce entities as implementation progresses:
+- `legal_entities`, `venture_seller_assignments`
+- `products`, `product_versions`, `product_rights`
+- `offers`, `offer_prices`, `offer_terms_versions`
+- `stores`, `channels`, `listings`
+- `customers`, `customer_consents`
+- `orders`, `order_items`, `order_events`
+- `payments`, `payment_events`, `settlements`, `reconciliations`
+- `fulfillment_jobs`, `deliveries`, `refunds`, `disputes`
+- `partners`, `attributions`, `commission_rules`, `commission_entries`
+
+Every record must be scoped to workspace and venture, and where applicable seller legal entity. Purchased offer terms must be snapshotted; event and posted-ledger records are append-only. This is a target model, not an applied migration. Add schema only through reviewed numbered migrations, tested in development with backup and rollback plans.
