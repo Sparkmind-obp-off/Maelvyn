@@ -110,3 +110,30 @@ For every release, record:
 The release owner must mark each gate PASS, FAIL, or NOT APPLICABLE with evidence. Any failed critical security, identity, legal, financial, data-isolation, or recovery gate blocks public production launch.
 
 **No production claim without production evidence.**
+
+
+## 11. Observed MAELVYN state — 2026-11-18
+
+| Item | Observed state | Release implication |
+|---|---|---|
+| Cloudflare zone | `maelvyn.biz.id` is active | Domain zone exists; not sufficient for app production |
+| Pages project | `maelvyn-dev` | Development project |
+| Custom domains | Root and www are attached to `maelvyn-dev` | Must be cut over to a dedicated production project before public launch |
+| Pages environment | Deployment target named production | Platform target label only |
+| Application environment | `APP_ENV=development` | Development-configured |
+| Clerk | Development issuer and test publishable key | Not production identity |
+| Database | `maelvyn-dev-db` | Must not be used for production |
+| Production D1/R2 | Not verified for MAELVYN | Blocked |
+| MAELVYN Clerk Production app | Not identified in connected Clerk workspaces | Blocked |
+
+**Current release decision: NOT PRODUCTION-READY.** The domain is active and attached, but it currently points to a development-configured Pages project. Treat the custom domain as a development exposure until a separate production environment is provisioned and verified.
+
+## 12. Immediate P0 remediation
+
+- [ ] Decide whether to temporarily restrict or detach root/www from `maelvyn-dev` while the production project is prepared.
+- [ ] Identify the MAELVYN Clerk application in the correct Clerk workspace; do not reuse Oltavyn, Overlune, or another project's app.
+- [ ] Provision separate production D1 and private R2 resources.
+- [ ] Build and deploy the dedicated production project to a staging hostname.
+- [ ] Complete Clerk Production and domain verification.
+- [ ] Run end-to-end authentication, authorization, data-isolation, migration, backup, and rollback tests.
+- [ ] Cut over root/www only after all critical gates pass.
