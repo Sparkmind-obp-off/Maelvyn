@@ -335,3 +335,21 @@ Always identify the legal seller, venture, rights basis, fulfillment owner, pric
 For production work, inspect live repository and provider state first. Keep Development and Production identity, databases, storage, secrets, and deployment resources separate. Do not create an irreversible Clerk Production instance, change DNS, migrate production data, or switch live keys without verified application binding and explicit authorization. Follow `docs/CLERK-PRODUCTION-RUNBOOK.md` and `docs/PRODUCTION-READINESS-CHECKLIST.md`.
 
 Report each change as planned, committed, tested, deployed, or production-verified; never collapse these states.
+
+
+## 14. Verified implementation and Clerk Production update — 2026-11-18
+
+Before acting on earlier environment statements, read `docs/FULL-REPOSITORY-AND-PRODUCTION-GAP-AUDIT.md`. This audit supersedes any older statement that MAELVYN Clerk Production does not exist.
+
+Clerk Production instance and the `clerk.maelvyn.biz.id` auth domain are already verified. However, the running MAELVYN Pages application still uses Development Clerk bindings and the development D1 database. Therefore, Clerk Production exists but the MAELVYN app is not yet Production-live.
+
+When implementing:
+- Preserve `maelvyn-dev` and its synthetic data; do not repoint it.
+- Use separate `maelvyn-production` Pages project, `maelvyn-production-db`, and `maelvyn-production-private` R2 bucket.
+- Use the verified MAELVYN Clerk Production instance only.
+- Read the actual application contract: frontend obtains `CLERK_PUBLISHABLE_KEY` from `/api/v1/config`; backend reads `CLERK_ISSUER`, `CLERK_JWKS_URL`, `CLERK_AUTHORIZED_PARTIES` and server-only `CLERK_SECRET_KEY`.
+- Put the Production secret key only in Cloudflare secret storage. Never request it in chat or write it into GitHub/Genspark.
+- Add fail-closed Production authorized-party validation and dedicated Production E2E tests.
+- Verify Google OAuth callback, token validation, owner bootstrap, no implicit membership, cross-venture isolation, recovery, backup/restore and rollback.
+- Do not attach root/www or announce public launch until release gates pass and the user explicitly approves cutover.
+- Never claim a feature is live based only on a prompt, configuration file or resource creation; attach test and live-state evidence.
