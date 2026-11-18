@@ -77,7 +77,7 @@ The browser client now targets Clerk Core 3 via `@clerk/react` (Node.js >=20.9.0
 | Item | Status |
 |---|---|
 | Development URL | https://maelvyn-dev.pages.dev (Cloudflare Pages, user-owned account) |
-| Identity | Clerk **Development** instance only. Synthetic data only. Clerk Production is **blocked** until domain ownership and release gates are met |
+| Identity | Clerk Development and Production instances exist. Production auth domain is verified; application deployment is still Development-configured and not production-ready |
 | Database | D1 `maelvyn-dev-db` (development). Migrations `0001`–`0008` applied (remote, 2026-11-18; pre-migration export kept outside the repo) |
 | Production | **Not created and not deployed** |
 | Costs incurred | None that were intentionally triggered. Health checks call free read-only endpoints only |
@@ -171,7 +171,7 @@ Material changes to governance, ownership principles, capital rules, participant
 | [Genspark Master Implementation Prompt](docs/GENSPARK-MASTER-IMPLEMENTATION-PROMPT.md) | Copy-ready instruction for Genspark to inspect and implement the repository |
 | [Implementation Foundation Plan](docs/IMPLEMENTATION-FOUNDATION-PLAN.md) | Staged build sequence and first milestone acceptance criteria |
 
-The initial stack decision supersedes earlier provider-selection language where there is a conflict. Clerk is selected; Development is for synthetic development only, and Production remains blocked until the domain and release gates are ready.
+The initial stack decision supersedes earlier provider-selection language where there is a conflict. Clerk is selected. The MAELVYN Production instance and auth domain are verified; the web application remains on Development bindings until a separate production deployment is prepared.
 
 ## Commerce and production architecture upgrade
 
@@ -183,4 +183,4 @@ The current target architecture is documented in:
 - [Production Readiness Checklist](docs/PRODUCTION-READINESS-CHECKLIST.md)
 - [Architecture Decision Register](docs/ARCHITECTURE-DECISIONS.md)
 
-**Important production warning (2026-11-18):** Cloudflare reports the `maelvyn.biz.id` zone as active and the root/www hostnames attached to `maelvyn-dev`. That project's current environment is configured with `APP_ENV=development`, Clerk Development credentials/issuer, and `maelvyn-dev-db`. Do not treat this custom-domain binding as a production release. Keep production launch blocked until a separate production identity, database, storage, secrets, and deployment have been verified and the domain is cut over safely.
+**Important production warning (2026-11-18):** The MAELVYN Clerk Production instance already exists; its custom auth domain, DNS, SSL, mail, and Google OAuth configuration are verified. However, `maelvyn.biz.id` and `www.maelvyn.biz.id` still point to Pages project `maelvyn-dev`, whose `APP_ENV`, Clerk issuer/JWKS, publishable key, and D1 binding are Development. A separate production Pages/Worker deployment, D1, MAELVYN-specific private R2 (if required), and securely bound Clerk Production secret are still needed. Public production remains blocked until staging tests and safe domain cutover.
