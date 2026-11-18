@@ -149,3 +149,12 @@ As of 2026-11-17, docs/FINAL-STACK-DECISION.md is the authoritative decision and
 - Source/deployment: GitHub + Cloudflare.
 
 All providers must have typed contracts, disabled/unconfigured states, mocks, cost/quota enforcement, provenance, and kill switches. Real provider calls are enabled selectively. No paid actor, API plan, billing, production deployment, or production identity activation is implied by this architecture decision.
+
+
+## Commerce provider strategy
+
+Register payment gateways, shipping providers, email/SMS services, analytics, AI providers, and marketplace connectors in the Provider Registry. Record capability, legal entity/account requirement, pricing, quotas, commercial-use terms, data handling, webhook support, SLA, fallback, and venture authorization.
+
+Payment providers are adapters, not the source of legal authority or accounting truth. Verify webhook signatures, use idempotency keys, retain provider event IDs, and reconcile settlements. Never store raw card data. Do not enable live payment mode or payout/split-settlement functionality before merchant eligibility, contracts, fees, legal roles, and test evidence are verified.
+
+Clerk Development and Production are separate identity environments. Use `docs/CLERK-PRODUCTION-RUNBOOK.md` for the production process.
