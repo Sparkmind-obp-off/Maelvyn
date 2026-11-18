@@ -66,7 +66,14 @@ Agents may research, plan, coordinate, prepare, and execute only within explicit
 | [Full-Stack Implementation Blueprint](docs/FULL-STACK-IMPLEMENTATION.md) | Runtime, repository layout, agentic backend modules, tests, and build sequence |
 | [Database Schema](docs/DATABASE-SCHEMA.md) | Initial relational domain model and data integrity rules |
 | [API Contract](docs/API-CONTRACT.md) | MVP endpoints, approval states, permissions, and finance posting rules |
-| [Security, Privacy & Operations](docs/SECURITY-PRIVACY-OPERATIONS.md) | Data classification, access, privacy, audit, incident, and backup controls |\n| [Commerce OS Master Architecture](docs/COMMERCE-OS-MASTER-ARCHITECTURE.md) | Hybrid marketplace, independent storefronts, partner distribution, commerce modules, finance, and agentic controls |\n| [Legal Entity & Operating Model](docs/LEGAL-ENTITY-AND-OPERATING-MODEL.md) | Staged legal structure, operating-company boundaries, entity verification, and restructuring triggers |\n| [Domain & Environment Strategy](docs/DOMAIN-AND-ENVIRONMENT-STRATEGY.md) | Domain map, development/production isolation, DNS, Clerk, and Cloudflare release boundaries |\n| [Clerk Production Runbook](docs/CLERK-PRODUCTION-RUNBOOK.md) | MAELVYN-specific Clerk production prerequisites, provisioning, verification, and rollback |\n| [Production Readiness Checklist](docs/PRODUCTION-READINESS-CHECKLIST.md) | Evidence-based release gates for identity, infrastructure, security, finance, and commerce |\n| [Architecture Decision Register](docs/ARCHITECTURE-DECISIONS.md) | Versioned architecture decisions and unresolved implementation questions |
+| [Security, Privacy & Operations](docs/SECURITY-PRIVACY-OPERATIONS.md) | Data classification, access, privacy, audit, incident, and backup controls |
+| [Commerce OS Master Architecture](docs/COMMERCE-OS-MASTER-ARCHITECTURE.md) | Hybrid marketplace, independent storefronts, partner distribution, commerce modules, finance, and agentic controls |
+| [Legal Entity & Operating Model](docs/LEGAL-ENTITY-AND-OPERATING-MODEL.md) | Staged legal structure, operating-company boundaries, entity verification, and restructuring triggers |
+| [Domain & Environment Strategy](docs/DOMAIN-AND-ENVIRONMENT-STRATEGY.md) | Domain map, development/production isolation, DNS, Clerk, and Cloudflare release boundaries |
+| [Clerk Production Runbook](docs/CLERK-PRODUCTION-RUNBOOK.md) | MAELVYN-specific Clerk production prerequisites, provisioning, verification, and rollback |
+| [Production Readiness Checklist](docs/PRODUCTION-READINESS-CHECKLIST.md) | Evidence-based release gates for identity, infrastructure, security, finance, and commerce |
+| [Architecture Decision Register](docs/ARCHITECTURE-DECISIONS.md) | Versioned architecture decisions and unresolved implementation questions |
+| [Production Deployment Verification](docs/MAELVYN-PRODUCTION-DEPLOYMENT-VERIFICATION.md) | Live deployment evidence, verified surfaces, and remaining authentication blocker |
 | [Initial SQL Migration](migrations/0001_initial.sql) | D1/SQLite schema baseline; structure only, no participant or financial data |
 
 ## Authentication SDK upgrade
