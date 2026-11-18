@@ -196,3 +196,24 @@ If Git-connected automatic deployment is required, the safe choices are:
 - Keep this isolated project as Direct Upload and deploy a verified build artifact manually through Wrangler.
 
 Do not delete/recreate until the D1 blocker and deployment method are decided. Automatic production and preview deployments are not enabled.
+
+
+## 14. Production D1 provisioned and migrations applied — 2026-11-18
+
+The owner explicitly approved creating the MAELVYN Production D1 without deleting the Development database. No existing D1 database was deleted.
+
+- Production D1: `maelvyn-production-db`.
+- UUID: `6b42d874-61c8-4ebe-8b79-de7432e094de`.
+- Location: APAC.
+- Cloudflare Pages Production binding: `DB` → this exact UUID.
+- Applied migrations in order: `0001_initial.sql` through `0008_runtime_platform.sql`.
+- Created and verified migration ledger `d1_migrations`; all eight migrations recorded as applied.
+- Verified schema: 59 tables including Cloudflare internal `_cf_KV`; 58 application/migration tables including migration ledger.
+- Verified initial data state: workspaces 0, people 0, ventures 0, workspace_members 0, venture_members 0. Two `account_policies` rows exist as intentionally seeded by migration 0004 for the two owner-controlled accounts.
+- Production Pages project now has `APP_ENV=production`, Clerk Production issuer/JWKS/live publishable key, exact allowed party `https://maelvyn-production.pages.dev`, `DB` binding and `ARTIFACTS` R2 binding.
+- Preview environment has no Production vars or D1/R2 bindings; `fail_open=false` for both environments.
+- Added `wrangler.production.jsonc` and package scripts `db:migrate:production` and `deploy:production`.
+
+**Existing Development database preserved:** `maelvyn-dev-db`, UUID `ad21e923-f1f2-4a77-b5f7-d9b85afe217b`. No deletion, rename, migration or binding change was performed to it.
+
+Still blocked: Production Clerk secret-text injection, deployment source/deploy process, Production E2E and owner sign-in/claim, R2 application integration, restore test, legal review and domain cutover. No deployment exists yet.
