@@ -186,3 +186,10 @@ The 90-day plan remains evidence-led and begins only when authorized resources a
 **Gate:** no confidential venture data is exposed outside its approved scope.
 
 Roadmap completion is measured by verified acceptance criteria, not by the number of agents or integrations created.
+
+
+## Commerce and production release track (2026-11-18)
+
+Commerce implementation follows `docs/COMMERCE-OS-MASTER-ARCHITECTURE.md`. Start with one venture and one offer; prove order → payment confirmation → fulfillment → customer support → reconciliation before adding the central marketplace or partner distribution.
+
+Production release is governed by `docs/PRODUCTION-READINESS-CHECKLIST.md`. The current custom domain is attached to a Pages project configured with Development app settings, so root/www must not be treated as a production launch. A separate production identity, D1, storage, secrets, and deployment must be verified before domain cutover.
