@@ -62,7 +62,20 @@ export function createApp(deps: AppDeps = {}) {
       checks.migrations = applied === null ? 'untracked' : EXPECTED_MIGRATIONS.every((m) => applied.includes(m)) ? 'ok' : `pending (${applied.length}/${EXPECTED_MIGRATIONS.length})`
     } catch { checks.database = 'error' }
     checks.identity = c.env.CLERK_ISSUER && c.env.CLERK_JWKS_URL ? 'configured' : 'not_configured'
-    const ready = checks.database === 'ok' && checks.schema === 'ok' && checks.identity === 'configured'
+    const production = c.env.APP_ENV === 'production'
+    const authorizedParties = (c.env.CLERK_AUTHORIZED_PARTIES ?? '').split(',').map((s) => s.trim()).filter(Boolean)
+    checks.identity_secret = c.env.CLERK_SECRET_KEY ? 'configured' : 'not_configured'
+    checks.authorized_parties = authorizedParties.length > 0 ? 'configured' : 'not_configured'
+    checks.publishable_key = !c.env.CLERK_PUBLISHABLE_KEY ? 'not_configured'
+      : production && !c.env.CLERK_PUBLISHABLE_KEY.startsWith('pk_live_') ? 'invalid_for_production'
+      : !production && c.env.CLERK_PUBLISHABLE_KEY.startsWith('pk_live_') ? 'invalid_for_development'
+      : 'configured'
+    const productionIdentityReady = !production || (
+      checks.identity_secret === 'configured' &&
+      checks.authorized_parties === 'configured' &&
+      checks.publishable_key === 'configured'
+    )
+    const ready = checks.database === 'ok' && checks.schema === 'ok' && checks.identity === 'configured' && productionIdentityReady
     return ok(c, { status: ready ? 'ready' : 'not_ready', checks }, ready ? 200 : 503)
   })
 
