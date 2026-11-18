@@ -10,6 +10,17 @@ export type ProfileLookup = (subject: string) => Promise<IdentityProfile | null>
 
 const jwksCache = new Map<string, ReturnType<typeof createRemoteJWKSet>>()
 
+/** Production must have a non-empty explicit authorized-party allowlist and a matching azp claim. */
+export function assertAuthorizedParty(azp: string | undefined, env: Pick<Env, 'APP_ENV' | 'CLERK_AUTHORIZED_PARTIES'>): void {
+  const allowed = (env.CLERK_AUTHORIZED_PARTIES ?? '').split(',').map((s) => s.trim()).filter(Boolean)
+  if (env.APP_ENV === 'production' && (allowed.length === 0 || !azp || !allowed.includes(azp))) {
+    throw new AppError('UNAUTHENTICATED', 'Session token was issued for an unauthorized origin.')
+  }
+  if (azp && allowed.length > 0 && !allowed.includes(azp)) {
+    throw new AppError('UNAUTHENTICATED', 'Session token was issued for an unauthorized origin.')
+  }
+}
+
 /**
  * Verifies a Clerk session JWT server-side: signature (RS256 via JWKS), issuer, exp/nbf, and `azp`
  * against the authorized-party allowlist. A valid session proves identity only — it grants no access.
@@ -31,8 +42,7 @@ export const verifyClerkToken: TokenVerifier = async (token, env) => {
     throw new AppError('UNAUTHENTICATED', 'Session token is invalid or expired.')
   }
   const azp = typeof payload.azp === 'string' ? payload.azp : undefined
-  const allowed = (env.CLERK_AUTHORIZED_PARTIES ?? '').split(',').map((s) => s.trim()).filter(Boolean)
-  if (azp && allowed.length > 0 && !allowed.includes(azp)) throw new AppError('UNAUTHENTICATED', 'Session token was issued for an unauthorized origin.')
+  assertAuthorizedParty(azp, env)
   if (!payload.sub) throw new AppError('UNAUTHENTICATED', 'Session token has no subject.')
   return { provider: 'clerk', subject: payload.sub, sessionId: typeof payload.sid === 'string' ? payload.sid : undefined }
 }
