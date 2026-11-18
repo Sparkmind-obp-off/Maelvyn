@@ -111,3 +111,12 @@ If production authentication fails:
 **Clerk Production: BLOCKED / NOT VERIFIED.**
 
 The repository can be prepared for production, but production identity must not be claimed active until the MAELVYN application is bound to the correct Clerk workspace, production instance and domain are verified, and the end-to-end release checklist passes.
+
+
+## 10. Connected Clerk workspace inspection — 2026-11-18
+
+A read-only listing of the currently connected Clerk workspaces returned applications associated with other project names (including Oltavyn and Overlune in one workspace, and Rnnerhos.1 in another). No MAELVYN-named application was present in those returned lists.
+
+The MAELVYN development deployment currently documents/uses the development issuer `https://organic-stinkbug-2628.clerk.accounts.dev`, but the corresponding Clerk application ID was not established from the connected workspace listing. This is an account-binding gap, not permission to use an unrelated app.
+
+**Required:** identify the exact Clerk workspace/application that owns the MAELVYN development instance. If it is not accessible through the current connection, connect the correct workspace before creating or configuring Production. Do not create a duplicate application in an unconfirmed workspace.
