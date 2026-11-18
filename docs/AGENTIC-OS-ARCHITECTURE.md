@@ -151,3 +151,12 @@ All records are venture-scoped where applicable. Audit events are append-only. F
 5. **Production readiness:** security review, privacy/terms review, restore test, evaluation thresholds, operational owner, rollback, and legal review where applicable.
 
 This architecture is a target specification. It does not mean any agent runtime, provider, account, paid resource, or production deployment has been provisioned.
+
+
+## Commerce agent team extension
+
+Commerce agents operate within the commerce domain contracts in `docs/COMMERCE-OS-MASTER-ARCHITECTURE.md`. Add specialist roles for catalogue enrichment, offer QA, customer support drafting, fulfillment coordination, payment-event monitoring, reconciliation analysis, partner attribution review, and commerce performance intelligence.
+
+Agents may prepare product copy, classify listings, summarize demand, draft campaigns, and flag reconciliation exceptions. They cannot independently set the legal seller, assert product/IP ownership, alter payout destinations, authorize refunds above a narrow pre-approved threshold, sign contracts, or move funds. Public publication and material price/policy changes require the configured human approval.
+
+The order/payment/ledger state machines remain deterministic application services. An agent may request a permitted transition; it cannot fabricate a payment confirmation or bypass webhook verification.
