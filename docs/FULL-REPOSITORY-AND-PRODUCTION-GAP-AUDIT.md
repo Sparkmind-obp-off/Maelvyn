@@ -217,3 +217,17 @@ The owner explicitly approved creating the MAELVYN Production D1 without deletin
 **Existing Development database preserved:** `maelvyn-dev-db`, UUID `ad21e923-f1f2-4a77-b5f7-d9b85afe217b`. No deletion, rename, migration or binding change was performed to it.
 
 Still blocked: Production Clerk secret-text injection, deployment source/deploy process, Production E2E and owner sign-in/claim, R2 application integration, restore test, legal review and domain cutover. No deployment exists yet.
+
+
+## 15. Controlled Production deployment workflow
+
+Added `.github/workflows/deploy-production.yml`:
+- Manual `workflow_dispatch` only.
+- Refuses execution unless branch is `main`.
+- Uses a dedicated GitHub Actions `production` environment.
+- Runs `npm ci` and full `npm run check` before deployment.
+- Requires GitHub environment secret `CLOUDFLARE_API_TOKEN` and variable `CLOUDFLARE_ACCOUNT_ID`.
+- Deploys only to `maelvyn-production` using `wrangler.production.jsonc`.
+- Does not change root/www domains.
+
+Before running it, configure those GitHub environment values with a narrowly scoped Cloudflare API token. Also add the MAELVYN Clerk Production `CLERK_SECRET_KEY` through Cloudflare Pages secret-text. The workflow has not been run; no deployment exists yet. The first deployed /ready check is expected to remain blocked until the Clerk secret is set.
