@@ -107,3 +107,21 @@ Require fresh authorization, reason codes, audit events, and, where appropriate,
 6. Chart of accounts and journal posting.
 7. Audit search and exports.
 8. Frontend integration.
+
+
+## Commerce API extension (target contract; not yet implemented)
+
+Proposed route families:
+- `GET|POST /ventures/:vid/products`
+- `GET|PATCH /products/:id`
+- `GET|POST /ventures/:vid/offers`
+- `POST /offers/:id/submit|publish|archive`
+- `GET /stores/:id/catalog`
+- `GET|POST /ventures/:vid/orders`
+- `GET /orders/:id`
+- `POST /orders/:id/confirm-payment|cancel|fulfill`
+- `POST /payments/webhooks/:provider`
+- `GET|POST /ventures/:vid/finance/reconciliations`
+- `GET /partners/:id/attributions|commissions`
+
+These routes are design targets, not current implementation claims. Every endpoint must validate identity, seller/venture scope, state transition, idempotency, webhook signature (where applicable), and audit requirements. Public catalogue reads expose only approved listing projections. Never trust browser-supplied seller, venture, amount, payment state, or ownership claims.
