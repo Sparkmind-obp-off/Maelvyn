@@ -103,3 +103,25 @@ For each production release record:
 - Post-deploy smoke-test results.
 
 Do not change DNS, authentication issuer, production secrets, or production database in one unreviewed step. Prefer reversible changes and a staged cutover.
+
+
+## 9. Observed Cloudflare state (2026-11-18)
+
+Read-only inspection of the connected Cloudflare account found:
+- Zone `maelvyn.biz.id` exists and reports `active`.
+- Cloudflare authoritative nameservers are `ace.ns.cloudflare.com` and `elaine.ns.cloudflare.com`.
+- Pages project `maelvyn-dev` has `maelvyn.biz.id` and `www.maelvyn.biz.id` attached as custom domains.
+- The Pages project's configured production deployment environment currently declares `APP_ENV=development`, uses a Clerk Development issuer and test publishable key, and binds the development D1 database `maelvyn-dev-db`.
+
+**Critical interpretation:** Cloudflare Pages labels this deployment target as `production`, but its application environment and identity/database bindings are development. The custom domain is therefore attached to a development-configured project. Do not treat the custom domain or Pages deployment label as proof of a production environment.
+
+### Required correction before public launch
+
+1. Keep the current `maelvyn-dev` project as development and remove the public root/www custom-domain binding from it as part of a planned cutover, or otherwise restrict access while it remains development-configured.
+2. Provision a distinct production application environment with a distinct Worker/Pages production configuration, D1 database, R2 bucket, and Clerk Production instance.
+3. Validate the production app on a staging hostname first.
+4. Move `maelvyn.biz.id` and `www.maelvyn.biz.id` to the verified production Pages project only after all release gates pass.
+5. Preserve the development URL `maelvyn-dev.pages.dev` for development testing.
+6. Confirm DNS/TLS and smoke tests after cutover.
+
+Do not delete the current project or database. Do not run production migrations against `maelvyn-dev-db`. The correction should be a reversible, staged domain cutover.
