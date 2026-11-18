@@ -23,42 +23,48 @@ The development application has React/Vite/Tailwind, Clerk Development integrati
 
 **Clerk Core 3 (2026-11-17):** lockfile regenerated, all checks green, dev deployment verified in a real browser (ClerkJS 6.43.0, ticket sign-in, sign-out, API JWT accept/tamper-reject). See docs/CLERK-CORE-3-UPGRADE.md. Clerk Development only; synthetic data only. Production remains blocked.
 
+**P1–P3 + identity boundary (2026-11-18):**
+- Migrations 0004–0008 were applied to remote dev D1.
+- 63 tests pass. Typecheck, lint, and build are clean.
+- Deployed via CF BYOK (`1da72d91`, alias https://maelvyn-dev.pages.dev).
+- Live browser E2E with a synthetic Clerk user showed: `account_status=ACCOUNT_ONLY`, 0 memberships, `POST /workspaces` → 403, `GET /platform/accounts` → 403, owner claim → 403, tampered JWT → 401.
+
 ## Capability register
 
 | Domain | Required capability | Current status | Next deliverable |
 |---|---|---|---|
-| Identity | Clerk Dev sign-in, server JWT validation | IMPLEMENTED-VERIFIED (dev; browser E2E `npm run test:e2e`) | Sign-in UI journeys in Playwright CI once CI is enabled |
+| Identity | Clerk Dev sign-in, server JWT validation | IMPLEMENTED-VERIFIED (dev; browser E2E `npm run test:e2e` incl. identity-boundary denials) | Playwright in CI once enabled |
 | Identity | Production Clerk, custom domain, OAuth hardening | BLOCKED | Domain ownership and release gate |
-| Workspace | Workspace creation and membership | IMPLEMENTED-VERIFIED (migration 0003: hashed single-use invitations, explicit acceptance, role change, offboarding/leave, last-admin guard; 5 tests + live dev check) | Admin recovery procedure; invitation email (requires approval for external messages) |
-| Venture | Venture registry and detail | IMPLEMENTED-PARTIAL | Charter, lifecycle gates, operator assignment, stage history |
-| Governance | Decision register and authority source | NOT-IMPLEMENTED | Decision records, approver matrix, conflict declaration |
-| Governance | Approval inbox and multi-party approvals | NOT-IMPLEMENTED | Versioned requests, quorum/threshold, expiry, reject/withdraw |
-| Rights | Contribution classification | NOT-IMPLEMENTED | Service/loan/license/sale/asset-use/capital-contribution records |
-| Rights | Agreement, ownership and IP registry | NOT-IMPLEMENTED | Executed agreement metadata, rights, scope, effective dates, restrictions |
-| Finance | Budget proposal and approval | NOT-IMPLEMENTED | Venture budgets, line items, versioning, approval gates |
-| Finance | Double-entry ledger | NOT-IMPLEMENTED | Balanced journals, immutable posting, reversal, reconciliation |
-| Finance | Cashflow, liabilities, reserves, distribution readiness | NOT-IMPLEMENTED | Reports derived from posted ledger; distribution remains human-approved |
-| Assets | Asset register and custody | NOT-IMPLEMENTED | Ownership, custodian, location, condition, maintenance, transfer history |
-| Revenue | Offers, pricing, customers, sales pipeline | NOT-IMPLEMENTED | CRM-lite, order and invoice metadata, source-backed revenue |
-| Venture ops | Milestones, tasks, projects and work queues | IMPLEMENTED-PARTIAL | General task center, owners, dependencies, due dates, blockers |
+| Workspace | Workspace creation and membership | IMPLEMENTED-VERIFIED (owner-only creation; email-bound invitations with reason/review date/owner authorization; explicit acceptance; legacy memberships reconciled by 0004; tests + live) | Owner recovery runbook |
+| Venture | Venture registry and detail | IMPLEMENTED-VERIFIED (charter, lifecycle stage gates, stage history, proposed→accepted assignments) | Charter diff view |
+| Governance | Decision register and authority source | IMPLEMENTED-VERIFIED (append-only decisions with authority snapshot; conflict declarations; access review) | Delegated authority matrix per workspace |
+| Governance | Approval inbox and multi-party approvals | IMPLEMENTED-VERIFIED (7 request types, threshold, SoD, single-reject, expiry, withdraw, supersede-on-change) | Configurable thresholds per type |
+| Rights | Contribution classification | IMPLEMENTED-VERIFIED (type + legal character; valuation method required; acceptance by approval; never creates ownership) | Contribution evidence attachments (needs R2) |
+| Rights | Agreement, ownership and IP registry | IMPLEMENTED-VERIFIED (self-signature, execution approval, ownership needs executed agreement + ≥2 approvals, 100% cap, IP provenance) | Agreement document storage (needs R2) |
+| Finance | Budget proposal and approval | IMPLEMENTED-VERIFIED (versioned, line items, locked once approved, budget control at posting) | Multi-line budget editor UI |
+| Finance | Double-entry ledger | IMPLEMENTED-VERIFIED (balanced, single currency, maker-checker, idempotent posting, single reversal, reconciliation) | Period close |
+| Finance | Cashflow, liabilities, reserves, distribution readiness | IMPLEMENTED-PARTIAL (report from posted ledger: cash, receivables, liabilities, equity, net result; distribution not automated) | Cashflow statement by period |
+| Assets | Asset register and custody | IMPLEMENTED-VERIFIED (ownership basis, custodian, events append-only, disposal via approval) | Transfer workflow |
+| Revenue | Offers, pricing, customers, sales pipeline | IMPLEMENTED-PARTIAL (customers, offers, orders, unit economics) | Pipeline stages, invoices |
+| Venture ops | Milestones, tasks, projects and work queues | IMPLEMENTED-VERIFIED (milestones, work items, dependencies, blocked reasons, risks, reviews) | Cross-venture task center |
 | Research | Research Brief Agent | IMPLEMENTED-PARTIAL | Multi-source evidence review, reusable research projects, exports |
-| Research | Validation experiments | NOT-IMPLEMENTED | Hypothesis, experiment, sample, result, decision gate |
+| Research | Validation experiments | IMPLEMENTED-VERIFIED (hypothesis, metric, threshold, timebox, conclude → memory; counts as stage-gate evidence) | Experiment templates |
 | Agents | Agent registry and autonomy labels | IMPLEMENTED-PARTIAL | Version lifecycle, owner, capability grants, eval suites, disable path |
 | Orchestration | Durable multi-agent execution | FOUNDATION-ONLY / NOT-IMPLEMENTED | Task state machine, queue, workflow, checkpoints, retries, cancellation |
 | Providers | Registry, controls, adapters and mocks | IMPLEMENTED-PARTIAL | Provider policy editor, current pricing/quota evidence, health history |
 | Providers | Apify Actor / Scrape.ly task allowlists | NOT-AUTHORIZED | Human-approved Actor IDs, data scope, cost caps and test fixtures |
 | Inference | Workers AI live binding and model registry | BLOCKED | Binding, approved model catalog, per-model limits, evals |
-| Memory | Scoped knowledge and provenance | FOUNDATION-ONLY | Venture-scoped memory, retrieval authorization, retention/deletion |
-| Documents | Private R2 artifacts and signed access | NOT-IMPLEMENTED | Private buckets, upload/download authorization, malware/type/size checks |
+| Memory | Scoped knowledge and provenance | IMPLEMENTED-VERIFIED (venture-scoped, access log, retract not delete, synthetic briefs rejected, verified_decision only from register) | Retention schedule |
+| Documents | Private R2 artifacts and signed access | BLOCKED (no R2 binding provisioned) | Provision bucket, then adapter |
 | Automation | Event triggers and integrations | NOT-IMPLEMENTED | Event registry, webhooks, schedules, retries, connector permissions |
-| Notifications | In-app/email notification center | NOT-IMPLEMENTED | Approval/task/incident notifications; no external messages without approval |
-| Analytics | Portfolio and venture dashboards | IMPLEMENTED-PARTIAL | EBAV, funnel, unit economics, risk and execution reliability |
+| Notifications | In-app/email notification center | IMPLEMENTED-PARTIAL (in-app only; external messages NOT-AUTHORIZED) | Digest preferences |
+| Analytics | Portfolio and venture dashboards | IMPLEMENTED-VERIFIED (EBAV per MASTER-SYSTEM §10, by-stage, pending approvals, unit economics) | Trend history |
 | Security | Tenant/venture isolation, deny-by-default | IMPLEMENTED-VERIFIED for current tested routes | Expand negative tests to every new route and artifact |
 | Security | Rate limits, kill switches, audit | IMPLEMENTED-PARTIAL | Central policy middleware, alerting, tamper evidence, retention |
-| Privacy | Data export, deletion, retention, consent | NOT-IMPLEMENTED | Data inventory, export/delete workflows, retention schedule |
-| Operations | Backups, restore, incident response | NOT-IMPLEMENTED | Automated backups, restore drill, incident runbook |
-| Quality | Unit/integration tests | IMPLEMENTED-PARTIAL | Expand contract and domain test coverage |
-| Quality | Playwright end-to-end suite | NOT-IMPLEMENTED | Auth, workspace, venture, research, approvals, permission denial |
+| Privacy | Data export, deletion, retention, consent | IMPLEMENTED-PARTIAL (self-scoped export; export/deletion/correction requests resolved by Owner) | Automated deletion with ledger/audit carve-outs |
+| Operations | Backups, restore, incident response | IMPLEMENTED-PARTIAL (manual D1 export before each migration) | Scheduled backups, restore drill |
+| Quality | Unit/integration tests | IMPLEMENTED-VERIFIED (63 tests across identity, members, research, providers, governance, finance, rights, ops, memory, portfolio, me) | Contract tests |
+| Quality | Playwright end-to-end suite | IMPLEMENTED-PARTIAL (sign-in + identity-boundary denial against dev) | Approval and finance journeys |
 | Delivery | GitHub CI | BLOCKED | Workflow permission; run CI locally until enabled |
 
 ## Target product modules

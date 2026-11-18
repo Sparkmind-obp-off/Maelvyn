@@ -66,7 +66,11 @@ Agents may research, plan, coordinate, prepare, and execute only within explicit
 | [Security, Privacy & Operations](docs/SECURITY-PRIVACY-OPERATIONS.md) | Data classification, access, privacy, audit, incident, and backup controls |
 | [Initial SQL Migration](migrations/0001_initial.sql) | D1/SQLite schema baseline; structure only, no participant or financial data |
 
-## Authentication SDK upgrade\n\nThe browser client now targets Clerk Core 3 via `@clerk/react` (Node.js >=20.9.0). The previous `@clerk/clerk-react` Core 2 package was deprecated and used ClerkJS 5, which is blocked by Clerk's minimum-version protection on newer instances. See [Clerk Core 3 upgrade and verification](docs/CLERK-CORE-3-UPGRADE.md). The stale npm lockfile was removed and must be regenerated with `npm install` before the next clean CI/install; do not use `npm ci` until the generated lockfile is committed.\n\n## Current status
+## Authentication SDK upgrade
+
+The browser client now targets Clerk Core 3 via `@clerk/react` (Node.js >=20.9.0). The previous `@clerk/clerk-react` Core 2 package was deprecated and used ClerkJS 5, which is blocked by Clerk's minimum-version protection on newer instances. See [Clerk Core 3 upgrade and verification](docs/CLERK-CORE-3-UPGRADE.md). The stale npm lockfile was removed and must be regenerated with `npm install` before the next clean CI/install; do not use `npm ci` until the generated lockfile is committed.
+
+## Current status
 
 **Development foundation: implemented, tested, and deployed to a development environment.** MAELVYN is a working project identity and operating concept. This repository does not establish a legal entity, partnership, investment offer, ownership interest, or binding commitment by any person.
 
@@ -74,50 +78,73 @@ Agents may research, plan, coordinate, prepare, and execute only within explicit
 |---|---|
 | Development URL | https://maelvyn-dev.pages.dev (Cloudflare Pages, user-owned account) |
 | Identity | Clerk **Development** instance only. Synthetic data only. Clerk Production is **blocked** until domain ownership and release gates are met |
-| Database | D1 `maelvyn-dev-db` (development). Migrations `0001`–`0003` applied |
+| Database | D1 `maelvyn-dev-db` (development). Migrations `0001`–`0008` applied (remote, 2026-11-18; pre-migration export kept outside the repo) |
 | Production | **Not created and not deployed** |
 | Costs incurred | None that were intentionally triggered. Health checks call free read-only endpoints only |
 
 ### What works today
-- React + Vite + Tailwind web app with Clerk Development sign-in (Clerk Core 3, `@clerk/react`; browser-verified — see docs/CLERK-CORE-3-UPGRADE.md).
-- Workspace membership lifecycle: single-use hashed invitation links, explicit acceptance by the invitee, role changes with reason, offboarding and voluntary leave (ends venture access), last-admin protection, full audit. Pages: workspaces, venture, research brief, providers & kill switches, agent registry, audit & usage.
-- Hono API on a Cloudflare Pages Worker at `/api/v1`. Every response has a standard error shape, a `request_id`, and security headers. CSP follows Clerk's documented directives.
-- Clerk session JWTs are verified on the server (RS256 via JWKS, issuer, expiry, `azp` allowlist). A valid session alone grants **no** access.
-- Deny-by-default authorization, resolved from the database. Cross-venture access is denied and logged in `permission_decisions`.
-- **Research Brief Agent (L2 Prepare):**
-  1. Creates a task contract, enforcing idempotency and a credit budget.
-  2. Routes to a provider, either synthetic mock or live Tavily. Live Tavily runs only when an admin enables it with credit caps.
-  3. Optionally extracts the top source with Firecrawl.
-  4. Stores evidence with provenance and flags prompt-injection attempts.
-  5. Produces an extractive draft brief that separates source statements, agent inferences, and gaps. No LLM is used.
-  6. Requires human accept/reject.
-- Provider adapters for **Tavily, Firecrawl, Apify, Scrape.ly, Workers AI**, plus a mock. All live execution is off by default, with no automatic fallback between providers. Apify, Scrape.ly and Workers AI cannot be enabled until an Actor/model allowlist and budget are approved.
-- Kill switches at system, workspace, agent and provider level. Database rate limits.
-- Append-only audit, usage, executions and evidence. Reviewed briefs are immutable. All enforced by DB triggers.
+Verified by 63 automated tests (real migrations on an in-memory D1 shim), typecheck, lint, build, and a live browser E2E against the dev deployment.
+
+- **Identity boundary (migration 0004).** A singleton `platform_owner` is bound to `sparkmind.support@gmail.com`. The claim re-reads the primary email from Clerk's Backend API, requires it to be verified, and stores the stable Clerk subject.
+  - Signup and first login create an account only, with no membership.
+  - `elfares621@gmail.com` and `elmatador0197@gmail.com` are `owner_authorization_required` (ACCOUNT_ONLY).
+  - Only the Owner can create workspaces and administer members. `workspace_admin` is valid only for the bound Owner, checked again in policy as defence in depth.
+  - Legacy memberships were reconciled. Remote: 3 suspended and 2 venture assignments ended, each audited with `request_id = migration-0004`.
+- **Members.**
+  - Invitations are bound to a verified email and need a reason, an optional review date, and explicit Owner authorization for policy-listed accounts.
+  - They are single-use and hashed, and the invitee must accept them.
+  - They can never grant `workspace_admin` and carry no venture access.
+  - Venture assignments are proposed and then accepted by the assignee. Self-assignment is audited.
+- **Governance (0005).**
+  - Charters have 15 required fields, are versioned, and are immutable once decided.
+  - The approval engine supports seven request types, separation of duties (requester and subject cannot vote), conflict declarations, single-reject, expiry, withdrawal, and supersede-on-change (snapshot hash).
+  - Approval records an append-only decision register and `verified_decision` memory.
+  - Lifecycle stage gates apply.
+  - The Owner can run access reviews.
+- **Finance (0006).**
+  - Budgets have locked lines once approved.
+  - The double-entry ledger enforces balance, one currency per entry, and maker-checker posting with `Idempotency-Key`.
+  - Expenses must fall within an approved budget's cap, period, and currency.
+  - Corrections use a single reversal only.
+  - Includes reconciliation and a report derived from posted entries. Net result ≠ cash ≠ distributable surplus.
+- **Rights.**
+  - A contribution never creates ownership, and a value requires a valuation method.
+  - Agreements are signed by each party themselves.
+  - Ownership needs an executed agreement plus ≥2 independent approvals, with a 100% cap.
+  - IP register.
+- **Operations (0007).** Milestones and work items (dependencies, blocked reasons), assets with events and approval-gated disposal, customers, offers, orders, unit economics, experiments, risks, and reviews that snapshot metrics.
+- **Portfolio.** EBAV is computed per docs/MASTER-SYSTEM.md §10.
+- **Runtime (0008).** Venture-scoped memory with access log and retraction, where synthetic briefs cannot become knowledge. In-app notifications. Self-scoped data export. Data requests resolved by the Owner.
+- **UI.** Pages for Workspaces (account status and Owner claim), Platform (accounts, reconciliation, audit, data requests), Portfolio, Governance, Members, and Saya (notifications, assignments, export). Venture tabs: Research, Charter & Lifecycle, Team, Finance, Contributions & Rights, Operations, Memory.
+- Earlier foundation, still in place:
+  - Clerk Development sign-in (Core 3) with server JWT verification (RS256/JWKS, issuer, expiry, `azp` allowlist).
+  - Deny-by-default database authorization with denials logged.
+  - Research Brief Agent (L2), provider adapters (all live execution off by default), kill switches, rate limits, append-only audit.
 
 ### API (base `/api/v1`)
 - **Public:** `GET /health`, `GET /ready`, `GET /config`
-- **Session & workspaces:** `GET /session` · `GET|POST /workspaces` (self-service, dev only) · `GET /workspaces/:wid`
-- **Members:** `GET /workspaces/:wid/members` · `POST /workspaces/:wid/invitations` · `POST /workspaces/:wid/invitations/:iid/revoke` · `POST /invitations/accept` · `PUT /workspaces/:wid/members/:pid` · `POST /workspaces/:wid/members/:pid/offboard`
-- **Ventures:** `GET|POST /workspaces/:wid/ventures` · `GET /ventures/:vid`
-- **Research:** `POST /ventures/:vid/research` (needs `Idempotency-Key` header) · `GET /research/:tid` · `POST /research/:tid/review`
-- **Providers:** `GET /workspaces/:wid/providers` · `POST /workspaces/:wid/providers/:pid/health` · `PUT /workspaces/:wid/providers/:pid`
-- **Agents & controls:** `GET /agents` · `GET|PUT /workspaces/:wid/kill-switches`
-- **Audit & usage:** `GET /workspaces/:wid/audit` · `GET /workspaces/:wid/usage`
+- **Session & platform:** `GET /session` · `POST /platform/owner/claim` · `GET /platform/accounts|audit|data-requests` · `POST /platform/data-requests/:id/resolve` (Owner only)
+- **Workspaces & members:** `GET|POST /workspaces` (POST Owner only) · `GET /workspaces/:wid` · `GET /workspaces/:wid/members` · `POST /workspaces/:wid/invitations` · `POST …/invitations/:iid/revoke` · `POST /invitations/accept` · `PUT /workspaces/:wid/members/:pid` · `POST …/members/:pid/offboard`
+- **Ventures & assignments:** `GET|POST /workspaces/:wid/ventures` · `GET /ventures/:vid` · `GET|POST /ventures/:vid/assignments` · `POST …/assignments/:aid/end`
+- **Governance:** `GET|POST /ventures/:vid/charters` · `PUT /charters/:id` · `POST /charters/:id/submit` · `GET /ventures/:vid/lifecycle` · `POST /ventures/:vid/stage-requests` · `GET /workspaces/:wid/approvals?status=` · `GET /approvals/:id` · `POST /approvals/:id/votes|conflicts|withdraw` · `GET /workspaces/:wid/decisions` · `GET /workspaces/:wid/access-review` · `POST /workspaces/:wid/access-reviews`
+- **Finance:** `GET|POST /ventures/:vid/budgets` · `POST /budgets/:id/submit` · `GET|POST /ventures/:vid/finance/accounts` · `POST …/finance/accounts/defaults` · `GET|POST /ventures/:vid/finance/journals` · `POST /finance/journals/:id/post|reverse` (Idempotency-Key) · `GET|POST /ventures/:vid/finance/reconciliations` · `GET /ventures/:vid/finance/report`
+- **Rights:** `GET|POST /ventures/:vid/contributions` · `POST /contributions/:id/submit|withdraw` · `GET|POST /ventures/:vid/agreements` · `POST /agreements/:id/sign|submit` · `GET|POST /ventures/:vid/ownership` · `POST /ownership/:id/submit` · `GET|POST /ventures/:vid/ip`
+- **Operations:** `GET|POST /ventures/:vid/milestones` · `PATCH /milestones/:id` · `POST /ventures/:vid/work-items` · `PATCH /work-items/:id` · `GET|POST /ventures/:vid/assets` · `POST /assets/:id/events|dispose` · `GET /ventures/:vid/revenue` · `POST /ventures/:vid/customers|offers|orders` · `PATCH /orders/:id` · `GET|POST /ventures/:vid/experiments` · `POST /experiments/:id/start|conclude|abandon` · `GET|POST /ventures/:vid/risks` · `PATCH /risks/:id` · `GET|POST /ventures/:vid/reviews`
+- **Memory & portfolio:** `GET|POST /ventures/:vid/memory` · `POST /research/:tid/to-memory` · `POST /memory/:id/retract` · `GET /workspaces/:wid/portfolio`
+- **Me:** `GET /me/notifications` · `POST /me/notifications/read` · `GET /me/assignments` · `POST /me/assignments/:id/respond` · `GET /me/export` · `GET|POST /me/data-requests`
+- **Research, providers, agents, audit:** `POST /ventures/:vid/research` · `GET /research/:tid` · `POST /research/:tid/review` · `GET|PUT /workspaces/:wid/providers…` · `GET /agents` · `GET|PUT /workspaces/:wid/kill-switches` · `GET /workspaces/:wid/audit|usage`
 
 ### Not implemented yet
-- Approval engine for reserved matters (charter/budget votes), finance journals, agreements/contributions/ownership registries.
-- R2 artifacts, Queues and Workflows. Research currently runs synchronously within one request.
-- Workers AI binding and model registry.
-- Live Apify / Scrape.ly Actor runs. These need an approved Actor allowlist and budget.
-- Playwright browser suite beyond the sign-in E2E (`npm run test:e2e`, runs against the dev deployment).
-- Active GitHub CI: the workflow template is in `ops/github-workflows/`. Activating it requires `workflows` permission.
+- **Owner binding on the live dev environment.** The owner account must sign in with `sparkmind.support@gmail.com` (Google) and press "Klaim peran Platform Owner". The Clerk instance cannot create that user via API, so `platform_roles` is still empty remotely.
+- **R2 artifacts adapter.** BLOCKED: no R2 binding is provisioned. Queues and Workflows (research runs synchronously). Workers AI binding and model registry.
+- Live Apify / Scrape.ly Actor runs (NOT-AUTHORIZED). External email/SMS notifications (in-app only).
+- Active GitHub CI: the template is in `ops/github-workflows/` and needs `workflows` permission. The Playwright suite currently covers sign-in and identity-boundary denial only.
 
 ### Local development
 ```bash
 cp .dev.vars.example .dev.vars          # fill with DEVELOPMENT credentials only (git-ignored)
 npm ci
-npm run check                           # typecheck + lint + 43 tests + build
+npm run check                           # typecheck + lint + 63 tests + build
 npm run db:migrate:local
 npm run build && pm2 start ecosystem.config.cjs   # http://localhost:3000
 ```
@@ -132,7 +159,11 @@ No venture, shared account, pooled fund, or joint asset should be represented as
 Material changes to governance, ownership principles, capital rules, participant rights, agent permissions, provider selection, architecture, or security controls must be documented, versioned, and reviewed before implementation.
 
 
-### Capability coverage and upgrade roadmap\n\n[Capability Inventory & Upgrade Roadmap](docs/CAPABILITY-INVENTORY-AND-UPGRADE-ROADMAP.md) is the canonical feature-gap register, target module map, P0-P6 implementation sequence and definition of done.\n\n### Final implementation baseline
+### Capability coverage and upgrade roadmap
+
+[Capability Inventory & Upgrade Roadmap](docs/CAPABILITY-INVENTORY-AND-UPGRADE-ROADMAP.md) is the canonical feature-gap register, target module map, P0-P6 implementation sequence and definition of done.
+
+### Final implementation baseline
 
 | Document | Purpose |
 |---|---|

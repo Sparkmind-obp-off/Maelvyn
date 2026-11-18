@@ -44,9 +44,19 @@ const api = await page.evaluate(async () => {
   const s = await fetch('/api/v1/session', { headers: { Authorization: `Bearer ${t}` } })
   const tampered = await fetch('/api/v1/session', { headers: { Authorization: `Bearer ${t.slice(0, -2)}xx` } })
   const none = await fetch('/api/v1/session')
-  return { session: s.status, body: (await s.json()).principal, tampered: tampered.status, unauth: none.status }
+  const body = await s.json()
+  const H = { Authorization: `Bearer ${t}`, 'Content-Type': 'application/json' }
+  const createWs = await fetch('/api/v1/workspaces', { method: 'POST', headers: H, body: JSON.stringify({ name: 'E2E must be refused' }) })
+  const accounts = await fetch('/api/v1/platform/accounts', { headers: H })
+  const claim = await fetch('/api/v1/platform/owner/claim', { method: 'POST', headers: H, body: '{}' })
+  const list = await (await fetch('/api/v1/workspaces', { headers: H })).json()
+  return {
+    session: s.status, principal_email_verified: body.principal?.email_verified, account_status: body.account_status, platform_role: body.platform_role,
+    can_claim_owner: body.can_claim_owner, memberships: body.memberships?.length, tampered: tampered.status, unauth: none.status,
+    create_workspace: createWs.status, platform_accounts: accounts.status, owner_claim: claim.status, visible_workspaces: list.workspaces?.length,
+  }
 })
-out('API /session (browser JWT)', api)
+out('API identity boundary', api)
 
 await page.goto(`${BASE}/workspaces`, { waitUntil: 'networkidle' })
 await page.waitForTimeout(2000)

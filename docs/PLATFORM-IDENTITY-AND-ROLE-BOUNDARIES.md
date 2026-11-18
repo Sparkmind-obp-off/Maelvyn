@@ -87,13 +87,14 @@ Until all required steps are complete, status remains **ACCOUNT_ONLY / NO_MEMBER
 
 ## 7. Verification status
 
-This policy records the approved intended state. It does not prove the live Clerk identities or database rows have already been changed.
+Status as of 2026-11-18. Evidence comes from the repository, remote dev D1, tests, and the live dev deployment.
 
-The following remain **UNVERIFIED** until inspected and tested:
-- stable Clerk subject ID bound to the owner account;
-- whether the two account-only identities currently exist in Clerk;
-- whether either account currently has legacy workspace memberships;
-- whether signup/first-login code auto-creates memberships;
-- server-side enforcement and deployed negative authorization tests.
+| Item | Status | Evidence |
+|---|---|---|
+| Stable Clerk subject bound to owner | **PENDING (by design)** | Code implemented: `POST /platform/owner/claim` re-reads the primary email from Clerk's Backend API, requires `verified` and equality with `sparkmind.support@gmail.com`, then stores the subject; there is a singleton unique index. The owner account does not exist yet in the Clerk Development instance, and the API cannot create it by email. Remote `platform_roles` = 0 rows. The owner must sign in with that Google account and claim. |
+| Account-only identities exist in Clerk | VERIFIED | elmatador0197 → `user_3MF5i55huhkEruwohaSHRJKu7Mn`; elfares621 → `user_3MF54617VRWDY12yOTz1jkd4I1s` (Google). |
+| Legacy workspace memberships | VERIFIED + RECONCILED | Before 0004, both accounts (and Synthetic Tester) were active `workspace_admin` of self-service workspaces. After 0004 (remote), all are `suspended`; 2 venture assignments ended. Audited as `membership.suspended_by_reconciliation` ×3 and `venture_assignment.ended_by_reconciliation` ×2 with `request_id=migration-0004`. A D1 export was taken before migrating. |
+| First login auto-creates memberships | VERIFIED: NO | `resolvePrincipal` creates only `people` + `identity_links`. Tests cover this. Live E2E: a synthetic user has `memberships=0`, `account_status=ACCOUNT_ONLY`. |
+| Server enforcement + deployed negative tests | VERIFIED (dev) | 63 automated tests (owner-only admin, no self-promotion, unverified/spoofed email rejected, policy accounts require owner authorization, invitations cannot grant admin, owner cannot be removed, cross-venture denial). Live: `POST /workspaces` → 403, `/platform/accounts` → 403, claim by non-owner → 403, tampered JWT → 401. |
 
-Do not claim technical enforcement until repository code, database records, tests and development deployment provide evidence.
+Technical enforcement is claimed only for the development environment. Production remains blocked.
