@@ -44,7 +44,7 @@ Clerk is the selected identity provider. Use two distinct operational phases:
 - The development instance is not a temporary production substitute.
 
 ### Production later
-Production activation is blocked until MAELVYN owns and controls its intended domain and completes the production readiness checklist. Then:
+Production activation is blocked until the dedicated application environment and release gates pass. The MAELVYN Clerk Production instance and auth domain now exist and are verified; see the corrected Clerk Production runbook and production checklist.
 1. Create/activate Clerk Production instance.
 2. Configure the owned domain and Clerk-required DNS records.
 3. Supply dedicated OAuth credentials (including Google, if enabled).
@@ -63,7 +63,7 @@ Do not use Clerk Development for real users, public launch, production financial
 | Local | Clerk Development | Wrangler local/dev bindings | Synthetic fixtures only |
 | Development | Clerk Development | Dedicated dev Worker + D1 + optional dev R2 | Synthetic test data |
 | Staging (later, if needed) | Separate Clerk application configured for staging | Separate staging Worker/D1/R2/secrets | Synthetic or explicitly approved scrubbed data |
-| Production (blocked until domain) | Clerk Production | Separate production Worker/D1/R2/secrets/queues/workflows | Real data only after privacy/security/release gates |
+| Production (blocked pending app environment) | Existing MAELVYN Clerk Production | Separate production Worker/D1/R2/secrets/queues/workflows | Real data only after privacy/security/release gates |
 
 Never reuse D1 databases, R2 buckets, queue names, secrets, or Clerk keys across environments.
 
