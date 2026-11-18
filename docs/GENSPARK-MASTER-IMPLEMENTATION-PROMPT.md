@@ -333,3 +333,42 @@ Do not return only a plan when repository tools can safely implement the next sl
 ## 15. Mandatory owner-only administration and account-only identities (overrides older role examples)
 
 The only MAELVYN platform administrator / Platform Owner is `sparkmind.support@gmail.com`. The accounts `elfares621@gmail.com` and `elmatador0197@gmail.com` are account identities only and MUST remain ACCOUNT_ONLY / NO_MEMBERSHIP by default. Do not assign them Venture Operations Lead, Contributor, Viewer, Workspace Member, Venture Member, Workspace Admin, Platform Admin, or any other role. Do not create default workspace or venture membership on signup, first login, account discovery, or because an email is known. Account existence is not membership or consent. Implement explicit owner-authorized, scoped invitation/grant and acceptance before any future membership. Keep account identity, platform role, workspace membership, venture assignment and functional role as separate data concepts. Reconcile existing dev records before changing them; do not silently delete or overwrite legacy membership. Enforce all permissions server-side and add tests for owner-only administration, no auto-membership, account-only data denial, self-promotion denial, no email spoofing and no cross-scope access. This section supersedes any conflicting account-role assignment elsewhere in this prompt or older docs.
+
+
+---
+
+## 14. Critical verified-state correction — 2026-11-18
+
+This section supersedes older contradictory instructions in this prompt and linked documents. Read `docs/FULL-REPOSITORY-AND-PRODUCTION-GAP-AUDIT.md` first.
+
+### Verified MAELVYN Clerk Production
+- Clerk application: `Maelvyn`, ID `app_3MGax1kdfbzSasqHwUlBO9E1DJ3`.
+- Development instance: `ins_3MGawyTIeUoXm52k4cQHMQ5YCrB`.
+- Production instance: `ins_3MGb1IDHmPZvgywrCn50QjHDaW4`.
+- Auth frontend API: `https://clerk.maelvyn.biz.id`.
+- Accounts portal: `https://accounts.maelvyn.biz.id`.
+- Production domain/SSL and Google OAuth credentials were reported complete.
+- Production user count was zero at audit time.
+
+### Actual running application state
+The existing Pages project `maelvyn-dev` is still Development-configured: `APP_ENV=development`, Clerk Development issuer/JWKS/test publishable key and `maelvyn-dev-db`. Its root and www domains are attached. Do not mistake Cloudflare's deployment label "production" for the app's environment.
+
+### Your implementation mandate
+1. Inspect the latest `main` tree and audit report before coding. Preserve all valid work; do not scaffold a replacement.
+2. Keep `maelvyn-dev` unchanged and synthetic-only.
+3. Prepare a separate `maelvyn-production` Pages project with no custom root/www domain initially, a separate D1 database `maelvyn-production-db`, and private R2 bucket `maelvyn-production-private`.
+4. Add a dedicated production Wrangler/config strategy. Production must have `APP_ENV=production`, Clerk Production issuer/JWKS and live publishable key, explicit authorized parties, and production D1/R2 bindings.
+5. Actual frontend code reads `CLERK_PUBLISHABLE_KEY` from `/api/v1/config`; do not introduce a mismatched `VITE_CLERK_PUBLISHABLE_KEY` unless the code is deliberately migrated and tested.
+6. Store `CLERK_SECRET_KEY` only using Cloudflare secret-text. Never ask the user to paste it into Genspark, ChatGPT, GitHub, docs, source code or logs. If it is not available to your secure Cloudflare session, stop and provide the exact secure UI step.
+7. Make Production token verification fail closed when authorized-party allowlist is absent/empty; reject invalid or missing `azp` according to the Clerk session token contract. Add unit tests.
+8. Add a Production E2E workflow that refuses Development credentials and checks Google sign-in, session, sign-out, token tampering, issuer/origin mismatch, owner bootstrap and membership isolation. Never create/claim the owner account on the user's behalf.
+9. Add R2 private artifact access only after implementing scoped authorization, object-key isolation, short-lived signed delivery, size/type validation and audit events.
+10. Keep paid provider execution disabled by default; enforce allowlists, approval, per-task/daily caps, idempotency and provider terms.
+11. Run `npm ci`, `npm run check`, and the dedicated E2E suite. Fix all failures and report exact outputs.
+12. Verify live Cloudflare bindings and Clerk domain/instance state. A redacted secret is not proof of absence; never print secret contents.
+13. Keep root/www attached to the current project until the isolated Production deployment and release checklist pass. Then request explicit owner approval before DNS/domain cutover.
+14. Update the audit, runbook, environment strategy and readiness checklist with exact resource IDs, commit SHA, deployment URL, test results and unresolved blockers.
+15. Never state "Production live" unless the Production URL returns healthy/ready, correct Clerk identity, correct database schema and owner-approved smoke tests pass.
+
+### Non-negotiable stop conditions
+Stop without guessing if the Cloudflare session cannot create/configure the dedicated resources, the production Clerk key cannot be placed securely, the build cannot be proven, the owner cannot complete sign-in/claim, the schema migration/backup path is uncertain, or any release gate fails. Do not use another venture's resources or credentials. Do not change Clerk's live sign-up/MFA/bot settings without an explicit reviewed change and tested owner recovery path.
