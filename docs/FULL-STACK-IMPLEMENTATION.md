@@ -156,3 +156,20 @@ tests/agents/                Permission, isolation, reliability, quality tests
 - Enforce parent-to-child permission narrowing.
 - Treat generated memory as non-authoritative; use source records for rights, finance, and approvals.
 - Start with one low-risk agent vertical slice; do not build a large agent fleet before orchestration and security are proven.
+
+
+## Commerce implementation extension
+
+Implement commerce as bounded modules in the existing application before considering service extraction:
+1. seller/legal-entity and rights registry;
+2. product, category, offer, price, and store registry;
+3. storefront and catalogue read model;
+4. order and payment state machines;
+5. fulfillment adapters;
+6. venture-level ledger integration and reconciliation;
+7. partner attribution;
+8. marketplace discovery.
+
+Every write path requires authenticated identity, server-side venture authorization, schema validation, idempotency where appropriate, and audit correlation. Preserve order snapshots and append-only posted finance records. Agents may prepare drafts and analyze results but cannot bypass transaction services or approvals.
+
+Do not connect the commerce MVP to production payments until the production release checklist passes.
