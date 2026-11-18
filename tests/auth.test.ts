@@ -9,6 +9,24 @@ describe('health & readiness', () => {
     expect(r.status).toBe(200)
     expect(r.body.checks).toMatchObject({ database: 'ok', schema: 'ok', migrations: 'ok', identity: 'configured' })
   })
+  it('production readiness requires a live Clerk configuration and explicit origins', async () => {
+    const t = setup({ env: { APP_ENV: 'production', CLERK_PUBLISHABLE_KEY: 'pk_test_not_allowed' } })
+    const blocked = await t.call('GET', '/ready')
+    expect(blocked.status).toBe(503)
+    expect(blocked.body.checks).toMatchObject({
+      identity_secret: 'not_configured',
+      authorized_parties: 'not_configured',
+      publishable_key: 'invalid_for_production',
+    })
+    const ready = setup({ env: {
+      APP_ENV: 'production',
+      CLERK_PUBLISHABLE_KEY: 'pk_live_production',
+      CLERK_SECRET_KEY: 'sk_live_test_fixture',
+      CLERK_AUTHORIZED_PARTIES: 'https://app.maelvyn.biz.id',
+    } })
+    expect((await ready.call('GET', '/ready')).status).toBe(200)
+  })
+
   it('config never exposes secrets', async () => {
     const t = setup({ env: { CLERK_SECRET_KEY: 'sk_test_SHOULDNOTLEAK' } })
     const r = await t.call('GET', '/config')
