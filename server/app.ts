@@ -56,7 +56,7 @@ export function createApp(deps: AppDeps = {}) {
     try {
       await c.env.DB.prepare('SELECT 1').first()
       checks.database = 'ok'
-      const applied = await c.env.DB.prepare(`SELECT name FROM d1_migrations ORDER BY id`).all<{ name: string }>().then((r) => r.results.map((x) => x.name)).catch(() => null)
+      const applied = await c.env.DB.prepare(`SELECT name FROM d1_migrations ORDER BY name`).all<{ name: string }>().then((r) => r.results.map((x) => x.name)).catch(() => null)
       const tables = await c.env.DB.prepare(`SELECT COUNT(*) AS n FROM sqlite_master WHERE type='table' AND name IN ('workspaces','tasks','provider_registry')`).first<{ n: number }>()
       checks.schema = tables?.n === 3 ? 'ok' : 'missing_tables'
       checks.migrations = applied === null ? 'untracked' : EXPECTED_MIGRATIONS.every((m) => applied.includes(m)) ? 'ok' : `pending (${applied.length}/${EXPECTED_MIGRATIONS.length})`
@@ -75,7 +75,9 @@ export function createApp(deps: AppDeps = {}) {
       checks.authorized_parties === 'configured' &&
       checks.publishable_key === 'configured'
     )
-    const ready = checks.database === 'ok' && checks.schema === 'ok' && checks.identity === 'configured' && productionIdentityReady
+    // Production additionally requires a complete, tracked migration ledger.
+    const migrationsReady = !production || checks.migrations === 'ok'
+    const ready = checks.database === 'ok' && checks.schema === 'ok' && checks.identity === 'configured' && productionIdentityReady && migrationsReady
     return ok(c, { status: ready ? 'ready' : 'not_ready', checks }, ready ? 200 : 503)
   })
 
