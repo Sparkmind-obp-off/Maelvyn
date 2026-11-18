@@ -194,3 +194,23 @@ The MAELVYN Clerk Production instance is present and its custom domain is verifi
 | Root/www cutover | Not performed; remains attached to dev project | SAFELY DEFERRED |
 
 Do not mark production-ready until all BLOCKED items have evidence. The Development project and its D1 must remain separate.
+
+
+## 13. Production D1 provisioning update — 2026-11-18
+
+| Item | Verified state |
+|---|---|
+| Development D1 | `maelvyn-dev-db` preserved; no deletion or modification |
+| Production D1 | `maelvyn-production-db`, UUID `6b42d874-61c8-4ebe-8b79-de7432e094de`, APAC |
+| Production binding | Pages `DB` binding points to exact Production D1 UUID |
+| Migrations | 0001–0008 applied and ledger verified |
+| Schema | 59 tables including internal `_cf_KV` |
+| Initial records | no workspaces, people, ventures or memberships; 2 intentional account policy rows |
+| Wrangler config | `wrangler.production.jsonc` added |
+| Scripts | `db:migrate:production` and `deploy:production` added |
+| Clerk secret | BLOCKED — must be set through Cloudflare secret-text |
+| Deployment | BLOCKED — no deployment yet |
+| E2E / owner claim / restore | BLOCKED — not run |
+| Domain cutover | NOT DONE — safely deferred |
+
+Do not delete `maelvyn-dev-db`; keep Development and Production isolated.
