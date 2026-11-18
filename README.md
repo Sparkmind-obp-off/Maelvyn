@@ -184,3 +184,10 @@ The current target architecture is documented in:
 - [Architecture Decision Register](docs/ARCHITECTURE-DECISIONS.md)
 
 **Important production warning (2026-11-18):** The MAELVYN Clerk Production instance already exists; its custom auth domain, DNS, SSL, mail, and Google OAuth configuration are verified. However, `maelvyn.biz.id` and `www.maelvyn.biz.id` still point to Pages project `maelvyn-dev`, whose `APP_ENV`, Clerk issuer/JWKS, publishable key, and D1 binding are Development. A separate production Pages/Worker deployment, D1, MAELVYN-specific private R2 (if required), and securely bound Clerk Production secret are still needed. Public production remains blocked until staging tests and safe domain cutover.
+
+
+## Production execution
+
+The Production environment is isolated from Development. For Genspark execution, follow the canonical [Wrangler-only execution master prompt](docs/GENSPARK-WRANGLER-EXECUTION-MASTER-PROMPT.md). Production deployment, D1 migrations and Pages secret installation must use Cloudflare Wrangler CLI; GitHub Actions CI is validation-only and must never deploy Production.
+
+Current state and blockers: [Full repository and Production gap audit](docs/FULL-REPOSITORY-AND-PRODUCTION-GAP-AUDIT.md).
