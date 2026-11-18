@@ -140,3 +140,30 @@ A task is complete only with code/configuration evidence, tests or a live read-o
 ## 10. Current release decision
 
 **NOT PRODUCTION-READY / NO PUBLIC CUTOVER.** The Clerk Production identity instance exists and is domain-verified, but the application remains on Development bindings. The next release gate is isolated Production infrastructure plus secure credential injection and end-to-end verification.
+
+
+## 11. Implementation actions performed after the read-only audit — 2026-11-18
+
+The following Cloudflare resources/configuration were safely created without changing the existing development project or custom domains:
+
+- New Pages project: `maelvyn-production`.
+- Pages project ID: `77cd5d42-5667-4ac4-9dbd-edb60c5ea249`.
+- Isolated hostname: `https://maelvyn-production.pages.dev`.
+- Production branch: `main`; build command `npm run build`; output `dist`.
+- New private-intended R2 bucket: `maelvyn-production-private` (APAC, Standard).
+- Pages Production binding: `ARTIFACTS` → `maelvyn-production-private`.
+- Pages Production vars set: `APP_ENV=production`, Clerk Production issuer, Clerk Production JWKS URL, the MAELVYN Clerk Production publishable key, and authorized party `https://maelvyn-production.pages.dev`.
+- Pages preview and production `fail_open=false`; preview has no Production environment variables.
+- No custom root/www domains were attached. Existing `maelvyn-dev` remains unchanged.
+- No Production deployment exists yet (`latest_deployment=null` at project creation/configuration).
+
+### Hard blocker: D1 account limit
+
+Creating `maelvyn-production-db` was attempted and Cloudflare returned HTTP 403 / error 7406: **System limit reached: databases per account (10)**. The account currently lists ten D1 databases. A separate database named `test-permission-check-invalid` has only Cloudflare's internal `_cf_KV` table in a read-only schema check, but it has not been deleted. Deleting any existing database is destructive and requires explicit owner approval. Do not bind MAELVYN Production to the Development D1 or another venture's D1 to work around this limit.
+
+### Remaining Production blockers
+- Dedicated MAELVYN Production D1 not created due account limit.
+- `CLERK_SECRET_KEY` not set in Pages secret-text. The connector does not reveal existing Clerk secret keys; add the MAELVYN Production secret directly through Cloudflare's secure secret UI.
+- No deployment, migration, E2E, owner sign-in/claim or restore test completed.
+- R2 bucket exists and is bound, but the application has no R2 artifact implementation yet; do not advertise file delivery.
+- Root/www domain cutover remains intentionally untouched.
