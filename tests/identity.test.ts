@@ -1,5 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { bootstrap, claimOwner, grant, setup } from './helpers'
+import { assertAuthorizedParty } from '../server/identity/clerk'
+import { AppError } from '../server/lib/http'
 
 describe('platform identity boundaries (docs/PLATFORM-IDENTITY-AND-ROLE-BOUNDARIES.md)', () => {
   it('first login creates an ACCOUNT_ONLY identity with no membership, role or venture access', async () => {
@@ -82,5 +84,24 @@ describe('platform identity boundaries (docs/PLATFORM-IDENTITY-AND-ROLE-BOUNDARI
     for (const f of files.slice(3)) d.db.exec(readFileSync(`migrations/${f}`, 'utf8'))
     expect(d.db.prepare(`SELECT status FROM workspace_members WHERE id='m1'`).get()).toMatchObject({ status: 'suspended' })
     expect(d.db.prepare(`SELECT COUNT(*) AS n FROM audit_events WHERE action='membership.suspended_by_reconciliation'`).get()).toMatchObject({ n: 1 })
+  })
+})
+
+
+describe('Clerk authorized-party enforcement', () => {
+  it('fails closed in production when allowlist is missing or azp is missing', () => {
+    expect(() => assertAuthorizedParty('https://app.maelvyn.biz.id', { APP_ENV: 'production' })).toThrow(AppError)
+    expect(() => assertAuthorizedParty(undefined, { APP_ENV: 'production', CLERK_AUTHORIZED_PARTIES: 'https://app.maelvyn.biz.id' })).toThrow(AppError)
+  })
+
+  it('rejects an unlisted origin and accepts only the exact production origin', () => {
+    const env = { APP_ENV: 'production', CLERK_AUTHORIZED_PARTIES: 'https://app.maelvyn.biz.id,https://www.maelvyn.biz.id' }
+    expect(() => assertAuthorizedParty('https://evil.example', env)).toThrow(AppError)
+    expect(() => assertAuthorizedParty('https://app.maelvyn.biz.id', env)).not.toThrow()
+  })
+
+  it('preserves development compatibility while still rejecting an explicitly unlisted azp', () => {
+    expect(() => assertAuthorizedParty(undefined, { APP_ENV: 'development' })).not.toThrow()
+    expect(() => assertAuthorizedParty('https://evil.example', { APP_ENV: 'development', CLERK_AUTHORIZED_PARTIES: 'https://maelvyn-dev.pages.dev' })).toThrow(AppError)
   })
 })
