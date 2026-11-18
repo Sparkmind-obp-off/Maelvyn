@@ -63,7 +63,7 @@ Agents may research, plan, coordinate, prepare, and execute only within explicit
 | [Full-Stack Implementation Blueprint](docs/FULL-STACK-IMPLEMENTATION.md) | Runtime, repository layout, agentic backend modules, tests, and build sequence |
 | [Database Schema](docs/DATABASE-SCHEMA.md) | Initial relational domain model and data integrity rules |
 | [API Contract](docs/API-CONTRACT.md) | MVP endpoints, approval states, permissions, and finance posting rules |
-| [Security, Privacy & Operations](docs/SECURITY-PRIVACY-OPERATIONS.md) | Data classification, access, privacy, audit, incident, and backup controls |
+| [Security, Privacy & Operations](docs/SECURITY-PRIVACY-OPERATIONS.md) | Data classification, access, privacy, audit, incident, and backup controls |\n| [Commerce OS Master Architecture](docs/COMMERCE-OS-MASTER-ARCHITECTURE.md) | Hybrid marketplace, independent storefronts, partner distribution, commerce modules, finance, and agentic controls |\n| [Legal Entity & Operating Model](docs/LEGAL-ENTITY-AND-OPERATING-MODEL.md) | Staged legal structure, operating-company boundaries, entity verification, and restructuring triggers |\n| [Domain & Environment Strategy](docs/DOMAIN-AND-ENVIRONMENT-STRATEGY.md) | Domain map, development/production isolation, DNS, Clerk, and Cloudflare release boundaries |\n| [Clerk Production Runbook](docs/CLERK-PRODUCTION-RUNBOOK.md) | MAELVYN-specific Clerk production prerequisites, provisioning, verification, and rollback |\n| [Production Readiness Checklist](docs/PRODUCTION-READINESS-CHECKLIST.md) | Evidence-based release gates for identity, infrastructure, security, finance, and commerce |\n| [Architecture Decision Register](docs/ARCHITECTURE-DECISIONS.md) | Versioned architecture decisions and unresolved implementation questions |
 | [Initial SQL Migration](migrations/0001_initial.sql) | D1/SQLite schema baseline; structure only, no participant or financial data |
 
 ## Authentication SDK upgrade
@@ -172,3 +172,15 @@ Material changes to governance, ownership principles, capital rules, participant
 | [Implementation Foundation Plan](docs/IMPLEMENTATION-FOUNDATION-PLAN.md) | Staged build sequence and first milestone acceptance criteria |
 
 The initial stack decision supersedes earlier provider-selection language where there is a conflict. Clerk is selected; Development is for synthetic development only, and Production remains blocked until the domain and release gates are ready.
+
+## Commerce and production architecture upgrade
+
+The current target architecture is documented in:
+- [MAELVYN Commerce OS Master Architecture](docs/COMMERCE-OS-MASTER-ARCHITECTURE.md)
+- [Legal Entity & Operating Model](docs/LEGAL-ENTITY-AND-OPERATING-MODEL.md)
+- [Domain & Environment Strategy](docs/DOMAIN-AND-ENVIRONMENT-STRATEGY.md)
+- [Clerk Production Runbook](docs/CLERK-PRODUCTION-RUNBOOK.md)
+- [Production Readiness Checklist](docs/PRODUCTION-READINESS-CHECKLIST.md)
+- [Architecture Decision Register](docs/ARCHITECTURE-DECISIONS.md)
+
+**Important production warning (2026-11-18):** Cloudflare reports the `maelvyn.biz.id` zone as active and the root/www hostnames attached to `maelvyn-dev`. That project's current environment is configured with `APP_ENV=development`, Clerk Development credentials/issuer, and `maelvyn-dev-db`. Do not treat this custom-domain binding as a production release. Keep production launch blocked until a separate production identity, database, storage, secrets, and deployment have been verified and the domain is cut over safely.
