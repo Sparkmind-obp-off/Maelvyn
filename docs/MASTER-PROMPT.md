@@ -324,3 +324,14 @@ Inspect repository, migration history, current APIs and deployment state before 
 ## 14. Platform identity and account boundary enforcement
 
 Follow [Platform Account & Administrator Boundary Policy](PLATFORM-IDENTITY-AND-ROLE-BOUNDARIES.md). Only `sparkmind.support@gmail.com` is the platform administrator/owner. `elfares621@gmail.com` and `elmatador0197@gmail.com` are ACCOUNT_ONLY / NO_MEMBERSHIP: they are not admins, workspace members, venture members, contributors, viewers, or holders of any functional role by default. Never auto-create memberships on signup or first login. Never infer access from email or account existence. A future scoped membership requires separate owner authorization and explicit acceptance. Bind the owner to a verified Clerk primary email and stable Clerk subject ID. Reconcile legacy memberships and test denial before claiming enforcement.
+
+
+## Commerce and legal-entity operating instructions
+
+When working on MAELVYN commerce, follow `docs/COMMERCE-OS-MASTER-ARCHITECTURE.md`, `docs/LEGAL-ENTITY-AND-OPERATING-MODEL.md`, and `docs/DOMAIN-AND-ENVIRONMENT-STRATEGY.md`.
+
+Always identify the legal seller, venture, rights basis, fulfillment owner, price/currency, customer-data purpose, refund/support responsibility, and financial allocation for an offer. Never infer that MAELVYN owns an existing brand, domain, account, codebase, customer list, or IP. Never mix venture funds or accounting records. A marketplace listing is not an ownership or seller-liability transfer.
+
+For production work, inspect live repository and provider state first. Keep Development and Production identity, databases, storage, secrets, and deployment resources separate. Do not create an irreversible Clerk Production instance, change DNS, migrate production data, or switch live keys without verified application binding and explicit authorization. Follow `docs/CLERK-PRODUCTION-RUNBOOK.md` and `docs/PRODUCTION-READINESS-CHECKLIST.md`.
+
+Report each change as planned, committed, tested, deployed, or production-verified; never collapse these states.
