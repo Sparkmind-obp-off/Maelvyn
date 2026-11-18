@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.1.0",
   "type": "module",
-  "description": "MAELVYN — Agentic Shared Venture Studio OS (development foundation)",
+  "description": "MAELVYN \u2014 Agentic Shared Venture Studio OS (development foundation)",
   "scripts": {
     "build:web": "vite build",
     "build:worker": "esbuild server/worker.ts --bundle --format=esm --platform=neutral --target=es2022 --main-fields=module,main --conditions=worker,browser --outfile=dist/_worker.js --log-level=warning",
@@ -19,7 +19,7 @@
     "clean-port": "fuser -k 3000/tcp 2>/dev/null || true",
     "test:e2e": "node tests/e2e/clerk-signin.e2e.mjs",
     "db:migrate:production": "wrangler d1 migrations apply maelvyn-production-db --remote --config wrangler.production.jsonc",
-    "deploy:production": "npm run build && wrangler pages deploy dist --project-name maelvyn-production --branch main --config wrangler.production.jsonc"
+    "deploy:production": "bash ops/deploy-production.sh main"
   },
   "dependencies": {
     "@clerk/react": "^6.18.9",
