@@ -237,3 +237,20 @@ Maintain a controlled record set for each venture:
 ## 12. Operating standard
 
 A venture is not considered ready for material scale merely because an idea is attractive or an MVP exists. It must demonstrate customer evidence, reliable delivery, understandable economics, accountable ownership, and controls appropriate to its risk.
+
+
+## Commerce venture operating gate
+
+Before a venture sells an offer, its charter must record:
+- Legal seller/contracting party.
+- Product owner and rights/license basis.
+- Customer segment, offer, price, and currency.
+- Channel and distribution permissions.
+- Fulfillment owner, service levels, and capacity.
+- Refunds, complaints, and warranty responsibility.
+- Payment provider/merchant account.
+- Unit economics and reconciliation method.
+- Privacy/data purpose and retention.
+- Launch, pause, and stop conditions.
+
+A venture is not launch-ready merely because its product is listed. It must accept an order, fulfill the promise, support the customer, and reconcile the financial outcome.
