@@ -145,17 +145,17 @@ The MAELVYN Clerk Production instance is present and its custom domain is verifi
 
 | Control | Verified result | Status |
 |---|---|---|
-| Clerk application | Maelvyn | <badge>Found</badge> |
+| Clerk application | Maelvyn | FOUND |
 | Clerk Production instance | Exists | <badge>Found</badge> |
-| Clerk auth domain | `clerk.maelvyn.biz.id` | <badge color="success">Verified</badge> |
+| Clerk auth domain | `clerk.maelvyn.biz.id` | VERIFIED |
 | Accounts portal | `accounts.maelvyn.biz.id` | <badge color="success">Verified</badge> |
 | DNS / SSL / mail | Clerk reports complete | <badge color="success">Verified</badge> |
-| Google OAuth production credentials | Configured | <badge color="success">Configured</badge> |
-| Production users | 0 | <badge color="warning">Owner bootstrap pending</badge> |
-| Production Pages project | Not provisioned/verified | <badge color="warning">Blocked</badge> |
-| Current Pages root/www binding | Attached to `maelvyn-dev` with development auth settings | <badge color="danger">P0</badge> |
+| Google OAuth production credentials | Configured | CONFIGURED |
+| Production users | 0 | PENDING |
+| Production Pages project | Not provisioned/verified | BLOCKED |
+| Current Pages root/www binding | Attached to `maelvyn-dev` with development auth settings | P0 BLOCKER |
 | Production D1 | Not provisioned | <badge color="warning">Blocked</badge> |
-| MAELVYN-specific R2 | Not found in account bucket listing | <badge color="warning">Blocked if required</badge> |
+| MAELVYN-specific R2 | Not found in account bucket listing | BLOCKED IF REQUIRED |
 | Clerk Production secret bound to production Worker | Not verified; API redacts secret values | <badge color="warning">Blocked</badge> |
 
 **Release decision: NOT READY FOR PUBLIC PRODUCTION.** Clerk Production itself exists and its auth domain is verified, but the deployed MAELVYN web application still uses Development settings and the development D1 binding.
