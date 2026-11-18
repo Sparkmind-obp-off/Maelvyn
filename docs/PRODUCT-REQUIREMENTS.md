@@ -70,3 +70,27 @@ Search and exports are permission-scoped. Portfolio summaries retain venture dri
 
 ## Release definition
 P0 workflows, role-boundary tests, financial invariants, migration/restore tests, and manual security review must pass. Public signup and public investment functionality are excluded.
+
+## Commerce OS requirements extension
+
+The commerce product target is hybrid: a central discovery marketplace, independent venture storefronts, and partner/distribution channels. The first MVP must not attempt a full multi-vendor marketplace.
+
+### Initial commerce MVP
+1. Seller/venture/product/rights registry.
+2. Product catalogue and offer versioning.
+3. One independent storefront.
+4. Order creation and immutable order snapshot.
+5. Payment status adapter in test mode.
+6. Digital or manual service fulfillment with verifiable completion.
+7. Venture-level revenue/cost reporting and reconciliation evidence.
+8. Customer support and refund workflow.
+
+### Explicit non-goals for first release
+- Custody or automatic splitting of third-party funds.
+- Public self-service vendor onboarding.
+- Autonomous pricing or payout changes.
+- Cross-venture customer data sharing.
+- Unreviewed affiliate commission or tax calculations.
+- Listing products without verified seller and commercial rights.
+
+Acceptance criteria and module boundaries are defined in `docs/COMMERCE-OS-MASTER-ARCHITECTURE.md`.
