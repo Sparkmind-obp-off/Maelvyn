@@ -170,3 +170,12 @@ A separate R2 bucket `maelvyn-production-private` has been created and bound as 
 Creating `maelvyn-production-db` failed because the Cloudflare account reached its 10 D1 database limit. Do not reuse dev D1 or another venture database. A potentially disposable test database must not be deleted without owner approval.
 
 The Production Clerk secret is not configured yet; insert it directly into Cloudflare secret-text. No deployment exists. The current root/www domains remain attached to `maelvyn-dev` until the isolated project is complete, tested and cutover is explicitly approved.
+
+
+## 11. Production D1 completion — 2026-11-18
+
+The Production D1 database has now been created: `maelvyn-production-db` (UUID `6b42d874-61c8-4ebe-8b79-de7432e094de`, APAC). It is bound to the isolated `maelvyn-production` Pages project as `DB`. Migrations 0001–0008 have been applied and verified, with 59 total tables including internal `_cf_KV`.
+
+The Development database `maelvyn-dev-db` (UUID `ad21e923-f1f2-4a77-b5f7-d9b85afe217b`) was not deleted or modified. No existing database was deleted to make room.
+
+Production-only Wrangler config is `wrangler.production.jsonc`; scripts `db:migrate:production` and `deploy:production` are available. The Production Pages project has exact Clerk Production public configuration and D1/R2 bindings. It still lacks `CLERK_SECRET_KEY`, an actual deployment, Production E2E, owner bootstrap and restore evidence. Root/www stay on the existing dev project until explicit approved cutover.
