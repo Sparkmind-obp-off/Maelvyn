@@ -159,3 +159,14 @@ The remaining blocker is application environment separation, not Clerk instance 
 6. Only after the production release checklist passes, move `maelvyn.biz.id` and `www.maelvyn.biz.id` from the development project to the dedicated production project.
 
 No live application environment, DNS, Clerk auth configuration, or database was changed during this audit.
+
+
+## 10. Production provisioning update — 2026-11-18
+
+A separate Pages project `maelvyn-production` (ID `77cd5d42-5667-4ac4-9dbd-edb60c5ea249`) now exists at `https://maelvyn-production.pages.dev`, without custom root/www domains. It has Production Clerk public configuration and the authorized-party allowlist for that Pages hostname. Its preview and production configurations use `fail_open=false`.
+
+A separate R2 bucket `maelvyn-production-private` has been created and bound as `ARTIFACTS`. The application does not yet implement R2 artifact handling.
+
+Creating `maelvyn-production-db` failed because the Cloudflare account reached its 10 D1 database limit. Do not reuse dev D1 or another venture database. A potentially disposable test database must not be deleted without owner approval.
+
+The Production Clerk secret is not configured yet; insert it directly into Cloudflare secret-text. No deployment exists. The current root/www domains remain attached to `maelvyn-dev` until the isolated project is complete, tested and cutover is explicitly approved.
