@@ -152,3 +152,21 @@ No Clerk configuration was changed during this audit. In particular, do not swit
 The Production publishable key is available from Clerk metadata. The Production secret key is not exposed by the connected read API and must never be copied into chat, repository files, or browser code. Add it directly as a Cloudflare secret through the authenticated Cloudflare dashboard or a secure secret-management path.
 
 **Clerk status:** Production instance exists and its auth domain is verified. This does not mean the MAELVYN web application is already using it.
+
+
+## 12. Production binding correction — 2026-11-18
+
+The verified Clerk application and Production instance listed in §11 are correct. Earlier statements in §§1, 9 and 10 that no MAELVYN Production application was found are historical and superseded by §11 and `docs/FULL-REPOSITORY-AND-PRODUCTION-GAP-AUDIT.md`.
+
+Important distinction: Clerk Production instance/domain exists, but the Cloudflare app remains attached to Clerk Development. Production identity is not yet wired into a dedicated MAELVYN production application environment.
+
+Use the live application contract:
+- Frontend publishable key: `CLERK_PUBLISHABLE_KEY` (served by `GET /api/v1/config`).
+- Backend secret: `CLERK_SECRET_KEY` (Cloudflare secret-text only).
+- Issuer: `CLERK_ISSUER=https://clerk.maelvyn.biz.id`.
+- JWKS: `CLERK_JWKS_URL=https://clerk.maelvyn.biz.id/.well-known/jwks.json`.
+- Authorized parties: explicit exact production application origins; do not use wildcard or empty allowlist.
+
+Never put the Production secret key into GitHub, Genspark, prompts, ordinary Pages vars, browser configuration, logs or ChatGPT. Do not use a secret from another Clerk app. The Production instance currently has zero users as of the audit snapshot. The owner must personally sign in and complete the audited owner claim after secure bindings and recovery are verified.
+
+The existing E2E script is Development-only and refuses live keys. A separate Production-safe smoke test must be created with safeguards and must not automate the owner claim.
