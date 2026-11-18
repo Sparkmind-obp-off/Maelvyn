@@ -125,3 +125,37 @@ Read-only inspection of the connected Cloudflare account found:
 6. Confirm DNS/TLS and smoke tests after cutover.
 
 Do not delete the current project or database. Do not run production migrations against `maelvyn-dev-db`. The correction should be a reversible, staged domain cutover.
+
+
+## 10. Corrected live audit — 2026-11-18
+
+The MAELVYN-specific Clerk connection has now been identified. Clerk Production already exists; do not create another instance:
+- Clerk application: `Maelvyn`.
+- Production instance: `ins_3MGb1IDHmPZvgywrCn50QjHDaW4`.
+- Auth frontend: `clerk.maelvyn.biz.id`.
+- Accounts portal: `accounts.maelvyn.biz.id`.
+- Clerk domain, five required CNAME records, SSL, and mail verification: `complete`.
+- Google OAuth production credentials: configured.
+- Production Clerk users: 0 at audit time.
+
+The remaining blocker is application environment separation, not Clerk instance creation.
+
+### Verified Cloudflare state
+
+- Pages project `maelvyn-dev` has `maelvyn-dev.pages.dev`, `maelvyn.biz.id`, and `www.maelvyn.biz.id` attached.
+- Its production deployment target still has `APP_ENV=development`, Development Clerk issuer/JWKS, and a test publishable key.
+- It binds D1 `maelvyn-dev-db` (ID `ad21e923-f1f2-4a77-b5f7-d9b85afe217b`).
+- D1 read-only inspection confirms migrations `0001` through `0008` are applied and the application schema exists. The Cloudflare database list's `num_tables` metadata was inconsistent with direct SQL inspection; use the direct D1 query as the schema evidence.
+- The account's R2 bucket listing contains no MAELVYN-specific bucket. Do not reuse another venture's private bucket.
+- The Cloudflare API response redacts secret-text values; presence/value of `CLERK_SECRET_KEY` cannot be verified from that response. Do not interpret a redacted empty value as proof that a secret is absent.
+
+### Required next steps
+
+1. Keep `maelvyn-dev` and `maelvyn-dev-db` as Development; do not relabel or repurpose them.
+2. Create a dedicated production Pages/Worker deployment and a distinct production D1 database, plus a MAELVYN-specific private R2 bucket if digital asset storage is needed.
+3. Bind the existing Clerk Production instance to the production application: `CLERK_ISSUER=https://clerk.maelvyn.biz.id`, production JWKS endpoint, and the Production publishable key. Add the Production secret key directly through a secure Cloudflare secret entry; never commit or paste it into chat.
+4. Use a staging hostname and test Google sign-in, callback URLs, session verification, authorization, owner bootstrap, and invitation flows.
+5. Review sign-up mode, MFA, CAPTCHA, terms/privacy URLs, and session policy before external onboarding.
+6. Only after the production release checklist passes, move `maelvyn.biz.id` and `www.maelvyn.biz.id` from the development project to the dedicated production project.
+
+No live application environment, DNS, Clerk auth configuration, or database was changed during this audit.
