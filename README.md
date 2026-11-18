@@ -80,10 +80,10 @@ The browser client now targets Clerk Core 3 via `@clerk/react` (Node.js >=20.9.0
 | Item | Status |
 |---|---|
 | Development URL | https://maelvyn-dev.pages.dev (Cloudflare Pages, user-owned account) |
-| Identity | Clerk Development and Production instances exist. Production auth domain is verified; application deployment is still Development-configured and not production-ready |
+| Identity | Clerk Development and Production instances exist. Production app is configured for Clerk Production; server secret is not installed, so authenticated use remains blocked |
 | Database | D1 `maelvyn-dev-db` (development). Migrations `0001`–`0008` applied (remote, 2026-11-18; pre-migration export kept outside the repo) |
 | Production | **Deployed / partially verified** on `maelvyn-production`; Clerk server secret is missing, so user sign-in and authenticated workflows remain blocked. See [Production verification](docs/MAELVYN-PRODUCTION-DEPLOYMENT-VERIFICATION.md). |
-| Costs incurred | None that were intentionally triggered. Health checks call free read-only endpoints only |
+| Costs incurred | Research/actor costs are recorded per run in the Market Evidence register; infrastructure and provider billing must be reviewed in their respective accounts |
 
 ### What works today
 The latest repository verification reports 94 automated tests passing across 9 test files, plus typecheck, lint, and build. Production-specific end-user flows remain blocked pending Clerk secret installation; see the dated Production verification report.
