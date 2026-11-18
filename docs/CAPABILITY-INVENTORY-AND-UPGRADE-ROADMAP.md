@@ -180,3 +180,18 @@ Update this register after each implementation batch with commit, test evidence 
 ## Account and administrator boundary (mandatory policy)
 
 Only `sparkmind.support@gmail.com` is the platform administrator/Platform Owner. `elfares621@gmail.com` and `elmatador0197@gmail.com` are account-only identities, not workspace members, venture members or assigned functional roles by default. No auto-membership on signup/first login. Account identity, platform role, workspace membership and venture assignment must be separate. See [Platform Account & Administrator Boundary Policy](PLATFORM-IDENTITY-AND-ROLE-BOUNDARIES.md). Add this invariant to P1 acceptance tests and reconcile existing development memberships before modifying records.
+
+
+## Commerce capability extension
+
+Add the following capabilities to the portfolio roadmap:
+- Seller/legal-entity and rights registry.
+- Product/offer/catalogue and storefront engine.
+- Order, payment event, refund, and dispute lifecycle.
+- Digital/service/subscription/physical fulfillment adapters.
+- Venture ledger integration and provider reconciliation.
+- Central marketplace discovery.
+- Partner/affiliate attribution and commission reporting.
+- Commerce agent support with approval gates.
+
+Priority rule: one venture and one offer must complete a verified order-to-fulfillment-to-reconciliation cycle before multi-vendor marketplace, public partner onboarding, or autonomous commerce execution is prioritized.
