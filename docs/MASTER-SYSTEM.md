@@ -350,3 +350,14 @@ The sequence is dependency-aware: P0 stabilize the current development app and C
 ## 17. Canonical platform identity and account boundaries
 
 Follow [Platform Account & Administrator Boundary Policy](PLATFORM-IDENTITY-AND-ROLE-BOUNDARIES.md). The sole platform administrator/owner is `sparkmind.support@gmail.com`. The accounts `elfares621@gmail.com` and `elmatador0197@gmail.com` are account identities only: no administrator role, no default workspace membership, no venture membership, and no functional role. Account existence and login do not imply membership or access. No first-login auto-membership. All private access is denied unless a separately authorized, scoped membership is explicitly accepted and recorded. These assignments are approved policy, not a claim that current Clerk IDs/database rows have already been reconciled.
+
+
+## Commerce OS integration addendum (2026-11-18)
+
+MAELVYN's commerce operating model is now specified in `docs/COMMERCE-OS-MASTER-ARCHITECTURE.md`: Hybrid Commerce comprising a Central Marketplace, Independent Venture Storefronts, and a Partner & Distribution Network, with All Commerce category coverage subject to eligibility and legal review.
+
+This addendum does not change the Shared Economic Core or Active Venture Studio foundation. Commerce is a portfolio capability, not a new legal entity and not a pooled seller account. Every offer must identify its legal seller, product/IP rights, customer-data purpose, fulfillment owner, liabilities, and venture-level financial records. Marketplace discovery does not transfer ownership or liability.
+
+For the staged legal operating model, see `docs/LEGAL-ENTITY-AND-OPERATING-MODEL.md`. The existing PT Perorangan is only a candidate initial operator subject to verification of legal status, KBLI, permits, and actual activity. MAELVYN itself is not thereby represented as a separate legal entity.
+
+Production status is governed by `docs/PRODUCTION-READINESS-CHECKLIST.md`; a domain or successful deployment is not sufficient evidence of production readiness.
