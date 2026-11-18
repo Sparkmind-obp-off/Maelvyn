@@ -135,3 +135,19 @@ Stop implementation and report if:
 ## Execution rule
 
 Implement the smallest complete vertical slice. Prefer real code with mocks and verifiable behavior over diagrams, placeholder integrations, or claims of full automation.
+
+
+## Commerce and production workstream
+
+Before public production, complete the P0 domain/environment remediation in `docs/PRODUCTION-READINESS-CHECKLIST.md`. Confirm the MAELVYN Clerk application binding, provision distinct production resources, and stage the application on a non-primary hostname.
+
+Commerce MVP build order:
+1. Seller and rights registry.
+2. Product and offer registry.
+3. One venture storefront.
+4. Order and payment status in test mode.
+5. Manual/digital fulfillment with evidence.
+6. Venture financial reconciliation.
+7. Production gates and controlled release.
+
+Do not enable live payment, public vendor onboarding, cross-venture customer sharing, or autonomous financial actions in the foundation milestone.
