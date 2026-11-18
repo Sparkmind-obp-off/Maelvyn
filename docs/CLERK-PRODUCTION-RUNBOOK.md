@@ -186,3 +186,16 @@ A dedicated Cloudflare Pages project has been created:
 **D1 provisioning is blocked:** Cloudflare rejected creation of `maelvyn-production-db` because the account is at its 10-database limit (error 7406). Do not use `maelvyn-dev-db` or another venture's database. A currently empty-looking `test-permission-check-invalid` database exists but must not be deleted without explicit owner approval.
 
 **Still required:** add `CLERK_SECRET_KEY` as Cloudflare secret-text directly (never in chat/GitHub/Genspark); create or free a dedicated Production D1 slot; bind it as `DB`; apply migrations only after verifying the new database is empty and isolated; deploy and run smoke/E2E; owner personally signs in and claims owner; complete backup/restore and release gates. Root/www remain on the Development project until explicit cutover approval.
+
+
+## 14. Production D1 is now provisioned — 2026-11-18
+
+- `maelvyn-production-db` UUID `6b42d874-61c8-4ebe-8b79-de7432e094de`, APAC.
+- Bound to the dedicated Pages project as `DB`.
+- Migrations 0001–0008 applied in order; all eight are recorded in `d1_migrations`.
+- 59 tables verified, including Cloudflare internal `_cf_KV`.
+- Initial production data: no workspaces, people, ventures or memberships. Two policy rows were seeded by migration 0004.
+- Development D1 `maelvyn-dev-db` UUID `ad21e923-f1f2-4a77-b5f7-d9b85afe217b` was not deleted or modified.
+- `wrangler.production.jsonc` now describes the Production-only DB, R2 and Clerk public configuration. Package scripts `db:migrate:production` and `deploy:production` were added.
+
+Remaining blockers: add `CLERK_SECRET_KEY` securely as Cloudflare secret-text, connect a verified deployment process, deploy and test Production, owner personally completes sign-in/claim, implement R2 artifact delivery, backup/restore, legal review and later approved domain cutover.
