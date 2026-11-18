@@ -231,3 +231,19 @@ Added `.github/workflows/deploy-production.yml`:
 - Does not change root/www domains.
 
 Before running it, configure those GitHub environment values with a narrowly scoped Cloudflare API token. Also add the MAELVYN Clerk Production `CLERK_SECRET_KEY` through Cloudflare Pages secret-text. The workflow has not been run; no deployment exists yet. The first deployed /ready check is expected to remain blocked until the Clerk secret is set.
+
+
+## 16. Wrangler-only deployment governance — 2026-11-18
+
+The owner clarified that Production deployment must be executed directly through Cloudflare Wrangler CLI, not CI/CD or GitHub Actions.
+
+Changes:
+- Added `docs/GENSPARK-WRANGLER-EXECUTION-MASTER-PROMPT.md` with exact resource manifest, security rules, execution order, Wrangler commands, validation tests, stop conditions and evidence-based reporting.
+- Updated `docs/MASTER-SYSTEM.md`, `docs/MASTER-PROMPT.md` and `docs/GENSPARK-MASTER-IMPLEMENTATION-PROMPT.md` to make Wrangler-only deployment mandatory.
+- Removed `.github/workflows/deploy-production.yml`. Do not recreate it.
+- Retained `.github/workflows/ci.yml` for typecheck/lint/test/build verification only; it is not a deployment path.
+- `wrangler.production.jsonc` contains Production non-secret vars and dedicated D1/R2 bindings. It must never contain `CLERK_SECRET_KEY`.
+- Install Clerk Production secret only with Wrangler's interactive Pages command: `npx wrangler pages secret put CLERK_SECRET_KEY --project-name maelvyn-production`. The owner must enter the value privately at the terminal prompt. Confirm only secret name with `wrangler pages secret list`.
+- Production deploy command: `npm run deploy:production`; migration command only if ledger incomplete: `npm run db:migrate:production`.
+
+No secret was installed and no Production deployment was triggered in this documentation change. The isolated Pages project still has no deployment. Genspark account control is not connected; this prompt is ready for the user to submit to Genspark Super Agent for execution. Do not claim task submission or deployment.
