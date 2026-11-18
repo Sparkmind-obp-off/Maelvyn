@@ -217,3 +217,12 @@ Measure progress through evidence:
 ## 14. Foundational rule
 
 **MAELVYN may coordinate shared ambition, but it must never erase individual consent, ownership, accountability, or financial boundaries.**
+
+
+## Commerce ecosystem extension (2026-11-18)
+
+The operating model is extended by a Hybrid Commerce Ecosystem: Central Marketplace + Independent Venture Storefronts + Partner & Distribution Network. Scope includes digital products, software/SaaS, AI products, services, physical goods, subscriptions, licensing/IP, B2B offers, affiliate, reseller, and distribution activities, subject to legal/provider eligibility.
+
+Commerce operates as shared infrastructure for separately accountable ventures. It does not make MAELVYN the automatic legal seller or owner of every product. Seller identity, ownership/licensing, customer data, liabilities, fulfillment, and financial records must be explicit per offer. See `docs/COMMERCE-OS-MASTER-ARCHITECTURE.md`.
+
+The proposed initial legal operating arrangement is described in `docs/LEGAL-ENTITY-AND-OPERATING-MODEL.md`; it is not a legal conclusion and requires verification of the existing entity's status, KBLI, permits, tax, and contracts.
