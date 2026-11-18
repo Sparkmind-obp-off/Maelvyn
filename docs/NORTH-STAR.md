@@ -95,3 +95,17 @@ Add these supporting measures without replacing EBAV:
 - **Evidence Coverage:** material agent recommendations with traceable sources and review status.
 
 Do not optimize for agent count, tool-call volume, token volume, or autonomous action count. Agentic capability is valuable only when it improves verified venture outcomes safely and economically.
+
+
+## Commerce outcome measures
+
+Commerce is a portfolio capability and must be measured by verified customer outcomes, not catalogue size. Add the following measures to the venture scorecard where relevant:
+- Paid orders successfully fulfilled.
+- Net revenue and contribution margin by venture and channel.
+- Refund, dispute, and payment failure rates.
+- Repeat purchase and retention.
+- Fulfillment success and time-to-delivery.
+- Customer acquisition cost and payback evidence.
+- Reconciliation variance between orders, provider settlements, and venture ledger.
+
+GMV is a volume indicator, not revenue or profit. Do not optimize for listings, impressions, or agent activity without evidence of customer value and sustainable economics.
