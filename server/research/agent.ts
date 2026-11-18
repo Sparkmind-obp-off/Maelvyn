@@ -10,12 +10,15 @@ import { buildBrief, detectInjection, type EvidenceForBrief } from './brief'
 
 export const CreateResearchInput = z.object({
   objective: z.string().trim().min(10).max(400),
-  mode: z.enum(['synthetic', 'live']).default('synthetic'),
+  /** Resolved by the route: Production defaults to real ('live') evidence; other environments to 'synthetic'. */
+  mode: z.enum(['synthetic', 'live']).optional(),
   max_results: z.number().int().min(1).max(5).default(5),
   extract_top_source: z.boolean().default(false),
   budget_credits: z.number().int().min(0).max(10).default(3),
 })
 export type CreateResearchInput = z.infer<typeof CreateResearchInput>
+/** Mode is always resolved before execution — Production never silently produces synthetic evidence. */
+export type ResearchInput = CreateResearchInput & { mode: 'synthetic' | 'live' }
 
 type AgentVersion = { id: string; agent_id: string; version: string; autonomy_level: string; tool_allowlist_json: string; data_classes_json: string; max_task_credits: number }
 
@@ -49,7 +52,7 @@ function usage(env: Env, p: { workspaceId: string; ventureId: string; taskId: st
  * a replay with a different body is rejected.
  */
 export async function createAndRunResearch(
-  env: Env, principal: Principal, access: VentureAccess, input: CreateResearchInput, idempotencyKey: string, requestId: string, deps: RunDeps = {},
+  env: Env, principal: Principal, access: VentureAccess, input: ResearchInput, idempotencyKey: string, requestId: string, deps: RunDeps = {},
 ): Promise<{ taskId: string; replayed: boolean }> {
   const requestHash = await sha256Hex(JSON.stringify({ v: access.ventureId, ...input }))
   const scope = `research:${access.workspaceId}`

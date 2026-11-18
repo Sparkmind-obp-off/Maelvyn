@@ -95,6 +95,11 @@ export function createApp(deps: AppDeps = {}) {
 
   // ---- Authentication (everything below) ------------------------------------
   app.use('*', async (c, next) => {
+    // Fail closed: without the server-side Clerk secret a Production request cannot be tied to a
+    // verified identity, and provisioning one would create profile-less accounts. Refuse instead.
+    if (c.env.APP_ENV === 'production' && !c.env.CLERK_SECRET_KEY) {
+      throw new AppError('SERVICE_UNAVAILABLE', 'Identity provider is not fully configured for this environment.')
+    }
     const h = c.req.header('Authorization') ?? ''
     const m = /^Bearer\s+(.+)$/i.exec(h)
     if (!m) throw new AppError('UNAUTHENTICATED', 'Authentication required.')
@@ -221,7 +226,10 @@ export function createApp(deps: AppDeps = {}) {
     if (!idem || !/^[A-Za-z0-9_-]{8,100}$/.test(idem)) throw new AppError('VALIDATION_ERROR', 'A valid Idempotency-Key header (8–100 chars) is required.')
     await rateLimit(c.env, `research:${p.personId}`, 10)
     const body = await parseJson(c, CreateResearchInput)
-    const r = await createAndRunResearch(c.env, p, access, body, idem, c.get('requestId'), deps.run)
+    // Production must never silently produce synthetic evidence: real ('live') is the default there.
+    // Non-production defaults to 'synthetic' so no paid provider is ever called by accident.
+    const mode = body.mode ?? (c.env.APP_ENV === 'production' ? 'live' : 'synthetic')
+    const r = await createAndRunResearch(c.env, p, access, { ...body, mode }, idem, c.get('requestId'), deps.run)
     return ok(c, { task_id: r.taskId, replayed: r.replayed }, r.replayed ? 200 : 201)
   })
 

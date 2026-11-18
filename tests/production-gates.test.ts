@@ -124,7 +124,7 @@ describe('production readiness and secret hygiene', () => {
   })
 
   it('an unverified identity in production gets no owner role, membership or workspace', async () => {
-    const t = setup({ env: prodVars })
+    const t = setup({ env: { ...prodVars, CLERK_SECRET_KEY: 'sk_live_fixture' } })
     expect((await t.call('POST', '/platform/owner/claim', 'unverified-owner')).status).toBe(403)
     const s = await t.call('GET', '/session', 'unverified-owner')
     expect(s.body).toMatchObject({ platform_role: null, memberships: [] })

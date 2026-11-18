@@ -1,4 +1,5 @@
 import { Show, SignInButton, UserButton } from '@clerk/react'
+import { EnvContext } from './lib/hooks'
 import { Link, NavLink, Route, Routes, useParams } from 'react-router-dom'
 import Landing from './pages/Landing'
 import WorkspacesPage from './pages/Workspaces'
@@ -20,6 +21,7 @@ import VentureRights from './pages/VentureRights'
 import VentureOps from './pages/VentureOps'
 import VentureMemory from './pages/VentureMemory'
 import VentureTeam from './pages/VentureTeam'
+import VentureArtifacts from './pages/VentureArtifacts'
 
 function WorkspaceNav() {
   const { wid } = useParams()
@@ -51,6 +53,7 @@ function VentureNav() {
       <NavLink to={`${base}/rights`} className={cls}>Kontribusi &amp; Hak</NavLink>
       <NavLink to={`${base}/ops`} className={cls}>Operasi</NavLink>
       <NavLink to={`${base}/memory`} className={cls}>Memori</NavLink>
+      <NavLink to={`${base}/artifacts`} className={cls}>Artefak</NavLink>
     </nav>
   )
 }
@@ -65,6 +68,7 @@ function WithNav({ children }: { children: React.ReactNode }) {
 
 export default function App({ environment, identityInstance, dataPolicy }: { environment: string; identityInstance: string; dataPolicy: string }) {
   return (
+    <EnvContext.Provider value={{ environment, identityInstance, dataPolicy }}>
     <div className="min-h-screen">
       {environment !== 'production' && (
         <div role="note" className="bg-amber-500/15 px-4 py-1.5 text-center text-xs text-amber-200">
@@ -110,6 +114,7 @@ export default function App({ environment, identityInstance, dataPolicy }: { env
           <Route path="/w/:wid/v/:vid/rights" element={<V><VentureRights /></V>} />
           <Route path="/w/:wid/v/:vid/ops" element={<V><VentureOps /></V>} />
           <Route path="/w/:wid/v/:vid/memory" element={<V><VentureMemory /></V>} />
+          <Route path="/w/:wid/v/:vid/artifacts" element={<V><VentureArtifacts /></V>} />
           <Route path="/w/:wid/research/:tid" element={<Protected><WithNav><ResearchPage /></WithNav></Protected>} />
           <Route path="*" element={<p className="text-slate-400">Halaman tidak ditemukan.</p>} />
         </Routes>
@@ -118,6 +123,7 @@ export default function App({ environment, identityInstance, dataPolicy }: { env
         Participation by Choice. Ownership by Agreement. · Repositori ini bukan entitas hukum, penawaran investasi, atau komitmen mengikat.
       </footer>
     </div>
+    </EnvContext.Provider>
   )
 }
 
@@ -128,7 +134,7 @@ function Protected({ children }: { children: React.ReactNode }) {
       <Show when="signed-out">
         <div className="card mx-auto max-w-md text-center">
           <p className="mb-4 text-slate-300">Silakan masuk untuk mengakses workspace.</p>
-          <SignInButton mode="modal"><button className="btn-primary">Masuk dengan Clerk (Development)</button></SignInButton>
+          <SignInButton mode="modal"><button className="btn-primary">Masuk dengan Clerk</button></SignInButton>
         </div>
       </Show>
     </>

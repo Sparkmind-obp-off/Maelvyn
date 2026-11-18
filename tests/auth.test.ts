@@ -106,7 +106,7 @@ describe('authorization & venture isolation', () => {
   })
 
   it('self-service workspace creation is disabled in production', async () => {
-    const t = setup({ env: { APP_ENV: 'production' } })
+    const t = setup({ env: { APP_ENV: 'production', CLERK_SECRET_KEY: 'sk_live_test_fixture' } })
     expect((await t.call('POST', '/workspaces', 'owner', { name: 'Prod attempt' })).status).toBe(403)
   })
 })

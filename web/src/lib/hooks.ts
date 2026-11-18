@@ -1,6 +1,12 @@
 import { useAuth } from '@clerk/react'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { ApiRequestError, createApi, type Api } from './api'
+
+export type EnvInfo = { environment: string; identityInstance: string; dataPolicy: string }
+const DEFAULT_ENV: EnvInfo = { environment: 'development', identityInstance: 'none', dataPolicy: 'synthetic-only' }
+/** Deployment environment, published by `/api/v1/config` via App. */
+export const EnvContext = createContext<EnvInfo>(DEFAULT_ENV)
+export const useEnv = () => useContext(EnvContext)
 
 export function useApi(): Api {
   const { getToken } = useAuth()
