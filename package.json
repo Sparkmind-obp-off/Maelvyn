@@ -17,7 +17,9 @@
     "db:migrate:dev": "wrangler d1 migrations apply maelvyn-dev-db --remote",
     "deploy:dev": "npm run build && wrangler pages deploy dist --project-name maelvyn-dev --branch main",
     "clean-port": "fuser -k 3000/tcp 2>/dev/null || true",
-    "test:e2e": "node tests/e2e/clerk-signin.e2e.mjs"
+    "test:e2e": "node tests/e2e/clerk-signin.e2e.mjs",
+    "db:migrate:production": "wrangler d1 migrations apply maelvyn-production-db --remote --config wrangler.production.jsonc",
+    "deploy:production": "npm run build && wrangler pages deploy dist --project-name maelvyn-production --branch main --config wrangler.production.jsonc"
   },
   "dependencies": {
     "@clerk/react": "^6.18.9",
