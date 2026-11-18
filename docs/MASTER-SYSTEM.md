@@ -376,3 +376,17 @@ Verified facts:
 - Production remains blocked until isolated resources, secret injection, owner bootstrap, E2E, recovery, privacy/legal and rollback gates pass.
 
 Environment policy remains strict: never mix Development and Production resources. Keep root/www attached to the current project until a separate production deployment passes and the user explicitly approves cutover. Production Clerk secret key must be entered only as a Cloudflare secret; never include it in this document, source code, Genspark prompt, logs or chat.
+
+
+## 16. Wrangler-only Production execution policy — 2026-11-18
+
+The canonical execution contract is now `docs/GENSPARK-WRANGLER-EXECUTION-MASTER-PROMPT.md`. It supersedes any earlier instruction that routes Production deployment through GitHub Actions/CI or Cloudflare Dashboard uploads.
+
+- All MAELVYN Production migrations and Pages deployments must be executed using the repository's Wrangler CLI scripts and `wrangler.production.jsonc`.
+- Production deploy command: `npm run deploy:production`.
+- Production migration command (only if ledger is incomplete): `npm run db:migrate:production`.
+- Production Clerk secret must be installed with Wrangler's hidden interactive prompt: `npx wrangler pages secret put CLERK_SECRET_KEY --project-name maelvyn-production`.
+- Secret presence may be checked by name only with `npx wrangler pages secret list --project-name maelvyn-production`; never retrieve or print its value.
+- CI may validate code, but CI/CD is not a deployment mechanism. The manual GitHub Actions Production deployment workflow has been removed. Do not recreate it.
+- Never use Dashboard upload, Cloudflare API scripts, or another hosting provider for the Production deployment.
+- Keep Development project/database and root/www domains unchanged.
