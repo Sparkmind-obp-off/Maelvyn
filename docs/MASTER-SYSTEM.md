@@ -361,3 +361,18 @@ This addendum does not change the Shared Economic Core or Active Venture Studio 
 For the staged legal operating model, see `docs/LEGAL-ENTITY-AND-OPERATING-MODEL.md`. The existing PT Perorangan is only a candidate initial operator subject to verification of legal status, KBLI, permits, and actual activity. MAELVYN itself is not thereby represented as a separate legal entity.
 
 Production status is governed by `docs/PRODUCTION-READINESS-CHECKLIST.md`; a domain or successful deployment is not sufficient evidence of production readiness.
+
+
+## 15. Verified implementation and Production addendum — 2026-11-18
+
+The canonical repository audit is `docs/FULL-REPOSITORY-AND-PRODUCTION-GAP-AUDIT.md`. It supersedes stale statements in earlier sections that say the MAELVYN Clerk Production instance does not exist.
+
+Verified facts:
+- MAELVYN Clerk Production instance exists and its custom auth domain/SSL are reported complete.
+- The current Cloudflare Pages project `maelvyn-dev` remains configured with `APP_ENV=development`, Clerk Development and `maelvyn-dev-db`, even though Cloudflare labels its deployment target "production".
+- No MAELVYN-specific production D1/R2/project was verified at audit time.
+- Existing code includes React/Vite, Hono, eight migrations, Clerk JWT verification, database-backed roles, venture authorization, governance, finance/rights/operations routes, provider adapters and tests.
+- Workers AI and private R2 artifact delivery are not implemented as live production capabilities.
+- Production remains blocked until isolated resources, secret injection, owner bootstrap, E2E, recovery, privacy/legal and rollback gates pass.
+
+Environment policy remains strict: never mix Development and Production resources. Keep root/www attached to the current project until a separate production deployment passes and the user explicitly approves cutover. Production Clerk secret key must be entered only as a Cloudflare secret; never include it in this document, source code, Genspark prompt, logs or chat.
