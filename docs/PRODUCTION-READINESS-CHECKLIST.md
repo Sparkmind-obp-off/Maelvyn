@@ -177,3 +177,20 @@ The MAELVYN Clerk Production instance is present and its custom domain is verifi
 - [ ] Confirm owner-only access and invitation authorization before changing sign-up mode.
 - [ ] Test MFA and bot protection configuration, session policy, authorization boundaries, audit trail, and recovery.
 - [ ] Move root/www domains only after staging acceptance and rollback plan.
+
+
+## 12. Production provisioning update — 2026-11-18
+
+| Resource | Current evidence | State |
+|---|---|---|
+| Clerk Production | MAELVYN app/instance verified; auth domain/SSL complete; Google OAuth configured | PASS (identity exists) |
+| Pages Production project | `maelvyn-production`, ID `77cd5d42-5667-4ac4-9dbd-edb60c5ea249`, hostname `maelvyn-production.pages.dev` | PASS (project only) |
+| Production vars | APP_ENV, Clerk Production issuer/JWKS/publishable key, authorized party configured | PASS (non-secret vars) |
+| Production secret | Clerk Production `CLERK_SECRET_KEY` not yet set | BLOCKED |
+| Production R2 | `maelvyn-production-private`, APAC Standard, binding `ARTIFACTS` | PASS (resource only; app integration absent) |
+| Production D1 | Creation blocked by account database limit 10 (Cloudflare error 7406) | BLOCKED |
+| Production deployment | No deployment exists | BLOCKED |
+| Production E2E / owner claim / restore | Not run | BLOCKED |
+| Root/www cutover | Not performed; remains attached to dev project | SAFELY DEFERRED |
+
+Do not mark production-ready until all BLOCKED items have evidence. The Development project and its D1 must remain separate.
