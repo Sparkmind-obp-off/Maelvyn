@@ -37,7 +37,7 @@ describe('authentication', () => {
 describe('authorization & venture isolation', () => {
   it('denies a signed-in non-member access to a workspace (indistinguishable from not found)', async () => {
     const t = setup()
-    const { wid, vid } = await bootstrap(t, 'alice')
+    const { wid, vid } = await bootstrap(t, 'owner')
     expect((await t.call('GET', `/workspaces/${wid}`, 'mallory')).status).toBe(404)
     expect((await t.call('GET', `/ventures/${vid}`, 'mallory')).status).toBe(404)
     expect((await t.call('GET', `/workspaces/${wid}/audit`, 'mallory')).status).toBe(404)
@@ -47,8 +47,8 @@ describe('authorization & venture isolation', () => {
 
   it('venture operator in the same workspace cannot read another venture (cross-venture denied)', async () => {
     const t = setup()
-    const { wid, vid } = await bootstrap(t, 'alice')
-    const other = await t.call('POST', `/workspaces/${wid}/ventures`, 'alice', { name: 'Other Venture', code: 'OTH-01', category: 'commerce' })
+    const { wid, vid } = await bootstrap(t, 'owner')
+    const other = await t.call('POST', `/workspaces/${wid}/ventures`, 'owner', { name: 'Other Venture', code: 'OTH-01', category: 'commerce' })
     await grant(t, 'bob', wid, 'venture_operator', vid)
     expect((await t.call('GET', `/ventures/${vid}`, 'bob')).status).toBe(200)
     expect((await t.call('GET', `/ventures/${other.body.venture.id}`, 'bob')).status).toBe(404)
@@ -61,7 +61,7 @@ describe('authorization & venture isolation', () => {
 
   it('viewer cannot create ventures, run research, manage providers or read audit', async () => {
     const t = setup()
-    const { wid, vid } = await bootstrap(t, 'alice')
+    const { wid, vid } = await bootstrap(t, 'owner')
     await grant(t, 'vic', wid, 'viewer', vid)
     expect((await t.call('POST', `/workspaces/${wid}/ventures`, 'vic', { name: 'Nope', code: 'NO-01', category: 'other' })).status).toBe(403)
     expect((await t.call('POST', `/ventures/${vid}/research`, 'vic', { objective: 'Synthetic viewer probe' }, { 'Idempotency-Key': 'idem-viewer-001' })).status).toBe(403)
@@ -71,7 +71,7 @@ describe('authorization & venture isolation', () => {
 
   it('client-forged role/workspace fields are ignored (roles come from the database)', async () => {
     const t = setup()
-    const { wid } = await bootstrap(t, 'alice')
+    const { wid } = await bootstrap(t, 'owner')
     await grant(t, 'vic', wid, 'viewer')
     const r = await t.call('PUT', `/workspaces/${wid}/providers/tavily`, 'vic', { live_enabled: true, daily_credit_cap: 5, per_task_credit_cap: 2, role: 'workspace_admin' }, { 'X-Role': 'workspace_admin' })
     expect(r.status).toBe(403)
@@ -79,7 +79,7 @@ describe('authorization & venture isolation', () => {
 
   it('suspended membership loses access', async () => {
     const t = setup()
-    const { wid } = await bootstrap(t, 'alice')
+    const { wid } = await bootstrap(t, 'owner')
     await grant(t, 'bob', wid, 'governance_approver')
     expect((await t.call('GET', `/workspaces/${wid}`, 'bob')).status).toBe(200)
     await t.db.prepare(`UPDATE workspace_members SET status = 'suspended' WHERE id = ?`).bind(`wsm_bob_${wid}`).run()
@@ -88,6 +88,6 @@ describe('authorization & venture isolation', () => {
 
   it('self-service workspace creation is disabled in production', async () => {
     const t = setup({ env: { APP_ENV: 'production' } })
-    expect((await t.call('POST', '/workspaces', 'alice', { name: 'Prod attempt' })).status).toBe(403)
+    expect((await t.call('POST', '/workspaces', 'owner', { name: 'Prod attempt' })).status).toBe(403)
   })
 })

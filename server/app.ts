@@ -3,8 +3,17 @@ import { z } from 'zod'
 import { audit, auditStatement } from './audit/audit'
 import { authorizeVenture, authorizeWorkspace, listVisibleVentures } from './authorization/policy'
 import type { AppEnv } from './env'
-import { fetchClerkDisplayName, verifyClerkToken, type TokenVerifier } from './identity/clerk'
-import { resolvePrincipal } from './identity/principal'
+import { fetchClerkProfile, verifyClerkToken, type ProfileLookup, type TokenVerifier } from './identity/clerk'
+import { applyProfile, resolvePrincipal } from './identity/principal'
+import { registerPlatformRoutes } from './platform/routes'
+import { isPlatformOwner, platformAudit } from './platform/owner'
+import { registerGovernanceRoutes } from './governance/routes'
+import { registerFinanceRoutes } from './finance/routes'
+import { registerRightsRoutes } from './rights/routes'
+import { registerOperationsRoutes } from './operations/routes'
+import { registerMemoryRoutes } from './memory/routes'
+import { registerPortfolioRoutes } from './portfolio/routes'
+import { registerMeRoutes } from './me/routes'
 import { AppError, errorBody, newId, nowIso, ok, redact, todayUtc } from './lib/http'
 import { rateLimit } from './lib/ratelimit'
 import { parseJson, principalOf } from './lib/request'
@@ -12,9 +21,9 @@ import { registerMemberRoutes } from './members/routes'
 import { getAdapter } from './providers/registry'
 import { CreateResearchInput, createAndRunResearch, reviewResearch, ReviewInput, type RunDeps } from './research/agent'
 
-export type AppDeps = { verifier?: TokenVerifier; lookupName?: (subject: string) => Promise<string | null>; run?: RunDeps }
+export type AppDeps = { verifier?: TokenVerifier; lookupProfile?: ProfileLookup; run?: RunDeps }
 
-const EXPECTED_MIGRATIONS = ['0001_initial.sql', '0002_agentic_foundation.sql', '0003_workspace_invitations.sql']
+const EXPECTED_MIGRATIONS = ['0001_initial.sql', '0002_agentic_foundation.sql', '0003_workspace_invitations.sql', '0004_platform_identity_boundaries.sql', '0005_governance.sql', '0006_finance_rights.sql', '0007_operations.sql', '0008_runtime_platform.sql']
 
 export function createApp(deps: AppDeps = {}) {
   const verifier = deps.verifier ?? verifyClerkToken
@@ -70,21 +79,30 @@ export function createApp(deps: AppDeps = {}) {
     const m = /^Bearer\s+(.+)$/i.exec(h)
     if (!m) throw new AppError('UNAUTHENTICATED', 'Authentication required.')
     const identity = await verifier(m[1]!.trim(), c.env)
-    const principal = await resolvePrincipal(c.env, identity, deps.lookupName ?? ((s) => fetchClerkDisplayName(c.env, s)))
+    const lookup: ProfileLookup = deps.lookupProfile ?? ((s) => fetchClerkProfile(c.env, s))
+    const principal = await resolvePrincipal(c.env, identity, lookup)
     c.set('principal', principal)
+    // Sensitive actions (owner claim, invitation acceptance) re-read the verified email from the identity provider.
+    c.set('refreshProfile', async () => {
+      const prof = await lookup(identity.subject)
+      if (!prof) throw new AppError('UNAUTHENTICATED', 'Could not verify your identity profile. Please retry.')
+      const row = await applyProfile(c.env, principal.personId, prof)
+      const fresh = { ...principal, displayName: row?.display_name ?? principal.displayName, email: prof.primaryEmail, emailVerified: prof.emailVerified }
+      c.set('principal', fresh)
+      return fresh
+    })
     await next()
   })
 
-  app.get('/session', async (c) => {
-    const p = principalOf(c)
-    const memberships = (await c.env.DB.prepare(
-      `SELECT w.id AS workspace_id, w.name, w.slug, w.is_synthetic, wm.role FROM workspace_members wm JOIN workspaces w ON w.id = wm.workspace_id
-       WHERE wm.person_id = ? AND wm.status = 'active' ORDER BY w.created_at`,
-    ).bind(p.personId).all()).results
-    return ok(c, { principal: { person_id: p.personId, display_name: p.displayName }, memberships })
-  })
-
+  registerPlatformRoutes(app)
   registerMemberRoutes(app)
+  registerGovernanceRoutes(app)
+  registerFinanceRoutes(app)
+  registerRightsRoutes(app)
+  registerOperationsRoutes(app)
+  registerMemoryRoutes(app)
+  registerPortfolioRoutes(app)
+  registerMeRoutes(app)
 
   // ---- Workspaces ------------------------------------------------------------
   app.get('/workspaces', async (c) => {
@@ -96,27 +114,25 @@ export function createApp(deps: AppDeps = {}) {
     return ok(c, { workspaces: rows })
   })
 
+  /** Only the Platform Owner creates workspaces (no self-service; no auto-membership for anyone else). */
   app.post('/workspaces', async (c) => {
     const p = principalOf(c)
-    if (c.env.APP_ENV === 'production' || c.env.ALLOW_SELF_SERVICE_WORKSPACES !== 'true') {
-      throw new AppError('FORBIDDEN', 'Self-service workspace creation is disabled in this environment.')
-    }
-    await rateLimit(c.env, `ws-create:${p.personId}`, 5)
-    const body = await parseJson(c, z.object({ name: z.string().trim().min(3).max(80) }))
-    const count = await c.env.DB.prepare(`SELECT COUNT(*) AS n FROM workspace_members WHERE person_id = ? AND role = 'workspace_admin'`).bind(p.personId).first<{ n: number }>()
-    if ((count?.n ?? 0) >= 5) throw new AppError('CONFLICT', 'Development limit reached (5 sandbox workspaces per user).')
+    if (!(await isPlatformOwner(c.env, p.personId))) throw new AppError('FORBIDDEN', 'Only the Platform Owner can create workspaces.')
+    await rateLimit(c.env, `ws-create:${p.personId}`, 10)
+    const body = await parseJson(c, z.object({ name: z.string().trim().min(3).max(80), synthetic: z.boolean().default(true) }))
+    if (c.env.APP_ENV !== 'production' && !body.synthetic) throw new AppError('VALIDATION_ERROR', 'Non-production environments may only hold synthetic workspaces.')
     const id = newId('wsp')
     const slug = `${body.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 40) || 'workspace'}-${id.slice(-6)}`
     const ts = nowIso()
-    const stmts = [
-      c.env.DB.prepare(`INSERT INTO workspaces (id, name, slug, status, default_currency, is_synthetic, created_at, updated_at) VALUES (?, ?, ?, 'setup', 'IDR', 1, ?, ?)`).bind(id, body.name, slug, ts, ts),
-      c.env.DB.prepare(`INSERT INTO workspace_members (id, workspace_id, person_id, role, status, granted_by_person_id, created_at, updated_at) VALUES (?, ?, ?, 'workspace_admin', 'active', NULL, ?, ?)`).bind(newId('wsm'), id, p.personId, ts, ts),
+    await c.env.DB.batch([
+      c.env.DB.prepare(`INSERT INTO workspaces (id, name, slug, status, default_currency, is_synthetic, created_at, updated_at) VALUES (?, ?, ?, 'active', 'IDR', ?, ?, ?)`).bind(id, body.name, slug, body.synthetic ? 1 : 0, ts, ts),
+      c.env.DB.prepare(`INSERT INTO workspace_members (id, workspace_id, person_id, role, status, granted_by_person_id, created_at, updated_at) VALUES (?, ?, ?, 'workspace_admin', 'active', ?, ?, ?)`).bind(newId('wsm'), id, p.personId, p.personId, ts, ts),
       ...['mock-search', 'tavily', 'firecrawl', 'apify', 'scrapely', 'workers-ai'].map((pid) =>
         c.env.DB.prepare(`INSERT INTO workspace_provider_settings (workspace_id, provider_id, live_enabled, paid_execution_allowed, daily_credit_cap, per_task_credit_cap, actor_allowlist_json, updated_at) VALUES (?, ?, 0, 0, 0, 0, '[]', ?)`).bind(id, pid, ts)),
-      auditStatement(c.env, { workspaceId: id, actorPersonId: p.personId, action: 'workspace.created', targetType: 'workspace', targetId: id, requestId: c.get('requestId'), metadata: { synthetic: true, self_service_dev: true } }),
-    ]
-    await c.env.DB.batch(stmts)
-    return ok(c, { workspace: { id, name: body.name, slug, role: 'workspace_admin', is_synthetic: 1 } }, 201)
+      auditStatement(c.env, { workspaceId: id, actorPersonId: p.personId, action: 'workspace.created', targetType: 'workspace', targetId: id, requestId: c.get('requestId'), metadata: { synthetic: body.synthetic } }),
+      platformAudit(c.env, { actorPersonId: p.personId, action: 'workspace.created', targetType: 'workspace', targetId: id, requestId: c.get('requestId') }),
+    ])
+    return ok(c, { workspace: { id, name: body.name, slug, role: 'workspace_admin', is_synthetic: body.synthetic ? 1 : 0 } }, 201)
   })
 
   app.get('/workspaces/:wid', async (c) => {

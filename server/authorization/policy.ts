@@ -5,19 +5,34 @@ export type WorkspaceRole = 'workspace_admin' | 'governance_approver' | 'venture
 
 export type Action =
   | 'workspace.read' | 'workspace.audit.read' | 'workspace.providers.manage' | 'workspace.killswitch.manage'
-  | 'workspace.members.manage' | 'venture.create' | 'venture.read' | 'research.create' | 'research.review'
+  | 'workspace.members.manage' | 'workspace.access_review'
+  | 'venture.create' | 'venture.read' | 'venture.manage' | 'research.create' | 'research.review'
+  | 'governance.request' | 'governance.vote'
+  | 'finance.read' | 'finance.draft' | 'finance.post' | 'rights.record' | 'memory.write'
 
-/** Workspace-level capability matrix (docs/API-CONTRACT.md, narrowed for the first slice). */
+/**
+ * Workspace-level capability matrix. `workspace_admin` is held only by the Platform Owner
+ * (docs/PLATFORM-IDENTITY-AND-ROLE-BOUNDARIES.md); invitations and role changes cannot grant it.
+ */
+const ALL_ACTIONS: Action[] = ['workspace.read', 'workspace.audit.read', 'workspace.providers.manage', 'workspace.killswitch.manage', 'workspace.members.manage', 'workspace.access_review',
+  'venture.create', 'venture.read', 'venture.manage', 'research.create', 'research.review', 'governance.request', 'governance.vote',
+  'finance.read', 'finance.draft', 'finance.post', 'rights.record', 'memory.write']
 const WORKSPACE_ACTIONS: Record<WorkspaceRole, Action[]> = {
-  workspace_admin: ['workspace.read', 'workspace.audit.read', 'workspace.providers.manage', 'workspace.killswitch.manage', 'workspace.members.manage', 'venture.create', 'venture.read', 'research.create', 'research.review'],
-  governance_approver: ['workspace.read', 'workspace.audit.read', 'venture.create', 'venture.read', 'research.create', 'research.review'],
-  venture_operator: ['workspace.read', 'venture.create', 'venture.read', 'research.create', 'research.review'],
-  finance_operator: ['workspace.read', 'venture.read'],
+  workspace_admin: ALL_ACTIONS,
+  governance_approver: ['workspace.read', 'workspace.audit.read', 'venture.create', 'venture.read', 'venture.manage', 'research.create', 'research.review',
+    'governance.request', 'governance.vote', 'finance.read', 'rights.record', 'memory.write'],
+  venture_operator: ['workspace.read', 'venture.create', 'venture.read', 'venture.manage', 'research.create', 'research.review', 'governance.request',
+    'finance.read', 'finance.draft', 'rights.record', 'memory.write'],
+  finance_operator: ['workspace.read', 'venture.read', 'finance.read', 'finance.draft', 'finance.post', 'rights.record'],
   viewer: ['workspace.read', 'venture.read'],
 }
 
+export const NON_ADMIN_ROLES = ['governance_approver', 'venture_operator', 'finance_operator', 'viewer'] as const
+export const roleAllows = (role: WorkspaceRole, action: Action) => WORKSPACE_ACTIONS[role].includes(action)
+
 /** Roles that see every venture in a workspace. Everyone else needs an explicit active venture membership. */
 const WORKSPACE_WIDE: WorkspaceRole[] = ['workspace_admin', 'governance_approver']
+export const isWorkspaceWide = (role: WorkspaceRole) => WORKSPACE_WIDE.includes(role)
 
 export type WorkspaceAccess = { workspaceId: string; role: WorkspaceRole }
 export type VentureAccess = WorkspaceAccess & { ventureId: string; ventureMember: boolean }
@@ -40,6 +55,14 @@ export async function authorizeWorkspace(env: Env, principal: Principal, workspa
   if (!m) {
     await recordDecision(env, { workspaceId: null, personId: principal.personId, action, decision: 'deny', reason: 'no_active_membership', requestId })
     throw new AppError('NOT_FOUND', 'Workspace not found.')
+  }
+  if (m.role === 'workspace_admin') {
+    // Defense in depth: workspace_admin is valid only for the bound Platform Owner.
+    const owner = await env.DB.prepare(`SELECT 1 AS ok FROM platform_roles WHERE role = 'platform_owner' AND status = 'active' AND person_id = ?`).bind(principal.personId).first()
+    if (!owner) {
+      await recordDecision(env, { workspaceId, personId: principal.personId, action, decision: 'deny', reason: 'admin_role_without_platform_owner', requestId })
+      throw new AppError('FORBIDDEN', 'Administrative role is not valid for this account.')
+    }
   }
   if (!WORKSPACE_ACTIONS[m.role].includes(action)) {
     await recordDecision(env, { workspaceId, personId: principal.personId, action, decision: 'deny', reason: `role_${m.role}_lacks_${action}`, requestId })
@@ -80,4 +103,9 @@ export async function listVisibleVentures(env: Env, principal: Principal, access
        WHERE v.workspace_id = ? GROUP BY v.id ORDER BY v.created_at DESC LIMIT 200`
   const stmt = wide ? env.DB.prepare(sql).bind(access.workspaceId) : env.DB.prepare(sql).bind(principal.personId, access.workspaceId)
   return (await stmt.all()).results
+}
+
+/** IDs of ventures visible to the principal (used to scope workspace-level lists). */
+export async function visibleVentureIds(env: Env, principal: Principal, access: WorkspaceAccess): Promise<string[]> {
+  return (await listVisibleVentures(env, principal, access)).map((v) => String((v as { id: string }).id))
 }
