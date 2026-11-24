@@ -8,7 +8,7 @@
 
 Exactly one account is the MAELVYN platform administrator / Platform Owner:
 
-- Canonical account: `sparkmind.support@gmail.com`
+- Canonical account: designated verified owner identity (exact identifier intentionally omitted from public documentation)
 - Canonical platform role: `platform_owner`
 - Cardinality: exactly one active Platform Owner.
 
@@ -20,8 +20,7 @@ The owner account is the only account with platform administration authority. Do
 
 The following are recognized account identities, but are **not administrators and are not workspace/venture members by virtue of being listed here**:
 
-- `elfares621@gmail.com`
-- `elmatador0197@gmail.com`
+- The designated account-only identities are recorded in the restricted identity register; personal identifiers are intentionally omitted from this public document.
 
 Their current MAELVYN status is **ACCOUNT_ONLY / NO_MEMBERSHIP**:
 - They may have an authenticated account identity in Clerk.
@@ -50,9 +49,9 @@ An account is not a member. A login is not an invitation acceptance. An account 
 1. Deny by default. Every private API read/write and artifact retrieval is authorized server-side.
 2. Resolve principal from a verified Clerk session and stable Clerk subject ID; never trust client-supplied email or role.
 3. Resolve platform authority and scoped memberships from MAELVYN server-side records.
-4. The owner binding requires verified primary email matching `sparkmind.support@gmail.com`, plus a persisted stable Clerk subject ID and controlled bootstrap evidence. Email text alone is not authorization.
+4. The owner binding requires verified primary email matching `[designated verified owner identity]`, plus a persisted stable Clerk subject ID and controlled bootstrap evidence. Email text alone is not authorization.
 5. Enforce exactly one active `platform_owner`. Protect it from ordinary role, membership, invitation, offboarding and user-management endpoints.
-6. `elfares621@gmail.com` and `elmatador0197@gmail.com` remain `ACCOUNT_ONLY / NO_MEMBERSHIP` until a separate explicit authorization is made. Do not seed workspace or venture membership for them.
+6. The designated account-only identities remain `ACCOUNT_ONLY / NO_MEMBERSHIP` until separate explicit authorization is made. Do not seed workspace or venture membership for them.
 7. Workspace invitations are scoped to one workspace and activate only after the invitee explicitly accepts. Venture access requires its own explicit assignment.
 8. No cross-workspace or cross-venture access by implication.
 9. Revoking membership removes access but preserves records and audit history under retention policy.
@@ -91,10 +90,10 @@ Status as of 2026-11-18. Evidence comes from the repository, remote dev D1, test
 
 | Item | Status | Evidence |
 |---|---|---|
-| Stable Clerk subject bound to owner | **PENDING (by design)** | Code implemented: `POST /platform/owner/claim` re-reads the primary email from Clerk's Backend API, requires `verified` and equality with `sparkmind.support@gmail.com`, then stores the subject; there is a singleton unique index. The owner account does not exist yet in the Clerk Development instance, and the API cannot create it by email. Remote `platform_roles` = 0 rows. The owner must sign in with that Google account and claim. |
-| Account-only identities exist in Clerk | VERIFIED | elmatador0197 → `user_3MF5i55huhkEruwohaSHRJKu7Mn`; elfares621 → `user_3MF54617VRWDY12yOTz1jkd4I1s` (Google). |
+| Stable Clerk subject bound to owner | **PENDING (by design)** | Code implemented: `POST /platform/owner/claim` re-reads the primary email from Clerk's Backend API, requires `verified` and equality with `[designated verified owner identity]`, then stores the subject; there is a singleton unique index. The owner account does not exist yet in the Clerk Development instance, and the API cannot create it by email. Remote `platform_roles` = 0 rows. The owner must sign in with that Google account and claim. |
+| Account-only identities exist in Clerk | VERIFIED | The designated account-only identities are verified in the restricted register; user IDs are intentionally omitted from this public document. |
 | Legacy workspace memberships | VERIFIED + RECONCILED | Before 0004, both accounts (and Synthetic Tester) were active `workspace_admin` of self-service workspaces. After 0004 (remote), all are `suspended`; 2 venture assignments ended. Audited as `membership.suspended_by_reconciliation` ×3 and `venture_assignment.ended_by_reconciliation` ×2 with `request_id=migration-0004`. A D1 export was taken before migrating. |
 | First login auto-creates memberships | VERIFIED: NO | `resolvePrincipal` creates only `people` + `identity_links`. Tests cover this. Live E2E: a synthetic user has `memberships=0`, `account_status=ACCOUNT_ONLY`. |
-| Server enforcement + deployed negative tests | VERIFIED (dev) | 63 automated tests (owner-only admin, no self-promotion, unverified/spoofed email rejected, policy accounts require owner authorization, invitations cannot grant admin, owner cannot be removed, cross-venture denial). Live: `POST /workspaces` → 403, `/platform/accounts` → 403, claim by non-owner → 403, tampered JWT → 401. |
+| Server enforcement + deployed negative tests | VERIFIED (dev) | 94 automated tests across 9 test files (as reported by the dated Production verification; the relevant owner-boundary and cross-venture cases are included). Live: `POST /workspaces` → 403, `/platform/accounts` → 403, claim by non-owner → 403, tampered JWT → 401. |
 
-Technical enforcement is claimed only for the development environment. Production remains blocked.
+Technical enforcement is claimed only for the environment and tests listed above. Production Pages/D1/private R2 were deployed or verified by 2026-11-18; authenticated Clerk flows and owner bootstrap remained blocked pending the Production server secret in the dated deployment report.
