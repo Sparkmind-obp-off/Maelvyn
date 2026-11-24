@@ -179,3 +179,18 @@ The Production D1 database has now been created: `maelvyn-production-db` (UUID `
 The Development database `maelvyn-dev-db` (UUID `ad21e923-f1f2-4a77-b5f7-d9b85afe217b`) was not deleted or modified. No existing database was deleted to make room.
 
 Production-only Wrangler config is `wrangler.production.jsonc`; scripts `db:migrate:production` and `deploy:production` are available. The Production Pages project has exact Clerk Production public configuration and D1/R2 bindings. It still lacks `CLERK_SECRET_KEY`, an actual deployment, Production E2E, owner bootstrap and restore evidence. Root/www stay on the existing dev project until explicit approved cutover.
+
+
+---
+
+## 12. Production deployment evidence reconciliation — 2026-11-24
+
+The earlier proposed-only sections are historical. The 2026-11-18 verification records:
+- `maelvyn-production` Pages project deployed and reachable.
+- Production D1 `maelvyn-production-db` bound and verified with read/write/read-back.
+- Production private R2 `maelvyn-production-private` bound as `ARTIFACTS`.
+- Production Clerk issuer and publishable configuration present.
+- Production readiness returned 503 because `CLERK_SECRET_KEY` was not installed.
+- The root and www domains returned 200 after the first production deployment; this does not mean authenticated service launch is approved.
+
+Re-check current Cloudflare/Clerk state before any change. Do not move domains, reuse Development resources, or deploy from a dashboard. The Wrangler-only process remains the recorded deployment route.

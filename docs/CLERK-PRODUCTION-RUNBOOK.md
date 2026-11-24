@@ -199,3 +199,12 @@ A dedicated Cloudflare Pages project has been created:
 - `wrangler.production.jsonc` now describes the Production-only DB, R2 and Clerk public configuration. Package scripts `db:migrate:production` and `deploy:production` were added.
 
 Remaining blockers: add `CLERK_SECRET_KEY` securely as Cloudflare secret-text, connect a verified deployment process, deploy and test Production, owner personally completes sign-in/claim, implement R2 artifact delivery, backup/restore, legal review and later approved domain cutover.
+
+
+---
+
+## 15. Deployment evidence reconciliation — 2026-11-24
+
+Sections 1–10 describe earlier planning and must be read with the later dated updates in sections 11–14 and the live evidence report. Production Pages, Production D1, and private R2 were provisioned and deployed by 2026-11-18. The recorded remaining blocker is `CLERK_SECRET_KEY` installation through the secure Wrangler prompt. After installation, re-run sign-in, JWT, owner-claim, authorization, and artifact upload/download verification. Do not paste secret values into chat, prompts, files, or command arguments.
+
+Canonical evidence: [MAELVYN Production Deployment Verification](MAELVYN-PRODUCTION-DEPLOYMENT-VERIFICATION.md).

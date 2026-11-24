@@ -195,3 +195,23 @@ Add the following capabilities to the portfolio roadmap:
 - Commerce agent support with approval gates.
 
 Priority rule: one venture and one offer must complete a verified order-to-fulfillment-to-reconciliation cycle before multi-vendor marketplace, public partner onboarding, or autonomous commerce execution is prioritized.
+
+
+---
+
+## Status reconciliation against Production deployment evidence — 2026-11-24
+
+The dated source of truth is `docs/MAELVYN-PRODUCTION-DEPLOYMENT-VERIFICATION.md` (2026-11-18). It supersedes older statements in this document that Production resources, Pages deployment, D1, or R2 do not exist.
+
+| Capability | Latest recorded evidence | Correct status |
+|---|---|---|
+| Development app | Implemented and tested | IMPLEMENTED / TESTED |
+| Production Pages | Live on `maelvyn-production.pages.dev` | VERIFIED LIVE (public surfaces only, 2026-11-18) |
+| Production D1 | Read/write/read-back and migration ledger 0001–0009 checked | VERIFIED LIVE (2026-11-18) |
+| Production private R2 | Bucket exists and is bound as `ARTIFACTS` | CONFIGURED; authenticated upload/download UNVERIFIED |
+| Production Clerk | Production instance/configured issuer and publishable key; server secret missing in report | PARTIALLY CONFIGURED / BLOCKED |
+| Authenticated sign-in and owner bootstrap | Not verified because secret was missing | BLOCKED / UNVERIFIED |
+| Production payment execution | No verified payment provider execution | NOT IMPLEMENTED / UNVERIFIED |
+| Workers AI inference/model registry | No verified live inference path | NOT IMPLEMENTED / UNVERIFIED |
+
+Do not copy a status label from an older audit without checking the later dated evidence. Re-run live verification before treating any blocker as still open or resolved.

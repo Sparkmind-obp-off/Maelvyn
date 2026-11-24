@@ -189,3 +189,10 @@ Pricing and quotas change. Re-check official sources on the date an integration 
 The existing Cloudflare-first stack remains the target baseline. Commerce should be implemented as a modular domain within the current Worker/Hono application initially, with provider adapters for payments, delivery, shipping, and notifications. D1 remains the transactional source for the initial scope; private R2 is required for protected digital artifacts. Do not add a new database, queue, or service without a concrete workload and verified operational need.
 
 Environment isolation is mandatory: development Pages/Worker, D1, R2, and Clerk Development are separate from production equivalents. The currently attached root/www custom domains are not a production release while the Pages project is configured with development app settings. See `docs/DOMAIN-AND-ENVIRONMENT-STRATEGY.md`.
+
+
+---
+
+## Current Production status correction — 2026-11-24
+
+The earlier phrase “Production later” describes the original decision sequence, not the current infrastructure state. By 2026-11-18, the dedicated Production Pages project, D1, private R2, and Clerk Production configuration were deployed or verified as recorded in `docs/MAELVYN-PRODUCTION-DEPLOYMENT-VERIFICATION.md`. Authenticated Production use remained blocked by the missing Clerk server secret. The stack decision remains Cloudflare-first; no replacement platform is approved.
