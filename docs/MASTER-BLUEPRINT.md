@@ -3,7 +3,7 @@
 **Document status:** Foundational proposal  
 **Version:** 1.0  
 **Model:** Active Venture Studio  
-**Working identity:** MAELVYN — Shared Venture Studio
+**Working identity:** MAELVYN — Venture Studio & Commerce Ecosystem
 
 ## 1. Purpose
 

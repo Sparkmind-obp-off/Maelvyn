@@ -1,6 +1,7 @@
 # MAELVYN
 
-**Agentic Shared Venture Studio OS**  
+**Venture Studio & Commerce Ecosystem**  
+*Agentic Shared Venture Studio OS*  
 *Building Ventures. Creating Value. Growing Together.*
 
 MAELVYN is a governed, multi-agent operating system for discovering opportunities, validating demand, creating ventures, operating productive assets, and growing a portfolio through coordinated human and AI-agent work.
@@ -82,7 +83,7 @@ The browser client now targets Clerk Core 3 via `@clerk/react` (Node.js >=20.9.0
 
 ## Current status
 
-**Development foundation: implemented, tested, and deployed to a development environment.** MAELVYN is a working project identity and operating concept. This repository does not establish a legal entity, partnership, investment offer, ownership interest, or binding commitment by any person.
+**Development foundation: implemented and tested. Production: separately deployed and partially verified, with authenticated workflows still subject to the recorded Clerk blocker.** MAELVYN is a working project identity and operating concept. This repository does not establish a legal entity, partnership, investment offer, ownership interest, or binding commitment by any person.
 
 | Item | Status |
 |---|---|
@@ -95,9 +96,9 @@ The browser client now targets Clerk Core 3 via `@clerk/react` (Node.js >=20.9.0
 ### What works today
 The latest repository verification reports 94 automated tests passing across 9 test files, plus typecheck, lint, and build. Production-specific end-user flows remain blocked pending Clerk secret installation; see the dated Production verification report.
 
-- **Identity boundary (migration 0004).** A singleton `platform_owner` is bound to `sparkmind.support@gmail.com`. The claim re-reads the primary email from Clerk's Backend API, requires it to be verified, and stores the stable Clerk subject.
+- **Identity boundary (migration 0004).** A singleton `platform_owner` is bound through the designated verified owner identity. The claim re-reads the primary email from Clerk's Backend API, requires it to be verified, and stores the stable Clerk subject. Specific owner identifiers are intentionally omitted from this public README.
   - Signup and first login create an account only, with no membership.
-  - `elfares621@gmail.com` and `elmatador0197@gmail.com` are `owner_authorization_required` (ACCOUNT_ONLY).
+  - Other identities remain `owner_authorization_required` (ACCOUNT_ONLY) until explicitly authorized.
   - Only the Owner can create workspaces and administer members. `workspace_admin` is valid only for the bound Owner, checked again in policy as defence in depth.
   - Legacy memberships were reconciled. Remote: 3 suspended and 2 venture assignments ended, each audited with `request_id = migration-0004`.
 - **Members.**
@@ -158,7 +159,7 @@ npm run check                           # typecheck + lint + current Vitest suit
 npm run db:migrate:local
 npm run build && pm2 start ecosystem.config.cjs   # http://localhost:3000
 ```
-After the regenerated package-lock.json is committed and verified, use npm ci for reproducible installs. Tests run the real migrations against an in-memory SQLite D1 shim (`tests/d1shim.ts`). Deploy to dev: `npm run deploy:dev`. Secrets are set with `wrangler pages secret put` and are never committed.
+After confirming `package-lock.json` is synchronized with `package.json`, use `npm ci` for reproducible installs. Tests run the real migrations against an in-memory SQLite D1 shim (`tests/d1shim.ts`). Deploy to dev: `npm run deploy:dev`. Secrets are set with `wrangler pages secret put` and are never committed.
 
 Provider candidates are not claims of approved spend or production readiness.
 
@@ -215,7 +216,6 @@ Current state and blockers: [Full repository and Production gap audit](docs/FULL
 - [Approved Brand Strategy](docs/BRAND-STRATEGY-AND-IDENTITY.md)
 - [Brand Design System](docs/BRAND-DESIGN-SYSTEM.md)
 - [Documentation Governance & Status](docs/DOCUMENTATION-GOVERNANCE-AND-STATUS.md)
-- [Tooling & Integration Strategy](docs/TOOLING-AND-INTEGRATION-STRATEGY.md) — candidate tools are not assumed connected or approved for paid use.
 
 The dated Production verification document is the source for live deployment claims. The latest evidence in this repository says the Production app and infrastructure are deployed, but Clerk server-secret setup and authenticated end-user verification remain blocking items. Do not describe MAELVYN as fully launched.
 
