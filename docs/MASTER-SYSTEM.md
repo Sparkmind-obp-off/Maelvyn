@@ -6,7 +6,7 @@
 **Operating model:** Agentic Shared Venture Studio  
 **Coordination and control plane:** Shared Economic Core
 
-> Building Businesses. Creating Assets. Growing Together.  
+> Building Ventures. Creating Value. Growing Together.  
 > Participation by Choice. Ownership by Agreement.
 
 ## 1. System mandate
@@ -405,3 +405,27 @@ Production deployment, Pages secret installation, and any approved D1 migration 
 Current root/www domain assignment is disputed by the latest execution report and must be inspected read-only. No custom-domain or DNS change is permitted without explicit owner approval. Initial Production verification uses the isolated `maelvyn-production.pages.dev` hostname.
 
 The detailed execution authority is `docs/PRODUCTION-CONTINUATION-MASTER-SYSTEM-AND-GENSPARK-PROMPT.md`. Where older notes conflict with this section on the existing Production resources, migration scope, or no-bulk-data-migration rule, this dated section and the continuation document govern. Security, human approval, and Development isolation rules remain in force.
+
+
+---
+
+## Brand strategy ratification — 2026-11-24
+
+This section is the canonical approved external brand direction and supersedes older working taglines or shorthand descriptions elsewhere in this document.
+
+- **Brand:** MAELVYN
+- **External category / positioning:** Venture Studio & Commerce Ecosystem
+- **Platform descriptor:** Agentic Shared Venture Studio OS
+- **Tagline:** **Building Ventures. Creating Value. Growing Together.**
+- **Purpose:** Mengubah ide dan peluang menjadi bisnis, produk, layanan, teknologi, dan sistem bernilai ekonomi; lalu menghubungkannya dengan pasar, pelanggan, dan mitra agar tumbuh berkelanjutan.
+- **Vision:** Menjadi ekosistem venture dan commerce yang mengembangkan bisnis, produk, teknologi, dan peluang ekonomi secara berkelanjutan melalui kolaborasi manusia, kreativitas, dan AI.
+- **Core values:** Human-Centered · Innovation · Ownership · Integrity · Collaboration · Sustainable Growth.
+- **Brand positioning statement:** MAELVYN adalah Venture Studio & Commerce Ecosystem yang menghubungkan penciptaan venture, pembangunan solusi, dan pertumbuhan bisnis untuk menciptakan nilai ekonomi nyata.
+- **Primary brand color:** #00AFEC.
+
+The complete nine-part approved strategy is in [BRAND-STRATEGY-AND-IDENTITY.md](BRAND-STRATEGY-AND-IDENTITY.md). The visual system is governed separately by [BRAND-DESIGN-SYSTEM.md](BRAND-DESIGN-SYSTEM.md). Trademark, domain, and social-handle clearance are not established by this strategy document.
+
+
+## Production evidence update — 2026-11-24
+
+Use [MAELVYN Production Deployment Verification](MAELVYN-PRODUCTION-DEPLOYMENT-VERIFICATION.md) as the dated evidence record. Its 2026-11-18 state is DEPLOYED / PARTIALLY VERIFIED: Production Pages, D1, private R2, and public API surfaces were verified; Clerk Production server secret, authenticated sign-in, owner bootstrap, and authenticated artifact flows remained unverified. This is not a full public-launch approval.

@@ -193,3 +193,19 @@ Roadmap completion is measured by verified acceptance criteria, not by the numbe
 Commerce implementation follows `docs/COMMERCE-OS-MASTER-ARCHITECTURE.md`. Start with one venture and one offer; prove order → payment confirmation → fulfillment → customer support → reconciliation before adding the central marketplace or partner distribution.
 
 Production release is governed by `docs/PRODUCTION-READINESS-CHECKLIST.md`. The current custom domain is attached to a Pages project configured with Development app settings, so root/www must not be treated as a production launch. A separate production identity, D1, storage, secrets, and deployment must be verified before domain cutover.
+
+
+---
+
+## Documentation, brand, and product-quality upgrade — 2026-11-24
+
+This workstream improves the existing foundation without resetting the venture roadmap or treating elapsed calendar days as completed milestones.
+
+1. **Canonical brand alignment:** apply the approved MAELVYN positioning and tagline from `BRAND-STRATEGY-AND-IDENTITY.md`; preserve independent venture brands and legal boundaries.
+2. **Documentation governance:** use `DOCUMENTATION-GOVERNANCE-AND-STATUS.md` as the document index, authority map, status vocabulary, and change-control standard.
+3. **Design system:** align the public brand and authenticated product UI through `BRAND-DESIGN-SYSTEM.md` and `UX-UI-SYSTEM.md`.
+4. **Technical UI audit:** inspect accessibility, responsive behavior, performance, theming, and implementation integrity before making UI code changes. Record reproducible findings and do not invent a score without the required measurements.
+5. **Tool integration review:** evaluate external research, browser, design, and app-building tools against the provider policy in `TOOLING-AND-INTEGRATION-STRATEGY.md`; no tool is treated as connected or paid-approved by appearing in a plan.
+6. **Production gate:** use the dated production verification and readiness checklist. Clerk Production secret installation, sign-in, owner bootstrap, authenticated artifact delivery, recovery, and final release approval remain explicit gates unless newer evidence supersedes them.
+
+**Definition of done:** all canonical docs agree on identity, tagline, system boundaries, current implementation state, security controls, and release blockers; all changes are versioned; no paid service, deployment, domain cutover, or financial side effect occurs without explicit approval.

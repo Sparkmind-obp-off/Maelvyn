@@ -27,7 +27,7 @@ Build a durable portfolio of independently accountable ventures and productive a
 - Protect the autonomy and rights of every participant.
 
 ### Tagline
-**Building Businesses. Creating Assets. Growing Together.**
+**Building Ventures. Creating Value. Growing Together.**
 
 ## 3. The MAELVYN architecture
 
@@ -226,3 +226,22 @@ The operating model is extended by a Hybrid Commerce Ecosystem: Central Marketpl
 Commerce operates as shared infrastructure for separately accountable ventures. It does not make MAELVYN the automatic legal seller or owner of every product. Seller identity, ownership/licensing, customer data, liabilities, fulfillment, and financial records must be explicit per offer. See `docs/COMMERCE-OS-MASTER-ARCHITECTURE.md`.
 
 The proposed initial legal operating arrangement is described in `docs/LEGAL-ENTITY-AND-OPERATING-MODEL.md`; it is not a legal conclusion and requires verification of the existing entity's status, KBLI, permits, tax, and contracts.
+
+
+---
+
+## Brand strategy ratification — 2026-11-24
+
+This section is the canonical approved external brand direction and supersedes older working taglines or shorthand descriptions elsewhere in this document.
+
+- **Brand:** MAELVYN
+- **External category / positioning:** Venture Studio & Commerce Ecosystem
+- **Platform descriptor:** Agentic Shared Venture Studio OS
+- **Tagline:** **Building Ventures. Creating Value. Growing Together.**
+- **Purpose:** Mengubah ide dan peluang menjadi bisnis, produk, layanan, teknologi, dan sistem bernilai ekonomi; lalu menghubungkannya dengan pasar, pelanggan, dan mitra agar tumbuh berkelanjutan.
+- **Vision:** Menjadi ekosistem venture dan commerce yang mengembangkan bisnis, produk, teknologi, dan peluang ekonomi secara berkelanjutan melalui kolaborasi manusia, kreativitas, dan AI.
+- **Core values:** Human-Centered · Innovation · Ownership · Integrity · Collaboration · Sustainable Growth.
+- **Brand positioning statement:** MAELVYN adalah Venture Studio & Commerce Ecosystem yang menghubungkan penciptaan venture, pembangunan solusi, dan pertumbuhan bisnis untuk menciptakan nilai ekonomi nyata.
+- **Primary brand color:** #00AFEC.
+
+The complete nine-part approved strategy is in [BRAND-STRATEGY-AND-IDENTITY.md](BRAND-STRATEGY-AND-IDENTITY.md). The visual system is governed separately by [BRAND-DESIGN-SYSTEM.md](BRAND-DESIGN-SYSTEM.md). Trademark, domain, and social-handle clearance are not established by this strategy document.

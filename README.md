@@ -208,3 +208,13 @@ Current state and blockers: [Full repository and Production gap audit](docs/FULL
 | Document | Purpose |
 |---|---|
 | [Production Continuation Master System & Genspark Prompt](docs/PRODUCTION-CONTINUATION-MASTER-SYSTEM-AND-GENSPARK-PROMPT.md) | Authoritative clarification: reuse existing Production Pages/D1/R2, deploy the app with Wrangler, preserve the eight applied migrations, avoid bulk Development data migration, and follow security/domain release gates |
+
+
+## Brand and documentation control
+
+- [Approved Brand Strategy](docs/BRAND-STRATEGY-AND-IDENTITY.md)
+- [Brand Design System](docs/BRAND-DESIGN-SYSTEM.md)
+- [Documentation Governance & Status](docs/DOCUMENTATION-GOVERNANCE-AND-STATUS.md)
+- [Tooling & Integration Strategy](docs/TOOLING-AND-INTEGRATION-STRATEGY.md) — candidate tools are not assumed connected or approved for paid use.
+
+The dated Production verification document is the source for live deployment claims. The latest evidence in this repository says the Production app and infrastructure are deployed, but Clerk server-secret setup and authenticated end-user verification remain blocking items. Do not describe MAELVYN as fully launched.

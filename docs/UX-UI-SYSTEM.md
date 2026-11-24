@@ -62,3 +62,63 @@ Add the following role-aware surfaces when the commerce MVP is implemented:
 - Commerce analytics by venture and channel.
 
 Always display the responsible seller, currency, offer terms, fulfillment expectation, and support route before checkout. Distinguish pending payment, paid, fulfilled, refunded, disputed, and cancelled states. Do not expose another venture's customer, order, financial, or partner data in shared dashboards.
+
+
+---
+
+## Brand-aligned design system upgrade — 2026-11-24
+
+### Design intent
+
+The MAELVYN product UI is an **Operate** surface: users must understand portfolio state, make governed decisions, and complete operational tasks. Preserve the existing restrained dark interface as the current implementation baseline; do not replace it with a marketing-site aesthetic.
+
+### Brand alignment
+
+- Brand: MAELVYN.
+- Positioning: Venture Studio & Commerce Ecosystem.
+- Tagline: Building Ventures. Creating Value. Growing Together.
+- Primary brand color: `#00AFEC`.
+- Product descriptor: Agentic Shared Venture Studio OS.
+- Brand expression: modern, premium, clean, precise, human-centered, collaborative.
+- The public-facing website may use a more expressive presentation, while authenticated workspaces prioritize clarity, trust, data density, and accessibility.
+
+### Token governance
+
+Use semantic tokens rather than raw color values in new UI work. The current implementation uses Tailwind slate surfaces and sky accents in `web/src/index.css`; this is the incumbent visual evidence, not a fully governed token system.
+
+| Token | Intent | Current / proposed use |
+|---|---|---|
+| `color.brand.primary` | MAELVYN identity | `#00AFEC`; accents, links, focus, selected states |
+| `color.surface.canvas` | App background | Existing deep slate baseline |
+| `color.surface.panel` | Cards and panels | Existing slate panel baseline |
+| `color.text.primary` | Main content | High-contrast neutral |
+| `color.text.muted` | Supporting content | Muted neutral; retain readable contrast |
+| `color.border.default` | Structure | Neutral border |
+| `color.status.success/warning/danger/info` | State semantics | Never communicate state by color alone |
+
+The semantic token names are approved; a complete light/dark numeric palette remains a design-system task. Do not use the bright brand cyan as small body text on a white surface unless measured contrast passes.
+
+### Typography and layout
+
+- Retain the current system sans-serif stack until a licensed, self-hosted font is explicitly selected.
+- Use a consistent type scale and semantic heading order.
+- Keep 4px spacing rhythm and responsive content widths.
+- Prefer clear page titles, contextual descriptions, one primary action, and secondary actions grouped by task.
+- Tables must have captions/labels, readable overflow behavior, and a useful mobile alternative.
+- Keep financial data labeled by currency, period, and actual/forecast/draft state.
+
+### Interaction and accessibility requirements
+
+- Every form control has a persistent visible label and programmatic association.
+- Errors identify the affected field and explain recovery; success and async states are announced to assistive technology.
+- Keyboard focus is visible and never obscured.
+- Touch targets aim for 44×44 CSS px; WCAG 2.2 AA minimums remain the baseline.
+- Respect `prefers-reduced-motion`; motion must not be required to understand a state.
+- Do not rely on color alone for roles, risk, finance, approval, or lifecycle status.
+- Destructive, financial, ownership, legal, and production actions require explicit review and confirmation.
+
+### Current code-level observations
+
+The checked-in UI uses dark slate surfaces, sky accents, shared form/table components, and responsive Tailwind utility classes. The CSS currently contains component-level hard-coded colors rather than a complete semantic token layer. The generic table provides horizontal overflow but does not by itself prove an accessible mobile table experience. These are enhancement targets, not claims that a full browser/assistive-technology audit has passed.
+
+See [BRAND-DESIGN-SYSTEM.md](BRAND-DESIGN-SYSTEM.md) for the identity token baseline and [DOCUMENTATION-GOVERNANCE-AND-STATUS.md](DOCUMENTATION-GOVERNANCE-AND-STATUS.md) for the documentation source-of-truth rules.
