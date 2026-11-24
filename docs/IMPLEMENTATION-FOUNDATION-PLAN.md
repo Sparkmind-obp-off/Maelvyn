@@ -151,3 +151,10 @@ Commerce MVP build order:
 7. Production gates and controlled release.
 
 Do not enable live payment, public vendor onboarding, cross-venture customer sharing, or autonomous financial actions in the foundation milestone.
+
+
+---
+
+## As-built implementation reconciliation — 2026-11-24
+
+This plan is a historical execution baseline, not a statement that all stages remain unstarted. The repository now contains the React/TypeScript/Vite frontend, Hono Worker API, D1 migrations 0001–0009, governance/finance/rights/operations modules, provider adapters, tests, and separate Production deployment configuration. Production Pages, D1, and private R2 have a dated deployment verification. Clerk Production secret installation and authenticated verification remained the blocker in the latest evidence. See `docs/CAPABILITY-INVENTORY-AND-UPGRADE-ROADMAP.md` and `docs/MAELVYN-PRODUCTION-DEPLOYMENT-VERIFICATION.md` before scheduling work.

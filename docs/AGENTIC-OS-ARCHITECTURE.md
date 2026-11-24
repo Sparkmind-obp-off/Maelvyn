@@ -160,3 +160,10 @@ Commerce agents operate within the commerce domain contracts in `docs/COMMERCE-O
 Agents may prepare product copy, classify listings, summarize demand, draft campaigns, and flag reconciliation exceptions. They cannot independently set the legal seller, assert product/IP ownership, alter payout destinations, authorize refunds above a narrow pre-approved threshold, sign contracts, or move funds. Public publication and material price/policy changes require the configured human approval.
 
 The order/payment/ledger state machines remain deterministic application services. An agent may request a permitted transition; it cannot fabricate a payment confirmation or bypass webhook verification.
+
+
+---
+
+## Implementation status clarification — 2026-11-24
+
+This document defines the target agentic architecture; it is not proof that the entire multi-agent runtime is deployed. The repository contains a research task/brief path, provider registry/adapters, cost and permission controls, venture-scoped memory, audit structures, and tests. Durable multi-agent orchestration, full specialist teams, complete evaluation/observability, and broad autonomous execution remain staged capabilities. Production use remains subject to the current release gates. Use the capability inventory for per-module status.

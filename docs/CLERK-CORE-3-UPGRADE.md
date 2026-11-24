@@ -1,5 +1,8 @@
 # Clerk Core 3 Upgrade — MAELVYN
 
+**Historical verification note:** The 2026-11-17 Genspark sandbox details are historical execution evidence. The source change and recorded test results remain useful, but current dependency and deployment state must be verified from the repository and dated Production report.
+
+
 **Date:** 2026-11-17  
 **Scope:** Development web client only  
 **Reason:** Clerk Development rejected browser authentication because the deployed client used Clerk Core 2 / ClerkJS 5, below the instance's configured minimum version.

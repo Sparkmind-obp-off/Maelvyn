@@ -173,3 +173,10 @@ Implement commerce as bounded modules in the existing application before conside
 Every write path requires authenticated identity, server-side venture authorization, schema validation, idempotency where appropriate, and audit correlation. Preserve order snapshots and append-only posted finance records. Agents may prepare drafts and analyze results but cannot bypass transaction services or approvals.
 
 Do not connect the commerce MVP to production payments until the production release checklist passes.
+
+
+---
+
+## As-built implementation note — 2026-11-24
+
+This blueprint remains a target and engineering reference, not a checklist of unstarted work. The repository already contains the application shell, domain route modules, D1 migration chain through 0009, provider registry/adapters, and automated tests. The agentic runtime is partial rather than the full target architecture. Consult `docs/CAPABILITY-INVENTORY-AND-UPGRADE-ROADMAP.md` for current module status and the Production verification report for live environment evidence.

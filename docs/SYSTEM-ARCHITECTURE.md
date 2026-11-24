@@ -236,3 +236,10 @@ Commerce is a bounded domain integrated with the Shared Economic Core. Keep regi
 Use a modular monolith initially. Keep payment-provider adapters isolated from order logic; keep fulfillment adapters isolated from payment confirmation; keep the agent runtime outside transaction-critical code. A verified payment webhook may update payment state, but the order/fulfillment state machine must validate idempotency and legal business rules.
 
 Development and Production must use separate identity issuers, databases, storage, and secrets. Current observed domain/environment status and cutover requirements are recorded in `docs/DOMAIN-AND-ENVIRONMENT-STRATEGY.md`.
+
+
+---
+
+## As-built stack and release status — 2026-11-24
+
+The original proposed baseline has since been implemented in substantial part. The current code uses React/TypeScript/Vite, Cloudflare Pages advanced-mode Worker with Hono, D1 migrations, Clerk Core 3, private R2 in the Production configuration, and provider adapters. Production deployment evidence is recorded separately; it does not establish full authenticated launch. Keep this architecture document as the domain-boundary design and use the capability inventory plus dated verification reports for as-built status.

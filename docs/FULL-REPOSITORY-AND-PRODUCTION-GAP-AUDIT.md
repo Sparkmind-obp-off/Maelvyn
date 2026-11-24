@@ -247,3 +247,10 @@ Changes:
 - Production deploy command: `npm run deploy:production`; migration command only if ledger incomplete: `npm run db:migrate:production`.
 
 No secret was installed and no Production deployment was triggered in this documentation change. The isolated Pages project still has no deployment. Genspark account control is not connected; this prompt is ready for the user to submit to Genspark Super Agent for execution. Do not claim task submission or deployment.
+
+
+---
+
+## 17. Supersession and current evidence pointer — 2026-11-24
+
+This audit is a snapshot dated 2026-11-18 and remains useful for its code observations and risk findings. Its pre-deployment statements that no Production Pages project, D1, or R2 existed are superseded by sections 14–16 and the separate [Production Deployment Verification](MAELVYN-PRODUCTION-DEPLOYMENT-VERIFICATION.md). The later report verifies Production Pages, D1, private R2 binding, public endpoints, and 9 migrations; authenticated Clerk flows and artifact upload/download remain unverified because the server secret was not installed in that report. Preserve unresolved code risks from this audit until each is independently tested and closed.
