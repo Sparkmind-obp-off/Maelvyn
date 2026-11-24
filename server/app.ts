@@ -21,10 +21,11 @@ import { parseJson, principalOf } from './lib/request'
 import { registerMemberRoutes } from './members/routes'
 import { getAdapter } from './providers/registry'
 import { CreateResearchInput, createAndRunResearch, reviewResearch, ReviewInput, type RunDeps } from './research/agent'
+import { registerConnectRoutes } from './connect/routes'
 
 export type AppDeps = { verifier?: TokenVerifier; lookupProfile?: ProfileLookup; run?: RunDeps }
 
-const EXPECTED_MIGRATIONS = ['0001_initial.sql', '0002_agentic_foundation.sql', '0003_workspace_invitations.sql', '0004_platform_identity_boundaries.sql', '0005_governance.sql', '0006_finance_rights.sql', '0007_operations.sql', '0008_runtime_platform.sql', '0009_private_artifacts.sql']
+const EXPECTED_MIGRATIONS = ['0001_initial.sql', '0002_agentic_foundation.sql', '0003_workspace_invitations.sql', '0004_platform_identity_boundaries.sql', '0005_governance.sql', '0006_finance_rights.sql', '0007_operations.sql', '0008_runtime_platform.sql', '0009_private_artifacts.sql', '0010_connect.sql']
 
 export function createApp(deps: AppDeps = {}) {
   const verifier = deps.verifier ?? verifyClerkToken
@@ -129,6 +130,7 @@ export function createApp(deps: AppDeps = {}) {
   registerPortfolioRoutes(app)
   registerMeRoutes(app)
   registerArtifactRoutes(app)
+  registerConnectRoutes(app)
 
   // ---- Workspaces ------------------------------------------------------------
   app.get('/workspaces', async (c) => {

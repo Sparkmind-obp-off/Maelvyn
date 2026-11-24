@@ -1,8 +1,8 @@
 # MAELVYN — Website, Acquisition & Provider Register
 
-**Version:** 1.0.0  
-**Status:** APPROVED operating direction; implementation PARTIALLY VERIFIED  
-**Last reviewed:** 2026-11-25  
+**Version:** 1.1.0
+**Status:** APPROVED operating direction; repository implementation VERIFIED, external-builder implementation PARTIALLY VERIFIED
+**Last reviewed:** 2026-11-24
 **Parent authority:** `docs/MASTER-SYSTEM.md`, `docs/DOCUMENTATION-GOVERNANCE-AND-STATUS.md`  
 **Related:** `docs/BRAND-STRATEGY-AND-IDENTITY.md`, `docs/BRAND-DESIGN-SYSTEM.md`, `docs/TOOLING-AND-INTEGRATION-STRATEGY.md`, `docs/CUSTOMER-JOURNEYS.md`, `docs/PRODUCTION-READINESS-CHECKLIST.md`
 
@@ -41,7 +41,7 @@ Reference pages and screenshots should be rechecked before a new design decision
 
 ## 4. Website information architecture and acquisition journey
 
-The current UiChemy project contains eight pages and 37 sections. Treat the following as the intended journey; verify every route and action in the rendered site before release.
+The earlier UiChemy audit described eight pages and 37 sections. Treat that as an intended journey only; the project could not be attached to the current identity, so every route and action still requires verification through a supported authenticated path before release.
 
 1. **Home — Understand:** communicate what MAELVYN is, who it serves, the outcomes it supports, and the next action.
 2. **About — Trust:** explain purpose, principles, human-centered approach, governance, and independent venture boundaries.
@@ -74,15 +74,16 @@ The current UiChemy project contains eight pages and 37 sections. Treat the foll
 - Do not add analytics trackers or external pixels until privacy, consent, retention, and provider terms are reviewed.
 - Do not publish fabricated metrics, testimonials, customer logos, case studies, or conversion claims.
 
-## 5. Current website implementation snapshot (2026-11-25)
+## 5. Current website implementation snapshot (2026-11-24)
 
 | Area | Observed status | Limitation / next gate |
 |---|---|---|
-| UiChemy project | Existing project updated; 8 pages / 37 sections | Builder preview/edit state is not proof of public deployment |
-| Design system | Buttons, cards, spacing, header, selected copy and sections standardized | Visual browser review still required |
+| Repository app | Existing React/Vite/Hono venture studio workspace is the implementation source; the public landing route was updated locally with the approved narrative and brand direction | Local checks and browser QA must pass before any release; no deployment was performed |
+| UiChemy project | Project ID `6b05dffa73c998b4e11b5507` supplied; attach/edit path unavailable to the current project identity | Do not claim the earlier page/section findings as verified in this repository; do not duplicate |
+| Design system | Semantic tokens, buttons, cards, spacing, header, public narrative and focus states updated in source | Visual browser review still required |
 | Responsive checks | Static checks ran at 390px, 768px, and 1440px; no text/fixed-width overflow reported | This is not a complete browser/device QA |
-| Accessibility | 9 contrast findings remained in the last reported check; several image alt fields were missing | Resolve contrast and accurate alt text; rerun checks |
-| Template content | Some template-specific hardcoded content remained in Ventures CTA and Contact Form | Replace/verify before publication |
+| Accessibility | Repository baseline found inconsistent focus treatment and low-emphasis text utilities; shared form/table semantics were improved locally | Re-run contrast and assistive-technology checks before publication |
+| Template content | No UiChemy template content was modified or claimed verified; repository landing copy now avoids template claims | Replace/verify external-builder content only through its supported authenticated path |
 | Custom embed | No supported UiChemy custom-code/embed capability had been identified in the inspected tool set | Chat widget installation path remains unresolved |
 | Domain | Intended domain: `maelvyn.biz.id` | DNS/domain changes not authorized by this register |
 | Publication | Not published by the documented workflow | No claim that the public site is live |
@@ -93,8 +94,8 @@ Status labels are scoped to the MAELVYN website/workflow. A connected account or
 
 | Provider / tool | Intended role | Current evidence/status | Next action / control |
 |---|---|---|---|
-| GitHub — [Maelvyn repository](https://github.com/Sparkmind-obp-off/Maelvyn) | Canonical decisions, specs, code, evidence, work log | Repository exists; default branch `main`; latest inspected commit before this register was `9ed31259360b6b39bd8f732bb091d31eb5941dc0` | Keep canonical decisions and dated evidence here; commit this register |
-| UiChemy | Primary public website builder | Existing project updated; preview/edit state only | Continue audit in the existing project; do not duplicate the site |
+| GitHub — [Maelvyn repository](https://github.com/Sparkmind-obp-off/Maelvyn) | Canonical decisions, specs, code, evidence, work log | Repository exists; default branch `main`; local baseline was `077454d` before this task; connector verification later reported an invalid token | Keep canonical decisions and dated evidence here; re-authenticate before pushing the reviewed commit |
+| UiChemy | Existing external website-builder source | Project discovered but unavailable to current attach identity; no edit or sync verified | Continue only through a supported authenticated path; do not duplicate the site |
 | BestSaaSWebDesigns | Design research and reference catalog | Read-only catalog queried; reference candidates recorded above | Use as inspiration only; cite reference URLs and document design decisions |
 | Flows | Primary website concierge/chat candidate | Instance and design saved; install check previously reported chat code absent from homepage | Obtain supported embed route; test end-to-end before claiming installed |
 | Flint | Alternative website builder | Account check found no existing MAELVYN site | Do not create a duplicate; hold unless a distinct use case is approved |
@@ -102,7 +103,8 @@ Status labels are scoped to the MAELVYN website/workflow. A connected account or
 | Framer | Design/prototype reference | Existing project link recorded in prior work | Reference only unless explicitly selected as a separate deliverable |
 | Brilliant Design | Visual prototype/reference | Existing playground link recorded in prior work | Reference only; not the production website |
 | Webflow | Alternative website platform | Connected account checked; no MAELVYN site found in prior check | Hold; no migration or duplicate |
-| Asyntai | Alternative chatbot | Previously evaluated; not installed | Avoid parallel chatbots; Flows remains the primary candidate unless changed by decision |
+| Asyntai | Alternative chatbot | Previously evaluated; not installed; chatbot activation is not authorized in this task | Avoid parallel chatbots; keep it out of the current release |
+| MAELVYN Connect REST/MCP | Private registry and proposal integration layer | Implemented locally in source; REST routes and tests are present; local MCP bridge is read-only by default and not connected to ChatGPT or any live external assistant | Configure and test only through an approved authenticated origin; no external connection claim |
 | External LLM/API providers | Chatbot/agent intelligence | No production key or paid usage authorized in this workflow | Do not activate paid keys, usage, subscriptions, or credits without explicit approval |
 
 ### Integration evidence contract
