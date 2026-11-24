@@ -71,3 +71,10 @@ Required commerce entities as implementation progresses:
 - `partners`, `attributions`, `commission_rules`, `commission_entries`
 
 Every record must be scoped to workspace and venture, and where applicable seller legal entity. Purchased offer terms must be snapshotted; event and posted-ledger records are append-only. This is a target model, not an applied migration. Add schema only through reviewed numbered migrations, tested in development with backup and rollback plans.
+
+
+---
+
+## Migration and schema source-of-truth update — 2026-11-24
+
+The initial domain model in this document is conceptual and does not replace the executable migration chain. The repository currently contains migrations `0001`–`0009`; use those SQL files and the current D1 migration ledger for the actual schema. The Production deployment report records all nine migrations applied and integrity checks clean on 2026-11-18. Never infer live schema solely from this document, and do not migrate Development identities or synthetic records into Production.

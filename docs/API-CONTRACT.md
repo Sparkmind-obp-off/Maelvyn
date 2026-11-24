@@ -125,3 +125,10 @@ Proposed route families:
 - `GET /partners/:id/attributions|commissions`
 
 These routes are design targets, not current implementation claims. Every endpoint must validate identity, seller/venture scope, state transition, idempotency, webhook signature (where applicable), and audit requirements. Public catalogue reads expose only approved listing projections. Never trust browser-supplied seller, venture, amount, payment state, or ownership claims.
+
+
+---
+
+## Implementation alignment — 2026-11-24
+
+This file remains the API domain contract and acceptance reference. The application now implements a wider set of routes than the initial endpoint proposal. For exact current behavior, use the corresponding `server/**/routes.ts` implementation and automated tests as the code source of truth. Do not assume every target Commerce API extension in this document is implemented. Any API change must preserve deny-by-default authorization, workspace/venture scoping, idempotency, immutable decision/ledger history, and explicit approval for reserved actions.

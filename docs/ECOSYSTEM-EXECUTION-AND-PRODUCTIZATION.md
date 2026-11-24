@@ -221,3 +221,12 @@ Choose by verified demand, low delivery risk, available capability, rights clari
 - No public listing before seller, scope, price, terms, fulfillment and support are confirmed.
 - No “production ready” claim without end-to-end evidence and a current release record.
 - Every write action has an owner, authorization, idempotency, audit trail and recovery path.
+
+
+---
+
+## Brand and tool-governance alignment — 2026-11-24
+
+Use **MAELVYN — Venture Studio & Commerce Ecosystem** as the external brand category and **Agentic Shared Venture Studio OS** as the platform descriptor. Approved tagline: **Building Ventures. Creating Value. Growing Together.** The approved brand strategy is in `docs/BRAND-STRATEGY-AND-IDENTITY.md`.
+
+Tool references and provider snapshots in this blueprint are not authorization to connect accounts, consume credits, publish, deploy, or spend. Evaluate tools through `docs/TOOLING-AND-INTEGRATION-STRATEGY.md`; record actual connection state, provider credentials, commercial terms, quotas, and permission scopes separately.

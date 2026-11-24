@@ -1,7 +1,7 @@
 # MAELVYN
 
 **Agentic Shared Venture Studio OS**  
-*Building Businesses. Creating Assets. Growing Together.*
+*Building Ventures. Creating Value. Growing Together.*
 
 MAELVYN is a governed, multi-agent operating system for discovering opportunities, validating demand, creating ventures, operating productive assets, and growing a portfolio through coordinated human and AI-agent work.
 
@@ -78,7 +78,7 @@ Agents may research, plan, coordinate, prepare, and execute only within explicit
 
 ## Authentication SDK upgrade
 
-The browser client now targets Clerk Core 3 via `@clerk/react` (Node.js >=20.9.0). The previous `@clerk/clerk-react` Core 2 package was deprecated and used ClerkJS 5, which is blocked by Clerk's minimum-version protection on newer instances. See [Clerk Core 3 upgrade and verification](docs/CLERK-CORE-3-UPGRADE.md). The stale npm lockfile was removed and must be regenerated with `npm install` before the next clean CI/install; do not use `npm ci` until the generated lockfile is committed.
+The browser client now targets Clerk Core 3 via `@clerk/react` (Node.js >=20.9.0). The previous `@clerk/clerk-react` Core 2 package was deprecated and used ClerkJS 5, which is blocked by Clerk's minimum-version protection on newer instances. See [Clerk Core 3 upgrade and verification](docs/CLERK-CORE-3-UPGRADE.md). A `package-lock.json` is present in the current repository. Before a clean install, verify it matches `package.json`; use `npm ci` only after lockfile synchronization is confirmed and committed.
 
 ## Current status
 
@@ -146,7 +146,7 @@ The latest repository verification reports 94 automated tests passing across 9 t
 
 ### Not implemented yet
 - **Owner binding on the live dev environment.** The owner account must sign in with `sparkmind.support@gmail.com` (Google) and press "Klaim peran Platform Owner". The Clerk instance cannot create that user via API, so `platform_roles` is still empty remotely.
-- **R2 artifacts adapter.** BLOCKED: no R2 binding is provisioned. Queues and Workflows (research runs synchronously). Workers AI binding and model registry.
+- **Production R2:** private bucket is provisioned and bound; authenticated upload/download verification remains blocked pending Clerk Production secret installation. Queues and Workflows (research runs synchronously) and Workers AI inference/model registry remain unverified or unimplemented.
 - Live Apify / Scrape.ly Actor runs (NOT-AUTHORIZED). External email/SMS notifications (in-app only).
 - Active GitHub CI: the template is in `ops/github-workflows/` and needs `workflows` permission. The Playwright suite currently covers sign-in and identity-boundary denial only.
 
@@ -154,7 +154,7 @@ The latest repository verification reports 94 automated tests passing across 9 t
 ```bash
 cp .dev.vars.example .dev.vars          # fill with DEVELOPMENT credentials only (git-ignored)
 npm ci
-npm run check                           # typecheck + lint + 63 tests + build
+npm run check                           # typecheck + lint + current Vitest suite + build
 npm run db:migrate:local
 npm run build && pm2 start ecosystem.config.cjs   # http://localhost:3000
 ```
@@ -198,7 +198,7 @@ The current target architecture is documented in:
 
 ## Production execution
 
-The Production environment is isolated from Development. For Genspark execution, follow the canonical [Wrangler-only execution master prompt](docs/GENSPARK-WRANGLER-EXECUTION-MASTER-PROMPT.md). Production deployment, D1 migrations and Pages secret installation must use Cloudflare Wrangler CLI; GitHub Actions CI is validation-only and must never deploy Production.
+The Production environment is isolated from Development. The Genspark-specific Wrangler prompt is historical; use the tool-neutral `docs/MASTER-PROMPT.md` and current runbooks. Production deployment, D1 migrations and Pages secret installation must use Cloudflare Wrangler CLI; GitHub Actions CI is validation-only and must never deploy Production.
 
 Current state and blockers: [Full repository and Production gap audit](docs/FULL-REPOSITORY-AND-PRODUCTION-GAP-AUDIT.md).
 
@@ -207,7 +207,7 @@ Current state and blockers: [Full repository and Production gap audit](docs/FULL
 
 | Document | Purpose |
 |---|---|
-| [Production Continuation Master System & Genspark Prompt](docs/PRODUCTION-CONTINUATION-MASTER-SYSTEM-AND-GENSPARK-PROMPT.md) | Authoritative clarification: reuse existing Production Pages/D1/R2, deploy the app with Wrangler, preserve the eight applied migrations, avoid bulk Development data migration, and follow security/domain release gates |
+| [Production Continuation Master System & Genspark Prompt](docs/PRODUCTION-CONTINUATION-MASTER-SYSTEM-AND-GENSPARK-PROMPT.md) | Historical Genspark-specific continuation prompt; see current tool-neutral master prompt, documentation governance, and dated Production verification |
 
 
 ## Brand and documentation control
@@ -221,3 +221,8 @@ The dated Production verification document is the source for live deployment cla
 
 - [Tooling & Integration Strategy](docs/TOOLING-AND-INTEGRATION-STRATEGY.md)
 - [UI/UX Audit & Enhancement Plan](docs/UI-UX-AUDIT-AND-ENHANCEMENT-PLAN.md)
+
+
+## Canonical brand and current status
+
+MAELVYN's approved tagline is **Building Ventures. Creating Value. Growing Together.** External positioning is **Venture Studio & Commerce Ecosystem**; the technical platform descriptor is **Agentic Shared Venture Studio OS**. The latest dated Production evidence is 2026-11-18 and records deployment with authenticated Clerk flows still blocked by the missing server secret. See the brand strategy and Production verification documents before making public claims.

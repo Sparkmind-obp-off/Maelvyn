@@ -158,3 +158,10 @@ Register payment gateways, shipping providers, email/SMS services, analytics, AI
 Payment providers are adapters, not the source of legal authority or accounting truth. Verify webhook signatures, use idempotency keys, retain provider event IDs, and reconcile settlements. Never store raw card data. Do not enable live payment mode or payout/split-settlement functionality before merchant eligibility, contracts, fees, legal roles, and test evidence are verified.
 
 Clerk Development and Production are separate identity environments. Use `docs/CLERK-PRODUCTION-RUNBOOK.md` for the production process.
+
+
+---
+
+## Provider and environment status reconciliation — 2026-11-24
+
+The existing Cloudflare-first stack remains the selected baseline. The 2026-11-18 Production verification records a live Pages deployment, isolated Production D1, private R2 binding, and Production Clerk configuration. Authenticated Production workflows remained blocked by the missing Clerk server secret in that dated report. External provider adapters in code do not prove active credentials, commercial approval, or live provider execution. Use `docs/TOOLING-AND-INTEGRATION-STRATEGY.md` for the latest evaluation policy; no new provider or app-builder is approved merely by being listed.
