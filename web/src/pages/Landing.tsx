@@ -20,6 +20,7 @@ export default function Landing() {
       <section id="hero-section" className="mv-hero" aria-labelledby="hero-title">
         <div className="hero-copy">
           <p className="eyebrow">MAELVYN / VENTURE STUDIO &amp; COMMERCE ECOSYSTEM</p>
+          <p className="platform-descriptor">Agentic Shared Venture Studio OS</p>
           <h1 id="hero-title">Building ventures with <span>clarity, evidence, and room to grow.</span></h1>
           <p className="hero-lede">MAELVYN menghubungkan discovery, validation, execution, dan shared operating infrastructure tanpa menghapus kemandirian setiap venture.</p>
           <div className="hero-actions">

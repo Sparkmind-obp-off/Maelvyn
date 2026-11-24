@@ -40,3 +40,20 @@ Verification completed: `npm run check` passed (typecheck, lint, 98 tests across
 Delivery remains local until the GitHub connector is re-authenticated. The last verified repository state before this task was `077454d`; no push, deployment, publication, DNS update, or UiChemy edit was performed.
 
 The implementation commit is local at `2e7c0a04d2eb587b3a05b688b89a90b9c65723f6` (`feat: refine maelvyn experience and connect layer`). A fresh `gh auth status` check returned `GitHub: Connector token is invalid, re-authenticate with the user to continue.` Therefore `origin/main` remains unchanged and no push receipt is claimed.
+
+
+## Continuation audit and descriptor closure — 2026-11-24 UTC
+
+This continuation began from canonical `main` at `2a5754dc84b3f2d905ad5b87574e02ef1868b9a2`, which matched `origin/main` in a clean clone. GitHub REST API reported 0 open PRs and 0 open issues. Existing UI/UX and Connect work was already present in `main`; this task did not create a duplicate site or repo.
+
+The supplied UiChemy ID `6b05dffa73c998b4e11b5507` failed attachment twice with `The bound Webdev resource is unavailable to the current project identity`. Task search for MAELVYN, UiChemy, and Hydrr111 only surfaced this task. The current task owner is Elmatador; no alternate authorized workspace/device was listed. UiChemy was not edited, and the repository is not treated as a UiChemy sync.
+
+Source review found the approved “Agentic Shared Venture Studio OS” descriptor in brand documentation but not visible on the public landing page. Added the descriptor near the category in `web/src/pages/Landing.tsx`, styled it with the high-contrast muted token in `web/src/index.css`, and added `tests/public-site.test.ts` before implementation. The new test initially failed only on the absent descriptor (three other cases passed). It then passed with all other project tests.
+
+Evidence: `npm run check` passed typecheck, lint, 102 tests across 11 files, and web/worker build. Vite served `/manus-routes.json` as JSON with 21 routes and `/` as HTML. Local Playwright/Chromium QA with a synthetic auth config passed at 1440×900, 768×1024, and 390×844: expected home descriptor/tagline found, no horizontal overflow, no missing-alt image, and no page errors. The decorative favicon has `alt=""`. Checked contrast token ratios were cyan/navy 6.87:1, soft-cyan/navy 11.04:1, muted/navy 9.58:1, and white/navy 16.64:1; this is a token spot-check, not a full WCAG audit. `git diff --check` passed. Build emits a non-fatal warning for the ~505.10 kB minified main JS chunk.
+
+The existing Connect code/docs were reviewed. Connect remains read-only by default, requires the established Clerk request principal, authorizes via database workspace/venture scope, uses strict Zod input parsing and rate limiting, projects data rather than exposing raw tables/secrets, and writes only pending status proposals with append-only audit events. Its tests cover unauthenticated access, scoped reads, viewer write rejection, and auditable pending proposal behavior. No real credential or live external MCP connection was used or claimed.
+
+Provider/cost boundary: public GitHub reads, npm lockfile install, and open-source Playwright Chromium/FFmpeg download for local QA only; no paid service, API, asset, credit or subscription. No production/customer data was sent. No production publish/deploy, DNS, form/chatbot activation, analytics, provider activation, production migration, or external integration activation occurred.
+
+Remote GitHub write remains **BLOCKED**: `gh auth status` reports `You are not logged into any GitHub hosts.` The current Manus task owner is not the requested Hydrr111 identity. Do not claim push or remote commit verification. The continuation audit is in `docs/MAELVYN-CONTINUATION-AUDIT-2026-11-24.md`; its next action is to restore authorized identity/write access and the UiChemy binding, then fetch, recheck, push to canonical `main`, verify the exact remote SHA, and continue the builder-side work separately. Current local commit/push receipts follow after the commit attempt.
