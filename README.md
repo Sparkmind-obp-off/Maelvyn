@@ -218,3 +218,6 @@ Current state and blockers: [Full repository and Production gap audit](docs/FULL
 - [Tooling & Integration Strategy](docs/TOOLING-AND-INTEGRATION-STRATEGY.md) — candidate tools are not assumed connected or approved for paid use.
 
 The dated Production verification document is the source for live deployment claims. The latest evidence in this repository says the Production app and infrastructure are deployed, but Clerk server-secret setup and authenticated end-user verification remain blocking items. Do not describe MAELVYN as fully launched.
+
+- [Tooling & Integration Strategy](docs/TOOLING-AND-INTEGRATION-STRATEGY.md)
+- [UI/UX Audit & Enhancement Plan](docs/UI-UX-AUDIT-AND-ENHANCEMENT-PLAN.md)

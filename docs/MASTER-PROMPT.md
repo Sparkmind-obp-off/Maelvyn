@@ -365,3 +365,22 @@ For Genspark execution, use `docs/GENSPARK-WRANGLER-EXECUTION-MASTER-PROMPT.md` 
 - `npx wrangler pages secret put CLERK_SECRET_KEY --project-name maelvyn-production` for the Clerk Production secret, using its hidden interactive terminal prompt and owner-entered value.
 
 Do not deploy through CI/CD, GitHub Actions, Cloudflare Dashboard upload, direct Cloudflare API calls or other hosting. CI can run tests only. Do not place secrets in prompts, chat, files, source code, environment files or command arguments. If Genspark cannot provide a private interactive terminal for owner secret entry, stop and let the owner run that Wrangler command locally.
+
+
+---
+
+## MAELVYN brand and documentation governance — 2026-11-24
+
+Use `docs/BRAND-STRATEGY-AND-IDENTITY.md` as the canonical brand source:
+- External category: **Venture Studio & Commerce Ecosystem**.
+- Platform descriptor: **Agentic Shared Venture Studio OS**.
+- Approved tagline: **Building Ventures. Creating Value. Growing Together.**
+- Primary color: `#00AFEC`.
+
+For all public copy, decks, product surfaces, and partner material:
+- Do not invent capabilities, customers, revenue, partnerships, ownership, certifications, or trademark/domain availability.
+- Preserve independent venture identities and their legal, financial, IP, data, and operational boundaries.
+- State whether a capability is live, tested, proposed, blocked, or unverified.
+- Do not describe MAELVYN as a pooled fund, holding company, payment institution, or automatic owner of all portfolio ventures.
+
+Use `docs/DOCUMENTATION-GOVERNANCE-AND-STATUS.md` to resolve document conflicts and status claims. Legacy Genspark prompts are historical tool-specific material, not the source of truth for platform architecture. Never place secrets in prompts or chat.

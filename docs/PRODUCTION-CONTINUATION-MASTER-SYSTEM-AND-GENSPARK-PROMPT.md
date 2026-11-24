@@ -1,5 +1,8 @@
 # MAELVYN — Production Continuation Master System & Genspark Execution Prompt
 
+> **ARCHIVED / TOOL-SPECIFIC (2026-11-24):** This file preserves a historical Genspark-oriented execution prompt. It is not the canonical source of truth and must not be used blindly when the referenced Genspark account/runtime is unavailable. Follow `docs/MASTER-PROMPT.md`, `docs/DOCUMENTATION-GOVERNANCE-AND-STATUS.md`, and the current verified runbooks. Never paste secrets into prompts.
+
+
 **Version:** 1.0.0  
 **Date:** 2026-11-18  
 **Repository:** `Sparkmind-obp-off/Maelvyn`  

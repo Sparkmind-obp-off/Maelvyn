@@ -214,3 +214,19 @@ Do not mark production-ready until all BLOCKED items have evidence. The Developm
 | Domain cutover | NOT DONE — safely deferred |
 
 Do not delete `maelvyn-dev-db`; keep Development and Production isolated.
+
+
+---
+
+## Production evidence reconciliation — 2026-11-24
+
+The latest dated live evidence in this repository is `docs/MAELVYN-PRODUCTION-DEPLOYMENT-VERIFICATION.md` (2026-11-18). It records:
+
+- Production Pages deployment succeeded.
+- Production D1 connectivity and migration ledger `0001`–`0009` were verified.
+- A private Production R2 bucket was provisioned and bound.
+- Public health, readiness, config, and SPA routes were checked.
+- Readiness remained `503 not_ready` because the Clerk Production server secret was not installed.
+- Google sign-in, verified JWT flow, owner bootstrap, and authenticated R2 upload/download remained unverified.
+
+**Release decision:** DEPLOYED / PARTIALLY VERIFIED — NOT APPROVED FOR GENERAL PUBLIC LAUNCH. The owner must complete the secret installation through the documented private Wrangler prompt, then run the complete authenticated verification and obtain explicit release approval. Re-check the live state before acting; this dated report is not proof that the blocker remains unchanged today.

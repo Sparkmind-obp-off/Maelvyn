@@ -1,5 +1,8 @@
 # MAELVYN — Genspark Master Implementation Prompt
 
+> **ARCHIVED / TOOL-SPECIFIC (2026-11-24):** This file preserves a historical Genspark-oriented execution prompt. It is not the canonical source of truth and must not be used blindly when the referenced Genspark account/runtime is unavailable. Follow `docs/MASTER-PROMPT.md`, `docs/DOCUMENTATION-GOVERNANCE-AND-STATUS.md`, and the current verified runbooks. Never paste secrets into prompts.
+
+
 **Version:** 2.0.0  
 **Target:** Genspark.ai coding/research workspace  
 **Repository:** https://github.com/Sparkmind-obp-off/Maelvyn  

@@ -60,3 +60,17 @@
 | OPEN-004 | Legal entity/KBLI fit for each planned commerce activity | Requires professional verification |
 | OPEN-005 | Payment provider and merchant-of-record model | Not selected |
 | OPEN-006 | Public marketplace launch scope | Not selected |
+
+
+## ADR-009 — MAELVYN brand and external positioning
+
+**Decision date:** 2026-11-24  
+**Decision:** Use MAELVYN as the master brand; position it externally as a **Venture Studio & Commerce Ecosystem**; describe the underlying platform as **Agentic Shared Venture Studio OS**; use the approved tagline **Building Ventures. Creating Value. Growing Together.**  
+**Rationale:** Separate the market-facing business category from the technical operating-system descriptor.  
+**Consequences:** All public and internal brand collateral must follow `docs/BRAND-STRATEGY-AND-IDENTITY.md`. This does not establish legal ownership of ventures or trademark/domain clearance.
+
+## ADR-010 — Tool-neutral integration policy
+
+**Decision date:** 2026-11-24  
+**Decision:** External AI, research, browser, design, app-building, and demo tools are optional adapters or workflow aids—not mandatory MAELVYN core dependencies.  
+**Consequences:** Keep Cloudflare/Workers/Hono/D1/R2 as the existing implementation baseline unless a new ADR approves a change. Evaluate each external tool for data access, security, cost, commercial terms, exportability, and measurable benefit before connection. No paid service or credit use is authorized by a mention in a document. See `docs/TOOLING-AND-INTEGRATION-STRATEGY.md`.
