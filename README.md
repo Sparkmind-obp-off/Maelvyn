@@ -146,7 +146,7 @@ The latest repository verification reports 94 automated tests passing across 9 t
 - **Research, providers, agents, audit:** `POST /ventures/:vid/research` · `GET /research/:tid` · `POST /research/:tid/review` · `GET|PUT /workspaces/:wid/providers…` · `GET /agents` · `GET|PUT /workspaces/:wid/kill-switches` · `GET /workspaces/:wid/audit|usage`
 
 ### Not implemented yet
-- **Owner binding on the live dev environment.** The owner account must sign in with `sparkmind.support@gmail.com` (Google) and press "Klaim peran Platform Owner". The Clerk instance cannot create that user via API, so `platform_roles` is still empty remotely.
+- **Owner binding on the live dev environment.** The designated owner must sign in through the configured Google identity and press "Klaim peran Platform Owner". The exact account identifier is intentionally omitted from this public README. The Clerk instance cannot create that user via API, so `platform_roles` is still empty remotely.
 - **Production R2:** private bucket is provisioned and bound; authenticated upload/download verification remains blocked pending Clerk Production secret installation. Queues and Workflows (research runs synchronously) and Workers AI inference/model registry remain unverified or unimplemented.
 - Live Apify / Scrape.ly Actor runs (NOT-AUTHORIZED). External email/SMS notifications (in-app only).
 - Active GitHub CI: the template is in `ops/github-workflows/` and needs `workflows` permission. The Playwright suite currently covers sign-in and identity-boundary denial only.
