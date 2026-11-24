@@ -1,7 +1,7 @@
 # MAELVYN — Documentation Governance & Status
 
-**Version:** 1.0.0  
-**Effective date:** 2026-11-24  
+**Version:** 1.0.1  
+**Effective date:** 2026-11-25  
 **Scope:** All repository documentation, implementation prompts, operational runbooks, and release evidence.
 
 ## 1. Purpose
@@ -59,6 +59,7 @@ Never use "complete", "live", "secure", "production-ready", or "launched" withou
 | Security/operations | SECURITY-PRIVACY-OPERATIONS, PRODUCTION-READINESS-CHECKLIST, DOMAIN-AND-ENVIRONMENT-STRATEGY, Clerk runbooks | Dated evidence required for release claims |
 | Evidence | MARKET-EVIDENCE-AND-OPPORTUNITY-REGISTER, FULL-REPOSITORY-AND-PRODUCTION-GAP-AUDIT, MAELVYN-PRODUCTION-DEPLOYMENT-VERIFICATION | Preserve source, date, limitations and evidence class |
 | Brand/UI | BRAND-STRATEGY-AND-IDENTITY, BRAND-DESIGN-SYSTEM, UX-UI-SYSTEM | Strategy is approved; detailed visual implementation is staged |
+| Website/acquisition/providers | WEBSITE-ACQUISITION-AND-PROVIDER-REGISTER | Canonical public-site journey, design references, provider statuses, release gates and work-log rules |
 | Planning | 90-DAY-ROADMAP, CAPABILITY-INVENTORY-AND-UPGRADE-ROADMAP, IMPLEMENTATION-FOUNDATION-PLAN | Plans are not proof of completion |
 | Historical execution | GENSPARK-* and older continuation prompts | Genspark-specific; archive or adapt before reuse if access/runtime is unavailable |
 
@@ -100,4 +101,4 @@ The repository contains legacy Genspark implementation/execution prompts. They a
 
 ## 10. Review cadence
 
-Review canonical docs when any of these changes: brand strategy, legal structure, provider, auth, database schema, finance rules, agent autonomy, data boundaries, production environment, or commerce seller/fulfillment model. Review operational evidence before every production release.
+Review canonical docs when any of these changes: brand strategy, legal structure, provider, auth, database schema, finance rules, agent autonomy, data boundaries, production environment, or commerce seller/fulfillment model. Review operational evidence before every production release. Update `docs/WEBSITE-ACQUISITION-AND-PROVIDER-REGISTER.md` whenever website, acquisition, provider, or chatbot status changes.
