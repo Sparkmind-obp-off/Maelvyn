@@ -208,3 +208,12 @@ Remaining blockers: add `CLERK_SECRET_KEY` securely as Cloudflare secret-text, c
 Sections 1–10 describe earlier planning and must be read with the later dated updates in sections 11–14 and the live evidence report. Production Pages, Production D1, and private R2 were provisioned and deployed by 2026-11-18. The recorded remaining blocker is `CLERK_SECRET_KEY` installation through the secure Wrangler prompt. After installation, re-run sign-in, JWT, owner-claim, authorization, and artifact upload/download verification. Do not paste secret values into chat, prompts, files, or command arguments.
 
 Canonical evidence: [MAELVYN Production Deployment Verification](MAELVYN-PRODUCTION-DEPLOYMENT-VERIFICATION.md).
+
+## 16. Credential rotation and verification gate — 2026-11-25
+
+Supersedes the earlier secret-installation status: Wrangler now lists `CLERK_SECRET_KEY` as encrypted in Pages Production. This does not prove the credential is valid or rotated. Treat a key disclosed in chat or an attachment as compromised; do not test with it or use it as a rollback credential.
+
+1. In Clerk, verify the selected instance is the MAELVYN Production instance from §11. Revoke/rotate the disclosed backend key.
+2. Install the replacement on Cloudflare Pages project `maelvyn-production`, **Production** environment, as encrypted `CLERK_SECRET_KEY`. Use the authenticated Cloudflare dashboard or the interactive `npx wrangler pages secret put CLERK_SECRET_KEY --project-name maelvyn-production` prompt. Never put the value in a command argument, source file, shared attachment or browser variable.
+3. Confirm the replacement is active using an authorized test sign-in and server-side Clerk profile lookup; record status and request IDs only. If activation requires a new deployment, follow the existing release gates rather than bypassing them.
+4. Confirm exactly which origins should allow sign-in. The current allowlist contains only `https://maelvyn-production.pages.dev`; attached domains are not automatically authorized. Use [verification report §10](MAELVYN-PRODUCTION-DEPLOYMENT-VERIFICATION.md#10-p0-follow-up--2026-11-25) for the remaining owner, isolation, storage and recovery gates.
