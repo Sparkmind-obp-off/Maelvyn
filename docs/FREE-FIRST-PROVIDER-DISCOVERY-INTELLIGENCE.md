@@ -211,3 +211,56 @@ This discovery does not authorize:
 
 ---
 This document is a discovery and productization baseline. It is not proof that any provider is connected to the MAELVYN runtime or that every package is ready for public sale.
+
+
+## 11. ChatGPT connector namespace inventory observed in this session
+
+This is a capability-discovery inventory of tool namespaces visible to this ChatGPT session, not a claim that every provider account is authenticated, free, or connected to MAELVYN. Repeated names/aliases may point to separate workspaces or deployments and must not be merged without checking identity and permissions.
+
+### Research, search, data, SEO and scraping
+Ahrefs; AgentData; Apify; Brightdata; Context.dev; DataBlue; Exa; Firecrawl; Parallel; Scrape.ly; Search1API; Semrush; Similarweb; Tavily; Treg; TokConnect; Windsor.ai; Google Search Console (Windsor); Reportei; Supermetrics; G2; Pod; LinkedIn; LinkedIn Ads; Nexlev; Explainx.ai; AgentGrid Shared Drive.
+
+### Agents, orchestration, memory and developer operations
+Agent Relay; Agent Swarm; AgentContext; AgentWorld Explorer; Agentplace; AI Task Brief Builder; Aictrl.dev; Alpic; AMS; Automations; Atlas AI Agent; Brainbase MCP; CoreSpeed; Cortex Semantic Memory; DotSpark; Elaichi; Giljo HQ; Harbor; Hyper; Knowledge for Agents; Kody; LIAM; Lobu; Manus; MatchTool; Olbrain Alchemist; OpenHands; Openlayer; Operator Powers; Prompt Perfect; PromptingCraft; TeleClaw; Vertical Bar Agent; Wever Labs; Wever Brief; Wever Evidence; WisBot; ZRouter; Agent Spot; OMGSkills.
+
+### Integrations, workflow automation, communications and CRM
+Bird; Composio; Make; Make Agent Fast; monday.com; Reply; RudderStack; Shopify; Etsy; Fiverr; Gumroad; Gmail; LinkedIn; MyChatBot; SiteSpeak; Socialync; Zernio; WorkOS; Clerk; Apollo.io; Asyntai; ChatbotGen; Flows; Nexvio AI; Mcp.zpuerr Fliki; Mcp.mnychat; Mcp.arcade; Mcp.clerk; Mcp.crly; Mcp.frecrwl; Mcp.tavily; Mcp.taviky; Mcp.sea; Windsor.ai.
+
+### Design, brand, website and visual production
+Adobe; BestSaaSWebDesigns; Brand API; Brand Strategist; Brandfetch; Brilliant Design; Canva; Creative Claw; Everygen; Favicon Generator; Framer; Genspark AI Slides; Genspark MMX; Hugeicons; Magnific; Miro; OpenArt; Orshot; Runway; tldraw; UiChemy AI Website Creator; V0; Vercel; Webflow; Website Design; Website Maker; FluxBuilder; VideoGen; Invideo; Video Generator by MegaScenes; ElevenLabs; Hyperhuman Agent Workspace; Resume Maker; Business Plan Maker; Name Ideas Generator; Rhythm AI Personality Tuner.
+
+### Cloud, deployment, security and testing
+Cloudflare; AppDeploy; BasicDeploy; Floot; Flint; Vercel; Testifly; Browser Use; KERNEL; Clerk; WorkOS; GitHub; Openlayer; RudderStack; Alpic.
+
+### Commerce, growth, media and specialist tools
+Ggle Ads Ppenoard; Shopee; Shipee; TokConnect; Faceless Video; GetAgents; Hermoso AI; Nexvio AI; AgentWorld Explorer; Sonos; Hyperhuman; AI Video Maker; VideoGen; OpenArt; Creative Claw; Magnific; Runway; ElevenLabs; Fiverr; Etsy; Gumroad; Shopify; MyChatBot; Flows; Reportei; Supermetrics.
+
+### Connected tool aliases that require identity separation
+- Firecrawl / Firecrwal / Mcp.frecrwl variants
+- Tavily / Taviky / Mcp.tavily variants
+- Composio / Composio-devb
+- Clerk variants
+- Make / Make.com MCP variants
+- Cloudflare / Cloudflare MCP
+- Windsor.ai variants
+- Apify variants
+- OpenArt variants
+- Magnific variants
+
+**Registry rule:** retain provider vendor, connector namespace, authenticated identity, workspace/team, scopes, cost model, and data residency as separate fields. Never assume two aliases share credentials, quotas, terms, or account ownership.
+
+## 12. Provider evaluation scorecard
+
+Score each provider 0–5 on:
+1. Free access and no-card usability.
+2. Recurring allowance and hard-stop clarity.
+3. Quality/reliability and evidence traceability.
+4. API/MCP maturity and adapter effort.
+5. BYOC/OAuth and tenant isolation.
+6. Commercial SaaS/white-label rights.
+7. Privacy, retention, deletion, and security controls.
+8. Exportability and vendor lock-in.
+9. Indonesia accessibility, latency, and payment friction.
+10. Cost per finished customer outcome.
+
+A provider with unclear commercial rights, no hard spending ceiling, or no tenant-safe credential model cannot be promoted to `TERMS_CLEARED` or `PRODUCTION_APPROVED`, regardless of its free quota.
