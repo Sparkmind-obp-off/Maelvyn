@@ -230,3 +230,15 @@ The dated Production verification document is the source for live deployment cla
 ## Canonical brand and current status
 
 MAELVYN's approved tagline is **Building Ventures. Creating Value. Growing Together.** External positioning is **Venture Studio & Commerce Ecosystem**; the technical platform descriptor is **Agentic Shared Venture Studio OS**. The latest dated Production evidence is maintained in the Production verification report and records a live deployment with authenticated Clerk flows, private artifact round-trip, and recovery still open. See the brand strategy and Production verification documents before making public claims.
+
+## Agentic platform master documents
+
+The technical platform specification and Genspark execution prompt are maintained separately from the venture constitution:
+
+| Document | Purpose |
+|---|---|
+| [Agentic Platform Master System](docs/MAELVYN-AGENTIC-PLATFORM-MASTER-SYSTEM.md) | Canonical technical architecture, identity boundaries, gateway, providers, product roadmap, security and autonomy |
+| [Implementation Backlog P0–P5](docs/MAELVYN-IMPLEMENTATION-BACKLOG-P0-P5.md) | Dependency-ordered implementation epics, acceptance criteria, release gates and report template |
+| [Genspark Full-Stack Master Prompt](docs/GENSPARK-FULLSTACK-MASTER-PROMPT.md) | Copy-ready instruction for Genspark to inspect and continue this existing repository |
+
+These documents do not replace [Master System](docs/MASTER-SYSTEM.md). The latter remains authoritative for venture governance, participation, rights and ownership.
