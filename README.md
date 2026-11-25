@@ -66,6 +66,7 @@ Agents may research, plan, coordinate, prepare, and execute only within explicit
 | [Provider Stack Strategy](docs/PROVIDER-STACK-STRATEGY.md) | Provider-neutral stack, candidate runtimes, registry, quotas, cost controls, and fallback |
 | [External Capability Integration Architecture](docs/EXTERNAL-CAPABILITY-INTEGRATION-ARCHITECTURE.md) | MAELVYN-owned gateway, MCP/provider boundaries, account identity, policy, execution protocol and rollout gates |
 | [External Provider Binding Register](docs/EXTERNAL-PROVIDER-BINDING-REGISTER.md) | Provider-to-capability mapping, observed ChatGPT availability, MAELVYN binding status, priorities and blockers |
+| [Free-First Provider Discovery & Productization Intelligence](docs/FREE-FIRST-PROVIDER-DISCOVERY-INTELLIGENCE.md) | ChatGPT connector inventory, external free tiers, live account checks, provider scorecard, productized packages, and free-first integration backlog |
 | [Full-Stack Implementation Blueprint](docs/FULL-STACK-IMPLEMENTATION.md) | Runtime, repository layout, agentic backend modules, tests, and build sequence |
 | [Database Schema](docs/DATABASE-SCHEMA.md) | Initial relational domain model and data integrity rules |
 | [API Contract](docs/API-CONTRACT.md) | MVP endpoints, approval states, permissions, and finance posting rules |
