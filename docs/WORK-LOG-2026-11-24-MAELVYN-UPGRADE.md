@@ -62,3 +62,16 @@ The first remote push attempt was **BLOCKED** before the GitHub connector became
 ### Commit and push receipt
 
 Code/test/audit commit `dfe1ac6c1740d3beb6b71bb55848f140f97647e1` and documentation receipt commit `9cd3d1ba5c3cfb589c2c0d7adbaf28d0defbdc96` were pushed to canonical `origin/main`. Post-push `git fetch origin main`, local `git rev-parse origin/main`, and `git ls-remote origin refs/heads/main` all confirmed `9cd3d1ba5c3cfb589c2c0d7adbaf28d0defbdc96`. Commit URL: https://github.com/Sparkmind-obp-off/Maelvyn/commit/9cd3d1ba5c3cfb589c2c0d7adbaf28d0defbdc96. No deployment or publication was performed. UiChemy remains blocked and was not edited.
+
+
+## Production deployment follow-up — 2026-11-25
+
+The user explicitly requested direct deployment through Cloudflare using the existing BYOK token. `node --version`, `npm --version`, `npx wrangler --version`, and `npx wrangler whoami` confirmed Node `v22.23.4`, npm `10.9.9`, Wrangler `4.164.0`, and the expected account `sparkmind.support@gmail.com` / `a167a50f1272635d3c1145aab3cd8f98`. The token value was not printed or recorded. No new Pages project was created.
+
+Preflight confirmed clean main at `71c07eac092e52274ace4d97dbb593f8c552792b`, Production Pages `maelvyn-production`, Production D1 UUID `6b42d874-61c8-4ebe-8b79-de7432e094de`, and R2 `maelvyn-production-private`. Wrangler confirmed the Clerk secret name exists as encrypted; value was not retrieved. Production readiness had improved since the November 18 report and returned `200`.
+
+A clean `npm ci` reported 0 vulnerabilities. `npm run check` passed typecheck, lint, all 102 tests across 11 files, and web/Worker build. Non-fatal warning: main JS bundle about 505.10 kB minified. The Production D1 migration list showed only `0010_connect.sql` pending. After reviewing its additive DDL (new proposal table, indexes, append-only delete guard; no updates/deletes), it was applied once with `npm run db:migrate:production`. Wrangler subsequently reported no pending migrations; aggregate counts (people 2, workspaces 0, ventures 0, tasks 0, Connect proposals 0) remained consistent.
+
+`npm run deploy:production` completed via `ops/deploy-production.sh` and Wrangler. Deployment ID `356aa389-dfe3-4438-a6ed-8f5a7c0f668f`, URL `https://356aa389.maelvyn-production.pages.dev`, source short SHA `71c07ea`, Production branch `main`. Root/www domains were already attached to this project; they now serve this release. No DNS/domain configuration was changed. The script restored root `wrangler.jsonc` to Development `maelvyn-dev`; the local branch remained clean and synchronized with origin after verification.
+
+Post-deploy checks: home HTTP 200 on Pages, deployment URL, root, and www; readiness/health/config HTTP 200; unauthenticated `/api/v1/session`, `/api/v1/connect/manifest`, and `/api/v1/connect/registry` HTTP 401. This confirms public availability/configured readiness and unauthenticated denial, not live identity success. No Production Google sign-in, owner claim, authenticated tenant E2E, R2 live round-trip, or backup/restore was performed. No owner was claimed and no workspace/venture was created. Final state remains **DEPLOYED / PARTIALLY VERIFIED**, not Production Verified. No separate paid provider/asset was used; Cloudflare plan-level usage charges were not independently inspected.

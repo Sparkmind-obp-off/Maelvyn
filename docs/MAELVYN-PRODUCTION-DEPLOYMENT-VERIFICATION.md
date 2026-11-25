@@ -5,13 +5,9 @@ Scope: first real Production deployment of `maelvyn-production` (Wrangler CLI on
 
 ## 1. Status
 
-**DEPLOYED / PARTIALLY VERIFIED.**
+**Latest state (2026-11-25): DEPLOYED / PARTIALLY VERIFIED.** The new Production release is live and `/api/v1/ready` returns `200`; the Production Clerk server secret is present as an encrypted Cloudflare secret. Authenticated user journeys, owner bootstrap, R2 round-trip, and backup/restore remain unverified, so this is **not** a general-launch or Production-Verified claim.
 
-The application is live on Production Pages, bound to the Production D1 and R2, with Production Clerk
-configuration and per-environment CSP. Public surfaces (HTML, SPA routes, health, readiness, config) are
-verified live. Everything that requires a verified end-user session — Google login, JWT verification,
-owner bootstrap, administrative access, R2 upload/download — remains **unverified** because
-`CLERK_SECRET_KEY` is not installed.
+> Historical note: sections 2–6 below preserve the first-deployment evidence from 2026-11-18. Statements there that the secret was absent, readiness was `503`, or no current deployment existed are superseded by sections 7–8 below. Do not use that dated snapshot as the present state.
 
 ## 2. Commit and deployment
 
@@ -190,3 +186,55 @@ cd <repo> && npm run deploy:production
 Production is **deployed and structurally sound**, and the public plane is verified. It is **not**
 operational for users: no one can sign in yet. Do not announce availability until the secret is installed,
 Google login succeeds, the owner claims the platform exactly once, and the R2 round-trip is proven live.
+
+
+## 7. Latest Production release — 2026-11-25
+
+### 7.1 Release identity
+
+| Item | Verified value |
+|---|---|
+| Source branch / SHA | `main` / `71c07eac092e52274ace4d97dbb593f8c552792b` (Cloudflare reported source `71c07ea`) |
+| Source commit URL | https://github.com/Sparkmind-obp-off/Maelvyn/commit/71c07eac092e52274ace4d97dbb593f8c552792b |
+| Cloudflare account | `sparkmind.support@gmail.com`, account `a167a50f1272635d3c1145aab3cd8f98` (Wrangler `whoami`; token value not read or recorded) |
+| Pages project | `maelvyn-production`, existing production branch `main` |
+| Wrangler | `4.164.0`; Node `v22.23.4`; npm `10.9.9` |
+| Deployment ID | `356aa389-dfe3-4438-a6ed-8f5a7c0f668f` |
+| Deployment URL | https://356aa389.maelvyn-production.pages.dev |
+| Production/canonical URL | https://maelvyn-production.pages.dev |
+| Existing attached domains checked | https://maelvyn.biz.id and https://www.maelvyn.biz.id |
+| Deployment time | 2026-11-25, approximately 09:17 +07 (Wrangler reported the deployment at 09:17:08 +07) |
+| Previous Production deployment | `a26473a5-cb13-4dfd-a5c9-e36765316010` (pre-release rollback candidate; rollback not executed) |
+
+Deployment used the repository's `npm run deploy:production` → `ops/deploy-production.sh` → Wrangler Pages path, with the Production config temporarily staged at `wrangler.jsonc`. The script restored the Development root config afterward; `wrangler.jsonc` again names `maelvyn-dev`. Pages deployment emitted its expected dirty-tree warning while that temporary staging was active; after restoration, local `main` was clean and matched `origin/main`. No DNS records or domain attachments were changed. The existing root/www hostnames were already attached to the Production Pages project, so the release is live there too.
+
+### 7.2 Migration and data safety
+
+Before release, Wrangler showed only `0010_connect.sql` pending on Production D1 `6b42d874-61c8-4ebe-8b79-de7432e094de`. The migration was inspected and applied once through `npm run db:migrate:production`; it adds a proposal table, indexes, and a no-delete trigger. It does not update or delete existing rows. Post-migration Wrangler reported no migrations pending. Aggregate counts before/after were unchanged: people 2, workspaces 0, ventures 0, tasks 0, Connect proposals 0. No row contents or personal data were read/exported.
+
+Cloudflare Wrangler confirmed `CLERK_SECRET_KEY` exists as an encrypted Production secret; only its name/presence was checked. No secret value was retrieved, printed, or written to source/docs.
+
+### 7.3 Quality and live smoke evidence
+
+- `npm ci`: exit 0; npm reported 0 vulnerabilities.
+- `npm run check`: exit 0 — typecheck, lint, 11 test files / 102 tests passing, and web/Worker production build.
+- Build emitted one non-fatal Vite warning: main JS bundle about 505.10 kB minified (144.32 kB gzip), slightly above 500 kB.
+- Production Pages deployment: Wrangler reported `Deployment complete`; ID and URL above.
+- Homepage: HTTP 200 on `maelvyn-production.pages.dev`, the deployment URL, `maelvyn.biz.id`, and `www.maelvyn.biz.id`; the approved tagline was present in HTML.
+- `/api/v1/health`: HTTP 200, environment `production`.
+- `/api/v1/ready`: HTTP 200; D1, schema, migrations, R2 configuration, identity, secret presence, authorized parties, and publishable key reported configured/ok.
+- `/api/v1/config`: HTTP 200; only public Production configuration returned, no server secret.
+- Unauthenticated `/api/v1/session`, `/api/v1/connect/manifest`, and `/api/v1/connect/registry`: HTTP 401, as expected.
+- Production migration ledger: no pending migrations. Post-deploy D1 aggregate counts match the pre-deploy values above.
+- Local Connect tests in `npm run check` cover unauthenticated rejection, scope, viewer write denial, and pending/audited proposal behavior.
+- `git diff --check` passed; root Development config restored; working tree was clean immediately after deployment verification.
+
+### 7.4 Provider, cost, authorization
+
+This release used the existing Cloudflare API token via the `CLOUDFLARE_API_TOKEN` environment for Wrangler, the existing Cloudflare account/project, and the repository's existing build/deploy tooling. The user explicitly requested deployment through Cloudflare. No third-party paid API, paid visual asset, new service, DNS change, or separate purchase was made. Cloudflare account-level usage/billing was not independently inspected; normal Cloudflare plan/usage charges remain governed by that account. Build files were uploaded to the user's existing Cloudflare Pages project; no database export or user-content transfer was performed.
+
+## 8. Remaining verification and release decision
+
+**Current label: DEPLOYED / PARTIALLY VERIFIED — not Production Verified.** A `200 ready` response proves configured dependencies, not a complete authenticated user journey. Still pending: real Google sign-in and Production JWT issuer/signature/expiry/authorized-party verification; owner bootstrap (must be performed personally by the owner); authorized role and cross-workspace/venture E2E checks; live private R2 upload/download/delete; and backup/isolated restore verification. No owner was claimed, no workspace/venture was created, and no general-launch claim is made. The existing E2E script is explicitly development-only; it was not run against Production or with a Production secret.
+
+Rollback candidate is the preceding deployment ID in section 7.1. No rollback or DNS/domain mutation was performed. Do not mark Production Verified or announce general availability until remaining security, owner, storage, and recovery gates are proven.

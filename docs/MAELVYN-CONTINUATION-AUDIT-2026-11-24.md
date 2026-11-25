@@ -85,3 +85,14 @@ Repo pada baseline sudah memuat upgrade UI/UX dan MAELVYN Connect di commit `2e7
 - After the user requested direct push, the existing GitHub connection was enabled for this task; `gh auth status` reported active `Sparkmind-obp-off`. The push was a normal `git push origin main`, with no force option.
 - Push **VERIFIED**: `git fetch origin main`, `git rev-parse origin/main`, and `git ls-remote origin refs/heads/main` all returned `9cd3d1ba5c3cfb589c2c0d7adbaf28d0defbdc96`. Local `main` was synchronized with `origin/main` after verification.
 - Commit URL: https://github.com/Sparkmind-obp-off/Maelvyn/commit/9cd3d1ba5c3cfb589c2c0d7adbaf28d0defbdc96
+
+
+## Deployment follow-up — 2026-11-25
+
+At the user's direct request, the existing MAELVYN Production Pages project was deployed via its repository Wrangler script; no new site/project was created. Cloudflare `whoami` confirmed the existing account `a167a50f1272635d3c1145aab3cd8f98`; the Pages project has the pre-existing root/www attachments, and no DNS/domain setting was changed. Source was `main` at `71c07eac092e52274ace4d97dbb593f8c552792b`. Wrangler created deployment `356aa389-dfe3-4438-a6ed-8f5a7c0f668f` (`https://356aa389.maelvyn-production.pages.dev`).
+
+The previously documented Clerk-secret blocker had changed by this check: Wrangler showed `CLERK_SECRET_KEY` present as an encrypted secret (name only; value never read), and live `/api/v1/ready` returned `200`. Production D1 had `0010_connect.sql` pending. It was reviewed as additive (table/index/trigger only) and applied once; no previous records were changed or deleted. Counts remained people 2, workspaces 0, ventures 0, tasks 0, Connect proposals 0.
+
+A fresh `npm ci && npm run check` passed with 102 tests across 11 files, typecheck/lint/build, and 0 npm audit vulnerabilities. Live homepage returned `200` on Pages, root, and www; health/config/readiness returned `200`; unauthenticated session/Connect endpoints returned `401`. See [`MAELVYN-PRODUCTION-DEPLOYMENT-VERIFICATION.md`](MAELVYN-PRODUCTION-DEPLOYMENT-VERIFICATION.md) for the full deployment receipt.
+
+Status is **DEPLOYED / PARTIALLY VERIFIED**, not Production Verified. Real Google login/JWT user journey, owner bootstrap, authorized role/tenant E2E, live R2 upload/download/delete, and backup/restore remain unverified. The owner must perform the owner bootstrap personally. No DNS change, owner claim, workspace/venture creation, paid provider activation, or general-launch claim occurred. UiChemy project access remains blocked under the current identity and no builder change is claimed.
