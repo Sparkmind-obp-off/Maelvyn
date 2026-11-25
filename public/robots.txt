@@ -1,0 +1,12 @@
+User-agent: *
+Allow: /
+Allow: /products
+Disallow: /api/
+Disallow: /workspaces
+Disallow: /invite
+Disallow: /me
+Disallow: /platform
+Disallow: /w/
+Disallow: /assets/
+
+Sitemap: https://maelvyn.biz.id/sitemap.xml

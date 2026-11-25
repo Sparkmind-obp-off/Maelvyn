@@ -55,7 +55,7 @@ The development application has React/Vite/Tailwind, Clerk Development integrati
 | Providers | Apify Actor / Scrape.ly task allowlists | NOT-AUTHORIZED | Human-approved Actor IDs, data scope, cost caps and test fixtures |
 | Inference | Workers AI live binding and model registry | BLOCKED | Binding, approved model catalog, per-model limits, evals |
 | Memory | Scoped knowledge and provenance | IMPLEMENTED-VERIFIED (venture-scoped, access log, retract not delete, synthetic briefs rejected, verified_decision only from register) | Retention schedule |
-| Documents | Private R2 artifacts and signed access | BLOCKED (no R2 binding provisioned) | Provision bucket, then adapter |
+| Documents | Private R2 artifacts and signed access | IMPLEMENTED-PARTIAL (Production bucket/binding and authorization code exist; live authenticated round-trip remains unverified) | Verify upload/download/delete and restore evidence |
 | Automation | Event triggers and integrations | NOT-IMPLEMENTED | Event registry, webhooks, schedules, retries, connector permissions |
 | Notifications | In-app/email notification center | IMPLEMENTED-PARTIAL (in-app only; external messages NOT-AUTHORIZED) | Digest preferences |
 | Analytics | Portfolio and venture dashboards | IMPLEMENTED-VERIFIED (EBAV per MASTER-SYSTEM §10, by-stage, pending approvals, unit economics) | Trend history |
@@ -63,9 +63,9 @@ The development application has React/Vite/Tailwind, Clerk Development integrati
 | Security | Rate limits, kill switches, audit | IMPLEMENTED-PARTIAL | Central policy middleware, alerting, tamper evidence, retention |
 | Privacy | Data export, deletion, retention, consent | IMPLEMENTED-PARTIAL (self-scoped export; export/deletion/correction requests resolved by Owner) | Automated deletion with ledger/audit carve-outs |
 | Operations | Backups, restore, incident response | IMPLEMENTED-PARTIAL (manual D1 export before each migration) | Scheduled backups, restore drill |
-| Quality | Unit/integration tests | IMPLEMENTED-VERIFIED (63 tests across identity, members, research, providers, governance, finance, rights, ops, memory, portfolio, me) | Contract tests |
+| Quality | Unit/integration tests | IMPLEMENTED-VERIFIED (105 tests across 11 files; typecheck, lint and build pass on current main audit) | Contract tests and production E2E |
 | Quality | Playwright end-to-end suite | IMPLEMENTED-PARTIAL (sign-in + identity-boundary denial against dev) | Approval and finance journeys |
-| Delivery | GitHub CI | BLOCKED | Workflow permission; run CI locally until enabled |
+| Delivery | GitHub CI | IMPLEMENTED-PARTIAL (verification workflow exists; current session has no active GitHub connector to push the safe delta) | Push and confirm CI on target main |
 
 ## Target product modules
 

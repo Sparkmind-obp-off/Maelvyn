@@ -238,3 +238,19 @@ This release used the existing Cloudflare API token via the `CLOUDFLARE_API_TOKE
 **Current label: DEPLOYED / PARTIALLY VERIFIED — not Production Verified.** A `200 ready` response proves configured dependencies, not a complete authenticated user journey. Still pending: real Google sign-in and Production JWT issuer/signature/expiry/authorized-party verification; owner bootstrap (must be performed personally by the owner); authorized role and cross-workspace/venture E2E checks; live private R2 upload/download/delete; and backup/isolated restore verification. No owner was claimed, no workspace/venture was created, and no general-launch claim is made. The existing E2E script is explicitly development-only; it was not run against Production or with a Production secret.
 
 Rollback candidate is the preceding deployment ID in section 7.1. No rollback or DNS/domain mutation was performed. Do not mark Production Verified or announce general availability until remaining security, owner, storage, and recovery gates are proven.
+
+
+## 9. Repository audit and safe release delta — 2026-11-25
+
+The repository was freshly cloned from `main` at baseline `cb82bbf50ec737f1ae14f0c370cec20ed73a1bb2` and audited against the live domain before changes. Baseline validation passed `npm ci` with 0 reported vulnerabilities and `npm test -- --run` with 11 test files / 103 tests passing. The live root returned HTTP 200 with the expected security headers, but `/robots.txt` and `/sitemap.xml` returned the SPA HTML shell rather than crawler documents.
+
+The safe release delta adds:
+
+- `public/robots.txt` with explicit public/private boundaries and the canonical sitemap URL;
+- `public/sitemap.xml` containing only the public home and product catalog routes;
+- canonical, Open Graph, Twitter, theme-color, and no-JavaScript fallback metadata in `web/index.html`;
+- regression coverage in `tests/public-site.test.ts` for crawler documents and initial public metadata.
+
+Post-change local validation passed `npm run check`: typecheck, lint, 11 test files / 105 tests, and web/Worker build. `git diff --check` passed and the changed files contain no credentials or Development Clerk references. The build retains a non-fatal Vite bundle-size warning (main JavaScript approximately 533 kB minified).
+
+This delta is **safe and tested locally but not yet deployed** because the current execution environment has no active GitHub or Cloudflare authorization. The live deployment therefore remains the prior verified release until this commit is pushed to `main` and deployed through the existing Wrangler/Pages path. Production remains **DEPLOYED / PARTIALLY VERIFIED**, not Production Verified; authenticated sign-in/JWT, owner bootstrap, role and tenant E2E, private R2 upload/download/delete, and backup/restore remain unresolved.

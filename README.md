@@ -87,7 +87,7 @@ The browser client now targets Clerk Core 3 via `@clerk/react` (Node.js >=20.9.0
 
 ## Current status
 
-**Development foundation: implemented and tested. Production: separately deployed and partially verified, with authenticated workflows still subject to the recorded Clerk blocker.** MAELVYN is a working project identity and operating concept. This repository does not establish a legal entity, partnership, investment offer, ownership interest, or binding commitment by any person.
+**Development foundation: implemented and tested. Production: separately deployed and partially verified, with authenticated workflows and recovery evidence still open.** MAELVYN is a working project identity and operating concept. This repository does not establish a legal entity, partnership, investment offer, ownership interest, or binding commitment by any person.
 
 | Item | Status |
 |---|---|
@@ -98,7 +98,7 @@ The browser client now targets Clerk Core 3 via `@clerk/react` (Node.js >=20.9.0
 | Costs incurred | Research/actor costs are recorded per run in the Market Evidence register; infrastructure and provider billing must be reviewed in their respective accounts |
 
 ### What works today
-The latest repository verification reports 94 automated tests passing across 9 test files, plus typecheck, lint, and build. Production-specific end-user flows remain blocked pending Clerk secret installation; see the dated Production verification report.
+The latest repository verification reports 105 automated tests passing across 11 test files, plus typecheck, lint, and build. Production-specific authenticated journeys, owner bootstrap, private artifact round-trip, and backup/restore remain unverified; see the dated Production verification report.
 
 - **Identity boundary (migration 0004).** A singleton `platform_owner` is bound through the designated verified owner identity. The claim re-reads the primary email from Clerk's Backend API, requires it to be verified, and stores the stable Clerk subject. Specific owner identifiers are intentionally omitted from this public README.
   - Signup and first login create an account only, with no membership.
@@ -151,7 +151,7 @@ The latest repository verification reports 94 automated tests passing across 9 t
 
 ### Not implemented yet
 - **Owner binding on the live dev environment.** The designated owner must sign in through the configured Google identity and press "Klaim peran Platform Owner". The exact account identifier is intentionally omitted from this public README. The Clerk instance cannot create that user via API, so `platform_roles` is still empty remotely.
-- **Production R2:** private bucket is provisioned and bound; authenticated upload/download verification remains blocked pending Clerk Production secret installation. Queues and Workflows (research runs synchronously) and Workers AI inference/model registry remain unverified or unimplemented.
+- **Production R2:** private bucket is provisioned and bound; authenticated upload/download/delete verification remains unverified. Queues and Workflows (research runs synchronously) and Workers AI inference/model registry remain unverified or unimplemented.
 - Live Apify / Scrape.ly Actor runs (NOT-AUTHORIZED). External email/SMS notifications (in-app only).
 - Active GitHub CI: the template is in `ops/github-workflows/` and needs `workflows` permission. The Playwright suite currently covers sign-in and identity-boundary denial only.
 
@@ -186,7 +186,7 @@ Material changes to governance, ownership principles, capital rules, participant
 | [Genspark Master Implementation Prompt](docs/GENSPARK-MASTER-IMPLEMENTATION-PROMPT.md) | Copy-ready instruction for Genspark to inspect and implement the repository |
 | [Implementation Foundation Plan](docs/IMPLEMENTATION-FOUNDATION-PLAN.md) | Staged build sequence and first milestone acceptance criteria |
 
-The initial stack decision supersedes earlier provider-selection language where there is a conflict. Clerk is selected. The MAELVYN Production instance and auth domain are verified; the web application remains on Development bindings until a separate production deployment is prepared.
+The initial stack decision supersedes earlier provider-selection language where there is a conflict. Clerk is selected. The MAELVYN Production instance and auth domain are verified; the application is deployed to the isolated Production Pages project, while authenticated end-user verification remains open.
 
 ## Commerce and production architecture upgrade
 
@@ -198,7 +198,7 @@ The current target architecture is documented in:
 - [Production Readiness Checklist](docs/PRODUCTION-READINESS-CHECKLIST.md)
 - [Architecture Decision Register](docs/ARCHITECTURE-DECISIONS.md)
 
-**Important production warning (2026-11-18):** The MAELVYN Clerk Production instance already exists; its custom auth domain, DNS, SSL, mail, and Google OAuth configuration are verified. However, `maelvyn.biz.id` and `www.maelvyn.biz.id` still point to Pages project `maelvyn-dev`, whose `APP_ENV`, Clerk issuer/JWKS, publishable key, and D1 binding are Development. A separate production Pages/Worker deployment, D1, MAELVYN-specific private R2 (if required), and securely bound Clerk Production secret are still needed. Public production remains blocked until staging tests and safe domain cutover.
+**Important production status (2026-11-25):** `maelvyn.biz.id` and `www.maelvyn.biz.id` serve the isolated Production Pages deployment. Public health, readiness, security headers, and configuration are live-verified; authenticated sign-in, owner bootstrap, role/tenant E2E, private R2 round-trip, and backup/restore remain open. Do not describe MAELVYN as generally launched until those gates pass.
 
 
 ## Production execution
@@ -221,7 +221,7 @@ Current state and blockers: [Full repository and Production gap audit](docs/FULL
 - [Brand Design System](docs/BRAND-DESIGN-SYSTEM.md)
 - [Documentation Governance & Status](docs/DOCUMENTATION-GOVERNANCE-AND-STATUS.md)
 
-The dated Production verification document is the source for live deployment claims. The latest evidence in this repository says the Production app and infrastructure are deployed, but Clerk server-secret setup and authenticated end-user verification remain blocking items. Do not describe MAELVYN as fully launched.
+The dated Production verification document is the source for live deployment claims. The latest evidence says the Production app and infrastructure are deployed, while authenticated end-user, storage, and recovery verification remain open. Do not describe MAELVYN as fully launched.
 
 - [Tooling & Integration Strategy](docs/TOOLING-AND-INTEGRATION-STRATEGY.md)
 - [UI/UX Audit & Enhancement Plan](docs/UI-UX-AUDIT-AND-ENHANCEMENT-PLAN.md)
@@ -229,4 +229,4 @@ The dated Production verification document is the source for live deployment cla
 
 ## Canonical brand and current status
 
-MAELVYN's approved tagline is **Building Ventures. Creating Value. Growing Together.** External positioning is **Venture Studio & Commerce Ecosystem**; the technical platform descriptor is **Agentic Shared Venture Studio OS**. The latest dated Production evidence is 2026-11-18 and records deployment with authenticated Clerk flows still blocked by the missing server secret. See the brand strategy and Production verification documents before making public claims.
+MAELVYN's approved tagline is **Building Ventures. Creating Value. Growing Together.** External positioning is **Venture Studio & Commerce Ecosystem**; the technical platform descriptor is **Agentic Shared Venture Studio OS**. The latest dated Production evidence is maintained in the Production verification report and records a live deployment with authenticated Clerk flows, private artifact round-trip, and recovery still open. See the brand strategy and Production verification documents before making public claims.
