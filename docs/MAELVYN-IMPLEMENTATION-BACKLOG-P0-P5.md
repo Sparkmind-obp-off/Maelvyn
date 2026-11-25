@@ -1,8 +1,21 @@
 # MAELVYN — Full-Stack Implementation Backlog P0–P5
 
 **Version:** 1.0.0  
-**Status:** Dependency-ordered execution plan; not a completion claim  
+**Status:** Mandatory end-to-end execution contract; not a completion claim  
 **Parent:** [Agentic Platform Master System](MAELVYN-AGENTIC-PLATFORM-MASTER-SYSTEM.md)
+
+## One-shot execution contract — mandatory
+
+This backlog must be executed as one continuous end-to-end assignment from P0 through P5. It is not satisfied by a plan, audit, scaffold, P0-only fix, P1-only foundation or demo.
+
+- Track every task ID individually with status, owner/commit and evidence.
+- Complete phases in dependency order, but treat P0 as a production release gate rather than a blanket stop on development. If a production-only P0 check is blocked, continue independent P1–P5 work safely in local/test/preview environments.
+- For unavailable accounts, credentials, approvals or paid infrastructure, implement the safe internal contract/workflow and automated tests with clearly labelled fakes; keep provider state UNBOUND and live functionality unavailable until real verification.
+- Do not bypass approvals, provider terms, security, tenant isolation, or the no-spend rule to force completion.
+- A blocked task does not excuse skipping unrelated tasks. Continue every independent task, then revisit blocked dependencies when possible.
+- The final report must list every task ID from P0–P5, acceptance evidence, commit(s), test results and blockers. No phase may be called complete based on UI, mocks, stubs or documentation alone.
+- The final milestone is the highest phase whose exit gate is fully evidenced. Report implementation completion and production-release readiness separately.
+- “One-shot” means one uninterrupted autonomous engineering run and consolidated handoff; it is not blanket authorization for paid services, production side effects, public publishing, external messaging or live customer data changes.
 
 ## Status vocabulary
 
