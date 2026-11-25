@@ -249,3 +249,8 @@ These are historical reference values, not current assertions. Query GitHub and 
 - Supporting architecture, provider, product and backlog documents may elaborate but may not weaken these safeguards.
 - Changes to identity, tenancy, security, financial authority, ownership or approvals require owner review.
 - Material updates require version, date, rationale, evidence and affected components.
+
+
+## 13. End-to-end implementation mandate
+
+The implementation roadmap is one continuous P0–P5 delivery objective, not a sequence that may be abandoned after an early phase. Execute all safe, dependency-ready work through Product Marketplace and Agentic Workforce. P0 remains the production release gate; a blocked production-only verification item must not halt independent development and testing in P1–P5. Where live provider accounts, credentials, approvals or paid infrastructure are unavailable, build and test the internal capability using clearly labelled fakes or test adapters, keep the real provider UNBOUND, and report the exact limitation. Never weaken security, commercial terms, tenant isolation, approval policy or cost restrictions to claim completion. Implementation status and production-release status must always be reported separately.
