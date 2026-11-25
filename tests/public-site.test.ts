@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest'
 
 const landing = readFileSync('web/src/pages/Landing.tsx', 'utf8')
 const app = readFileSync('web/src/App.tsx', 'utf8')
+const products = readFileSync('web/src/pages/Products.tsx', 'utf8')
 const routeManifest = JSON.parse(readFileSync('public/manus-routes.json', 'utf8')) as {
   routes: Array<{ path: string; title?: string }>
 }
@@ -11,6 +12,15 @@ describe('public MAELVYN site contract', () => {
   it('presents the approved product descriptor and tagline', () => {
     expect(landing).toContain('Agentic Shared Venture Studio OS')
     expect(app).toContain('Building Ventures. Creating Value. Growing Together.')
+  })
+
+  it('publishes the five-stage product roadmap with LEADINTEL privacy and provider-binding boundaries', () => {
+    for (const stage of ['Intelligence Products', 'Workflow Products', 'Content & Commerce', 'Agentic Workforce', 'Product Marketplace']) {
+      expect(products).toContain(stage)
+    }
+    expect(products).toContain('LEADINTEL')
+    expect(products).toContain('Tidak ada private-data inference, sensitive personal profiling, atau outreach')
+    expect(products).toContain('Provider candidates · not a binding claim')
   })
 
   it('keeps the route manifest synchronized with declared application routes', () => {

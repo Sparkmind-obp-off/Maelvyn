@@ -15,6 +15,7 @@ import GovernancePage from './pages/Governance'
 import PortfolioPage from './pages/Portfolio'
 import PlatformPage from './pages/Platform'
 import MePage from './pages/Me'
+import ProductsPage from './pages/Products'
 import VentureGovernance from './pages/VentureGovernance'
 import VentureFinance from './pages/VentureFinance'
 import VentureRights from './pages/VentureRights'
@@ -84,6 +85,7 @@ export default function App({ environment, identityInstance, dataPolicy }: { env
               <span className="brand-descriptor">Venture Studio &amp; Commerce Ecosystem</span>
             </Link>
             <nav aria-label="Public" className="public-nav">
+              <Link to="/products">Produk</Link>
               <a href="/#about">About</a>
               <a href="/#how-we-work">How we work</a>
               <a href="/#boundaries">Boundaries</a>
@@ -104,6 +106,8 @@ export default function App({ environment, identityInstance, dataPolicy }: { env
         <main id="main-content" className="mx-auto max-w-7xl px-4 py-8 sm:px-6">
           <Routes>
             <Route path="/" element={<Landing />} />
+            <Route path="/products" element={<ProductsPage />} />
+            <Route path="/products/:slug" element={<ProductsPage />} />
             <Route path="/workspaces" element={<Protected><WorkspacesPage /></Protected>} />
             <Route path="/w/:wid" element={<Protected><WithNav><WorkspacePage /></WithNav></Protected>} />
             <Route path="/invite" element={<Protected><AcceptInvitePage /></Protected>} />

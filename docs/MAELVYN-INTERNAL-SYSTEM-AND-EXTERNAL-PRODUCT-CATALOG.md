@@ -7,7 +7,7 @@ This is the canonical bridge between MAELVYN's internal operating system, extern
 
 ## 1. Three dimensions that must stay separate
 
-MAELVYN has **five internal capability layers**, **six customer-facing products**, and **four rollout stages**. They are related but not interchangeable.
+MAELVYN has **five internal capability layers**, **seven roadmap products**, and **five customer productization stages**. They are related but not interchangeable. The five-stage roadmap in this section supersedes the earlier four-stage draft.
 
 ### Five internal capability layers
 
@@ -21,14 +21,15 @@ MAELVYN has **five internal capability layers**, **six customer-facing products*
 
 **Foundational boundary:** MAELVYN Core and Owner Control are internal ownership/governance foundations, not external providers and not a sixth layer. Agentic OS orchestrates work across layers but is not the source-of-truth database. All external calls pass through the MAELVYN Execution Gateway; agents never call provider APIs directly.
 
-### Four rollout stages
+### Five-stage customer productization roadmap
 
-1. **Stage 1 — SIGNAL + Internal Intelligence:** research, evidence, opportunity validation and report generation. No payment or seller API is required.
-2. **Stage 2 — FLOW + Internal Venture Operations:** CRM, email, calendar, Sheets, workflow, customer workspace and BYOC connection controls.
-3. **Stage 3 — REACH + CONCIERGE:** content operations, publishing and customer support after approval and delivery controls are verified.
-4. **Stage 4 — COMMERCE + DISTRIBUTOR:** order, inventory, payment reconciliation, supplier/distributor and fulfillment adapters after transaction controls are verified.
+1. **Stage 1 — Intelligence Products (SIGNAL + LEADINTEL):** market, competitor, category, trend, pricing and opportunity intelligence; sourced company/prospect/partner research and evidence-backed qualification. LEADINTEL does not infer private personal data or conduct outreach.
+2. **Stage 2 — Workflow Products (FLOW):** customer account connections, CRM, email/messaging workflows, pipeline, follow-ups, reminders, scheduling, customer history and reporting. Explicit authorization and customer-owned BYOC are required.
+3. **Stage 3 — Content & Commerce (REACH + COMMERCE):** content research, strategy, briefs, approval, publishing queue and performance; catalog, orders, inventory, payment reconciliation and fulfillment. Media, store, payment and publishing permissions must be verified first.
+4. **Stage 4 — Agentic Workforce:** agent runtime, orchestration, scoped tool execution, compute, evaluation and human oversight. Agent Relay, Agent Swarm, Manus or other runtimes remain candidates until permissions and compute are verified.
+5. **Stage 5 — Product Marketplace:** customers select MAELVYN outcomes, packages, capacity and workflows. Sell MAELVYN outcomes, never raw third-party API access.
 
-L2 is shared by every stage. L3 helps turn Stage 1 research into offers and grows into a fuller factory in Stage 2. L5 progressively powers Stages 1–4.
+L2 is shared by every stage. L1 supports Intelligence Products; L3 turns evidence into product definitions; L4 supports approved content workflows; L5 powers authorized integrations and automation. MAELVYN Core and Owner Control remain foundational, not additional roadmap stages.
 
 ## 2. Customer-facing product catalog
 
@@ -36,21 +37,25 @@ Products are outcome-oriented packages built on shared MAELVYN capabilities, not
 
 | Product | Primary users | Customer outcome | Core features | Primary output | Stage |
 |---|---|---|---|---|---|
-| **MAELVYN SIGNAL** | Business owners, brands, sellers, affiliates, product managers, venture builders | Evidence-backed market and competitor decisions | Market opportunity search; competitor and pricing research; product/offer change monitoring; trend and customer-need analysis; opportunity recommendations | Dashboard, research report, sourced dataset, alerts | 1 |
-| **MAELVYN FLOW** | MSMEs, agencies, service businesses, sales teams | Organized customer and sales operations | Lead capture; pipeline; follow-up queue; reminders; email/WhatsApp operations; scheduling; interaction history | Lead pipeline, follow-up queue, customer history, sales report | 2 |
-| **MAELVYN COMMERCE** | Online sellers, brands, digital stores, commerce operators | Reliable commerce operations and margin visibility | Product catalog; order tracking; inventory monitoring; payment reconciliation; fulfillment queue; sales and margin analysis | Order dashboard, transaction report, inventory alerts, fulfillment queue | 4 |
-| **MAELVYN REACH** | Creators, affiliates, brands, agencies, marketing teams | Evidence-led content planning and controlled distribution | Content/trend research; competitor content intelligence; content calendar; creative brief; approval; publishing connectors; performance reporting | Content plan, asset/approval queue, publishing workflow, analytics | 3 |
-| **MAELVYN DISTRIBUTOR** | Distributors, suppliers, resellers, wholesalers, brands with sales networks | Managed partner discovery and B2B order pipeline | Supplier/distributor discovery; partner CRM; product catalog and price lists; inquiry and quotation; order intake; territory and partner performance | Partner directory, inquiry pipeline, quotation workflow, distributor reports | 4 |
-| **MAELVYN CONCIERGE** *(add-on)* | Businesses needing customer support and service operations | Consistent customer support with human escalation | Support inbox/ticketing; knowledge base; response templates; WhatsApp/email operations; routing; escalation; service reporting | Support queue, response library, escalation log, service report | 3 |
+| **MAELVYN SIGNAL** | Business owners, brands, sellers, product managers, venture builders | Evidence-backed market and competitor decisions | Market/category opportunity; competitor and pricing research; trend and demand signals; source ledger | Market brief, competitor map, sourced evidence | 1 |
+| **MAELVYN LEADINTEL** | Business development, venture and partnership teams | Sourced, evidence-backed company/partner qualification and segmentation | Public/authorized business research; qualification rubric; provenance; explicit unknowns | Company research cards, qualification matrix, sourced business shortlist | 1 |
+| **MAELVYN FLOW** | MSMEs, service businesses, sales teams | Organized customer and sales operations | CRM; customer history; pipeline; reminders; email/messaging drafts; scheduling and reporting | Lead pipeline, follow-up queue, customer history, report | 2 |
+| **MAELVYN REACH** | Creators, affiliates, brands, marketing teams | Evidence-led content planning and controlled distribution | Content research; strategy; briefs; review; publishing queue; performance reporting | Content plan, creative brief, approved publishing queue, analytics | 3 |
+| **MAELVYN COMMERCE** | Online sellers, brands, commerce operators | Controlled commerce operations and margin visibility | Catalog; orders; inventory; payment reconciliation; fulfillment | Order dashboard, inventory alerts, reconciliation report, fulfillment view | 3 |
+| **Agentic Workforce** | Venture operators and MAELVYN workspaces | Supervised agent runs with bounded permissions and evaluated outcomes | Agent registry; scoped memory; task contracts; gateway allowlists; evaluations; kill switch | Plan/run record, evaluation summary, audit evidence | 4 |
+| **Product Marketplace** | Customers selecting a defined business outcome | Choose MAELVYN solutions, packages, capacity and workflows | Outcome catalog; transparent scope and entitlements; milestone-based delivery | Package scope, capacity, milestones and acceptance record | 5 |
+
+CONCIERGE and DISTRIBUTOR remain supplementary product concepts from earlier discovery; they are not additional stages or replacements for this seven-product roadmap.
 
 ### Product boundaries
 
 - SIGNAL sells research, evidence synthesis and decision support; it does not guarantee market success.
+- LEADINTEL is limited to sourced public/authorized business research; no private-data inference, sensitive personal profiling, or outreach.
 - FLOW manages customer operations; it does not send messages or make commitments without authorized approval.
 - REACH manages content workflows; publishing and outbound communications require explicit approval and platform-compliant account authorization.
-- CONCIERGE is an optional add-on to FLOW or REACH with a distinct support workflow.
-- COMMERCE and DISTRIBUTOR share catalog, order, partner and reporting primitives; they are separate customer propositions, not duplicate transaction databases.
-- DISTRIBUTOR is more than a contact directory: its value is managing inquiry, quotation, partner and order lifecycles.
+- COMMERCE is not available until store/payment permissions and transaction controls are verified; this catalog does not process payments or move money.
+- Agentic Workforce does not make the Agentic OS the source-of-truth database or allow agents to call providers directly.
+- Product Marketplace sells MAELVYN outcomes, not raw third-party API access, credentials, or quota.
 - No package resells raw third-party API access. MAELVYN sells workflows, analysis, managed services and outcomes.
 
 ## 3. External provider capability catalog
@@ -162,10 +167,11 @@ Product lifecycle: **HYPOTHESIS → INTERNAL_DRAFT → PILOT_READY → PILOT →
 
 | Stage | Build scope | Minimum acceptance gate |
 |---|---|---|
-| 1 — SIGNAL | Internal intelligence, research workflow, evidence quality, productized reports | Source provenance; synthetic/live separation; quota and budget enforcement; reproducible tests; human review |
-| 2 — FLOW | CRM, email, calendar, Sheets, customer workspace, BYOC | OAuth scope review; tenant isolation; draft-before-send; idempotent writes; audit and revocation |
-| 3 — REACH + CONCIERGE | Content calendar, creative QA, publishing, support queue and escalation | Asset rights/provenance; explicit publishing/send approval; consent; rate limits; rollback/disable controls |
-| 4 — COMMERCE + DISTRIBUTOR | Catalog, order, inventory, payment reconciliation, supplier/partner and logistics adapters | Signed webhooks; idempotency; reconciliation; inventory consistency; fraud/abuse controls; finance approval |
+| 1 — Intelligence Products (SIGNAL + LEADINTEL) | Read-only research, evidence quality, sourced business qualification and productized briefs | Source provenance; public/authorized data; no private-data inference or outreach; synthetic/live separation; quota/budget enforcement; human review |
+| 2 — Workflow Products (FLOW) | CRM, customer history, follow-up, scheduling, messaging drafts and BYOC | OAuth/account owner and scope review; tenant isolation; draft-before-send; idempotent writes; audit and revocation |
+| 3 — Content & Commerce (REACH + COMMERCE) | Content calendar and approved publishing; catalog, orders, inventory, reconciliation and fulfillment | Asset rights/provenance; explicit publish/send/finance approval; consent; verified store/payment scopes; idempotency and reconciliation |
+| 4 — Agentic Workforce | Scoped agents, orchestration, compute, memory, task contracts and evaluation | Runtime and compute eligibility; gateway allowlist; least privilege; human oversight; audit and kill switch |
+| 5 — Product Marketplace | Outcome packages, capacity, workflow selection and delivery acceptance | Product verification, support boundary, economics/terms review; no raw third-party API resale; no checkout until separately approved |
 
 ## 9. Initial implementation backlog
 
@@ -173,10 +179,12 @@ Product lifecycle: **HYPOTHESIS → INTERNAL_DRAFT → PILOT_READY → PILOT →
 2. Define a versioned product catalog and package registry; keep product metadata separate from provider credentials and execution settings.
 3. Add product-to-capability entitlement mapping and a read-only product catalog view.
 4. Add provider lifecycle and commercial-terms evidence to the binding register.
-5. Bind SIGNAL to the existing research pipeline first; test provider routing and evidence provenance.
+5. Bind SIGNAL to the existing research pipeline and scope LEADINTEL to public/authorized sourced business data; test provenance and limits.
 6. Implement FLOW only after connection/OAuth and approval controls are validated.
-7. Add REACH/CONCIERGE workflows with draft/review/approval states.
-8. Add COMMERCE/DISTRIBUTOR only after payment, order, inventory and fulfillment adapters pass dedicated security tests.
+7. Add REACH only after media rights, account permissions, and publishing approval controls pass.
+8. Add COMMERCE only after payment, order, inventory, reconciliation, and fulfillment adapters pass dedicated security tests.
+9. Build Agentic Workforce only after runtime, permissions, compute, evaluation, and human-oversight gates pass.
+10. Open Product Marketplace only for verified and supportable MAELVYN outcomes; never bundle raw provider access.
 
 ## 10. Definition of done
 

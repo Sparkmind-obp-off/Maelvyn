@@ -26,6 +26,7 @@ export default function Landing() {
           <div className="hero-actions">
             <Show when="signed-in"><Link to="/workspaces" className="btn-primary">Buka workspace <span aria-hidden>↗</span></Link></Show>
             <Show when="signed-out"><SignInButton mode="modal"><button className="btn-primary">Masuk ke workspace <span aria-hidden>↗</span></button></SignInButton></Show>
+            <Link to="/products" className="btn-ghost">Jelajahi produk</Link>
             <a className="btn-ghost" href="https://github.com/Sparkmind-obp-off/Maelvyn" target="_blank" rel="noreferrer noopener">Baca dokumentasi</a>
           </div>
           <p className="hero-footnote"><span className="status-dot" aria-hidden /> Readiness is explicit. Boundaries are part of the product.</p>
