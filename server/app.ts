@@ -25,7 +25,7 @@ import { registerConnectRoutes } from './connect/routes'
 
 export type AppDeps = { verifier?: TokenVerifier; lookupProfile?: ProfileLookup; run?: RunDeps }
 
-const EXPECTED_MIGRATIONS = ['0001_initial.sql', '0002_agentic_foundation.sql', '0003_workspace_invitations.sql', '0004_platform_identity_boundaries.sql', '0005_governance.sql', '0006_finance_rights.sql', '0007_operations.sql', '0008_runtime_platform.sql', '0009_private_artifacts.sql', '0010_connect.sql']
+const EXPECTED_MIGRATIONS = ['0001_initial.sql', '0002_agentic_foundation.sql', '0003_workspace_invitations.sql', '0004_platform_identity_boundaries.sql', '0005_governance.sql', '0006_finance_rights.sql', '0007_operations.sql', '0008_runtime_platform.sql', '0009_private_artifacts.sql', '0010_connect.sql', '0011_provider_call_reservations.sql', '0012_work_context_and_evidence.sql']
 
 export function createApp(deps: AppDeps = {}) {
   const verifier = deps.verifier ?? verifyClerkToken
@@ -221,6 +221,17 @@ export function createApp(deps: AppDeps = {}) {
   })
 
   // ---- Research Brief Agent --------------------------------------------------
+  app.get('/ventures/:vid/execution-summary', async (c) => {
+    const p = principalOf(c)
+    const access = await authorizeVenture(c.env, p, c.req.param('vid'), 'venture.read', c.get('requestId'))
+    const since = new Date(Date.now() - 30 * 86_400_000).toISOString()
+    const { results: runs } = await c.env.DB.prepare(`SELECT execution_mode, status, COUNT(*) AS count
+      FROM tasks WHERE venture_id = ? AND workspace_id = ? AND created_at >= ?
+      GROUP BY execution_mode, status ORDER BY execution_mode, status`)
+      .bind(access.ventureId, access.workspaceId, since).all()
+    return ok(c, { since, runs })
+  })
+
   app.post('/ventures/:vid/research', async (c) => {
     const p = principalOf(c)
     const access = await authorizeVenture(c.env, p, c.req.param('vid'), 'research.create', c.get('requestId'))
@@ -252,7 +263,7 @@ export function createApp(deps: AppDeps = {}) {
     const tid = c.req.param('tid')
     const task = await c.env.DB.prepare(`SELECT id, venture_id, workspace_id, objective, execution_mode, data_class, autonomy_level, status, status_reason, budget_credits, credits_used, contract_json, created_at, updated_at FROM tasks WHERE id = ? AND venture_id = ?`).bind(tid, access.ventureId).first<Record<string, unknown>>()
     const executions = (await c.env.DB.prepare(`SELECT step, provider_id, status, detail_json, started_at, finished_at FROM task_executions WHERE task_id = ? ORDER BY started_at, rowid`).bind(tid).all()).results
-    const evidence = (await c.env.DB.prepare(`SELECT id, provider_id, url, title, snippet, extracted_excerpt, relevance_score, evidence_class, trust, retrieved_at FROM evidence_sources WHERE task_id = ? ORDER BY rowid`).bind(tid).all()).results
+    const evidence = (await c.env.DB.prepare(`SELECT id, provider_id, url, title, snippet, extracted_excerpt, relevance_score, evidence_class, trust, retrieved_at, content_sha256 FROM evidence_sources WHERE task_id = ? ORDER BY rowid`).bind(tid).all()).results
     const artifact = await c.env.DB.prepare(`SELECT id, title, brief_json, generator, status, reviewed_by_person_id, review_note, reviewed_at, created_at FROM research_artifacts WHERE task_id = ?`).bind(tid).first<Record<string, unknown>>()
     return ok(c, {
       task: task ? { ...task, contract: JSON.parse(String(task.contract_json)), contract_json: undefined } : null,

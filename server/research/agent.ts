@@ -4,7 +4,7 @@ import { assertNotKilled } from '../authorization/killswitch'
 import type { VentureAccess } from '../authorization/policy'
 import type { Env, Principal } from '../env'
 import { AppError, newId, nowIso, safeHttpUrl, sanitizeText, sha256Hex, todayUtc } from '../lib/http'
-import { routeProvider } from '../providers/router'
+import { reserveResearchCall, routeProvider } from '../providers/router'
 import { ProviderError, type Capability, type CallContext } from '../providers/types'
 import { buildBrief, detectInjection, type EvidenceForBrief } from './brief'
 
@@ -12,6 +12,7 @@ export const CreateResearchInput = z.object({
   objective: z.string().trim().min(10).max(400),
   /** Resolved by the route: Production defaults to real ('live') evidence; other environments to 'synthetic'. */
   mode: z.enum(['synthetic', 'live']).optional(),
+  profile: z.enum(['signal', 'leadintel']).optional(),
   max_results: z.number().int().min(1).max(5).default(5),
   extract_top_source: z.boolean().default(false),
   budget_credits: z.number().int().min(0).max(10).default(3),
@@ -39,11 +40,11 @@ function exec(env: Env, taskId: string, step: string, providerId: string | null,
   ).bind(newId('tex'), taskId, step, providerId, status, JSON.stringify(detail).slice(0, 4000), started, nowIso())
 }
 
-function usage(env: Env, p: { workspaceId: string; ventureId: string; taskId: string; providerId: string; capability: string; estimated: number; actual: number | null; outcome: string; errorClass?: string | null; durationMs: number; requestId: string }) {
+function usage(env: Env, p: { workspaceId: string; ventureId: string; taskId: string; providerId: string; capability: string; estimated: number; actual: number | null; reservation?: { id: string; date: string } | null; outcome: string; errorClass?: string | null; durationMs: number; requestId: string }) {
   return env.DB.prepare(
     `INSERT INTO provider_usage (id, workspace_id, venture_id, task_id, provider_id, capability, estimated_credits, actual_credits, outcome, error_class, duration_ms, request_id, usage_date, created_at)
      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-  ).bind(newId('use'), p.workspaceId, p.ventureId, p.taskId, p.providerId, p.capability, p.estimated, p.actual, p.outcome, p.errorClass ?? null, p.durationMs, p.requestId, todayUtc(), nowIso())
+  ).bind(p.reservation?.id ?? newId('use'), p.workspaceId, p.ventureId, p.taskId, p.providerId, p.capability, p.estimated, p.actual, p.outcome, p.errorClass ?? null, p.durationMs, p.requestId, p.reservation?.date ?? todayUtc(), nowIso())
 }
 
 /**
@@ -54,6 +55,7 @@ function usage(env: Env, p: { workspaceId: string; ventureId: string; taskId: st
 export async function createAndRunResearch(
   env: Env, principal: Principal, access: VentureAccess, input: ResearchInput, idempotencyKey: string, requestId: string, deps: RunDeps = {},
 ): Promise<{ taskId: string; replayed: boolean }> {
+  if (input.profile && input.mode !== 'synthetic') throw new AppError('VALIDATION_ERROR', 'Product research profiles currently support synthetic fixtures only.')
   const requestHash = await sha256Hex(JSON.stringify({ v: access.ventureId, ...input }))
   const scope = `research:${access.workspaceId}`
   const prior = await env.DB.prepare(`SELECT request_hash, response_json FROM idempotency_records WHERE scope = ? AND idem_key = ?`)
@@ -71,6 +73,7 @@ export async function createAndRunResearch(
   const ts = nowIso()
   const contract = {
     task_id: taskId, parent_task_id: null, venture_id: access.ventureId, workspace_id: access.workspaceId,
+    ...(input.profile ? { research_profile: input.profile } : {}),
     requester: principal.personId, human_owner: principal.personId, objective: input.objective,
     deliverable: 'Draft research brief with cited sources, separated facts vs. inferences',
     acceptance_criteria: ['Every finding cites a stored source', 'Inferences labelled', 'Gaps listed', 'Human review recorded'],
@@ -112,9 +115,11 @@ export async function createAndRunResearch(
   {
     const started = nowIso()
     let route
+    let reservation
     try {
       route = await routeProvider(env, { workspaceId: access.workspaceId, capability: 'search.web', mode: input.mode, agentAllowlist: allowlist, remainingTaskBudget: budget - creditsUsed })
-      await assertNotKilled(env, access.workspaceId, [`provider:${route.adapter.id}`])
+      await assertNotKilled(env, access.workspaceId, [`agent:${agent.agent_id}`, `provider:${route.adapter.id}`])
+      reservation = await reserveResearchCall(env, route, { ...access, taskId, capability: 'search.web' })
     } catch (e) {
       const err = e instanceof AppError ? e : new AppError('INTERNAL_ERROR', 'Routing failed.')
       await env.DB.batch([
@@ -131,29 +136,36 @@ export async function createAndRunResearch(
       creditsUsed += route.estimate
       let n = 0
       const stmts = []
+      const seen = new Set<string>()
       for (const h of out.hits) {
-        const url = safeHttpUrl(h.url)
-        if (!url) continue
+        const safe = safeHttpUrl(h.url)
+        if (!safe) continue
+        const normalized = new URL(safe)
+        if (normalized.username || normalized.password) continue
+        normalized.hash = ''
+        const url = normalized.href
+        if (seen.has(url)) continue
+        seen.add(url)
         n += 1
         const title = sanitizeText(h.title, 300) || url
         const snippet = sanitizeText(h.snippet, 1500)
         const flag = detectInjection(`${title} ${snippet}`)
         evidence.push({ n, url, title, snippet, synthetic: out.synthetic, injectionFlag: flag })
         stmts.push(env.DB.prepare(
-          `INSERT INTO evidence_sources (id, workspace_id, venture_id, task_id, provider_id, query, url, title, snippet, extracted_excerpt, relevance_score, evidence_class, trust, retrieved_at)
-           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, NULL, ?, ?, ?, ?)`,
+          `INSERT INTO evidence_sources (id, workspace_id, venture_id, task_id, provider_id, query, url, title, snippet, extracted_excerpt, relevance_score, evidence_class, trust, retrieved_at, content_sha256)
+           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, NULL, ?, ?, ?, ?, ?)`,
         ).bind(newId('evd'), access.workspaceId, access.ventureId, taskId, route.adapter.id, input.objective, url, title, snippet, h.score,
-          out.synthetic ? 'synthetic' : 'secondary_unverified', out.synthetic ? 'synthetic' : 'untrusted_external', nowIso()))
+          out.synthetic ? 'synthetic' : 'secondary_unverified', out.synthetic ? 'synthetic' : 'untrusted_external', nowIso(), await sha256Hex(JSON.stringify([title, snippet]))))
       }
       stmts.push(exec(env, taskId, 'search', route.adapter.id, 'succeeded', { hits: n, synthetic: out.synthetic, provider_request_id: out.providerRequestId ?? null }, started))
-      stmts.push(usage(env, { workspaceId: access.workspaceId, ventureId: access.ventureId, taskId, providerId: route.adapter.id, capability: 'search.web', estimated: route.estimate, actual: route.estimate, outcome: 'succeeded', durationMs: Date.now() - t0, requestId }))
+      stmts.push(usage(env, { workspaceId: access.workspaceId, ventureId: access.ventureId, taskId, providerId: route.adapter.id, capability: 'search.web', estimated: route.estimate, reservation, actual: route.adapter.external ? null : 0, outcome: 'succeeded', durationMs: Date.now() - t0, requestId }))
       stmts.push(auditStatement(env, { workspaceId: access.workspaceId, ventureId: access.ventureId, action: 'provider.call.succeeded', targetType: 'task', targetId: taskId, requestId, metadata: { provider: route.adapter.id, capability: 'search.web', hits: n, credits: route.estimate } }))
       await env.DB.batch(stmts)
     } catch (e) {
       const pe = e instanceof ProviderError ? e : null
       await env.DB.batch([
         exec(env, taskId, 'search', route.adapter.id, 'failed', { error_class: pe?.errorClass ?? 'unknown', http_status: pe?.httpStatus ?? null }, started),
-        usage(env, { workspaceId: access.workspaceId, ventureId: access.ventureId, taskId, providerId: route.adapter.id, capability: 'search.web', estimated: route.estimate, actual: null, outcome: 'failed', errorClass: pe?.errorClass ?? 'unknown', durationMs: Date.now() - t0, requestId }),
+        usage(env, { workspaceId: access.workspaceId, ventureId: access.ventureId, taskId, providerId: route.adapter.id, capability: 'search.web', estimated: route.estimate, reservation, actual: null, outcome: 'failed', errorClass: pe?.errorClass ?? 'unknown', durationMs: Date.now() - t0, requestId }),
         auditStatement(env, { workspaceId: access.workspaceId, ventureId: access.ventureId, action: 'provider.call.failed', targetType: 'task', targetId: taskId, requestId, reason: pe?.errorClass ?? 'unknown', metadata: { provider: route.adapter.id } }),
       ])
       await finish('failed', `Search provider error: ${pe?.errorClass ?? 'unknown'}. No fallback provider was used.`)
@@ -167,29 +179,31 @@ export async function createAndRunResearch(
     const started = nowIso()
     try {
       const route = await routeProvider(env, { workspaceId: access.workspaceId, capability: 'extract.page', mode: 'live', agentAllowlist: allowlist, remainingTaskBudget: budget - creditsUsed })
-      await assertNotKilled(env, access.workspaceId, [`provider:${route.adapter.id}`])
+      await assertNotKilled(env, access.workspaceId, [`agent:${agent.agent_id}`, `provider:${route.adapter.id}`])
+      const reservation = await reserveResearchCall(env, route, { ...access, taskId, capability: 'extract.page' })
       const t0 = Date.now()
       try {
         const out = await route.adapter.extract!(env, { url: top.url }, ctx)
         creditsUsed += route.estimate
         const excerpt = sanitizeText(out.excerpt, 3000)
-        const flag = detectInjection(excerpt)
+        const title = sanitizeText(out.title, 300) || top.title
+        const flag = detectInjection(`${title} ${excerpt}`)
         top.excerpt = flag ? null : excerpt
         if (flag) top.injectionFlag = true
         await env.DB.batch([
           env.DB.prepare(
-            `INSERT INTO evidence_sources (id, workspace_id, venture_id, task_id, provider_id, query, url, title, snippet, extracted_excerpt, relevance_score, evidence_class, trust, retrieved_at)
-             VALUES (?, ?, ?, ?, 'firecrawl', ?, ?, ?, NULL, ?, NULL, 'secondary_unverified', 'untrusted_external', ?)`,
-          ).bind(newId('evd'), access.workspaceId, access.ventureId, taskId, input.objective, top.url, sanitizeText(out.title, 300) || top.title, excerpt, nowIso()),
+            `INSERT INTO evidence_sources (id, workspace_id, venture_id, task_id, provider_id, query, url, title, snippet, extracted_excerpt, relevance_score, evidence_class, trust, retrieved_at, content_sha256)
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?, NULL, ?, NULL, 'secondary_unverified', 'untrusted_external', ?, ?)`,
+          ).bind(newId('evd'), access.workspaceId, access.ventureId, taskId, route.adapter.id, input.objective, top.url, title, excerpt, nowIso(), await sha256Hex(JSON.stringify([title, excerpt]))),
           exec(env, taskId, 'extract', route.adapter.id, 'succeeded', { url: top.url, chars: excerpt.length, injection_flag: flag }, started),
-          usage(env, { workspaceId: access.workspaceId, ventureId: access.ventureId, taskId, providerId: route.adapter.id, capability: 'extract.page', estimated: route.estimate, actual: route.estimate, outcome: 'succeeded', durationMs: Date.now() - t0, requestId }),
+          usage(env, { workspaceId: access.workspaceId, ventureId: access.ventureId, taskId, providerId: route.adapter.id, capability: 'extract.page', estimated: route.estimate, reservation, actual: route.adapter.external ? null : 0, outcome: 'succeeded', durationMs: Date.now() - t0, requestId }),
           auditStatement(env, { workspaceId: access.workspaceId, ventureId: access.ventureId, action: 'provider.call.succeeded', targetType: 'task', targetId: taskId, requestId, metadata: { provider: route.adapter.id, capability: 'extract.page', credits: route.estimate } }),
         ])
       } catch (e) {
         const pe = e instanceof ProviderError ? e : null
         await env.DB.batch([
           exec(env, taskId, 'extract', route.adapter.id, 'failed', { error_class: pe?.errorClass ?? 'unknown' }, started),
-          usage(env, { workspaceId: access.workspaceId, ventureId: access.ventureId, taskId, providerId: route.adapter.id, capability: 'extract.page', estimated: route.estimate, actual: null, outcome: 'failed', errorClass: pe?.errorClass ?? 'unknown', durationMs: Date.now() - t0, requestId }),
+          usage(env, { workspaceId: access.workspaceId, ventureId: access.ventureId, taskId, providerId: route.adapter.id, capability: 'extract.page', estimated: route.estimate, reservation, actual: null, outcome: 'failed', errorClass: pe?.errorClass ?? 'unknown', durationMs: Date.now() - t0, requestId }),
         ])
       }
     } catch (e) {
@@ -200,7 +214,7 @@ export async function createAndRunResearch(
 
   // ---- Step: synthesize draft brief ----------------------------------------
   const started = nowIso()
-  const brief = buildBrief(input.objective, evidence)
+  const brief = buildBrief(input.objective, evidence, { profile: input.profile, synthetic: input.mode === 'synthetic' })
   await env.DB.batch([
     env.DB.prepare(`INSERT INTO research_artifacts (id, workspace_id, venture_id, task_id, title, brief_json, generator, status, created_at) VALUES (?, ?, ?, ?, ?, ?, 'extractive-v1', 'draft', ?)`)
       .bind(newId('art'), access.workspaceId, access.ventureId, taskId, `Research brief: ${input.objective.slice(0, 120)}`, JSON.stringify(brief), nowIso()),

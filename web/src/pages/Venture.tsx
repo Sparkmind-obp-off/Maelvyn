@@ -11,6 +11,7 @@ export default function VenturePage() {
   const { wid, vid } = useParams()
   const { data, error, loading, api } = useLoad((a) => a.get<Resp>(`/ventures/${vid}`), [vid])
   const [objective, setObjective] = useState('')
+  const [profile, setProfile] = useState<'' | 'signal' | 'leadintel'>('')
   const [mode, setMode] = useState<'synthetic' | 'live'>('synthetic')
   const [extract, setExtract] = useState(false)
   const [budget, setBudget] = useState(3)
@@ -22,7 +23,7 @@ export default function VenturePage() {
   async function run(e: React.FormEvent) {
     e.preventDefault(); setBusy(true); setErr(null)
     try {
-      const r = await api.post<{ task_id: string }>(`/ventures/${vid}/research`, { objective, mode, extract_top_source: extract, budget_credits: budget, max_results: 5 }, { 'Idempotency-Key': idem })
+      const r = await api.post<{ task_id: string }>(`/ventures/${vid}/research`, { objective, mode, ...(profile ? { profile } : {}), extract_top_source: extract, budget_credits: budget, max_results: 5 }, { 'Idempotency-Key': idem })
       setIdem(newIdempotencyKey())
       nav(`/w/${wid}/research/${r.task_id}`)
     } catch (e2) { setErr(e2 as ApiRequestError) } finally { setBusy(false) }
@@ -42,10 +43,17 @@ export default function VenturePage() {
         <div><label className="label" htmlFor="obj">Pertanyaan riset / objektif</label>
           <textarea id="obj" className="input" rows={2} required minLength={10} maxLength={400} value={objective} onChange={(e) => setObjective(e.target.value)} placeholder="mis. Permintaan layanan katering sehat untuk kantor kecil di Jakarta" />
         </div>
+        <div><label className="label" htmlFor="research-profile">Profil draf</label>
+          <select id="research-profile" className="input" value={profile} onChange={(e) => {
+            const next = e.target.value as typeof profile
+            setProfile(next)
+            if (next) { setMode('synthetic'); setExtract(false) }
+          }}><option value="">Riset umum</option><option value="signal">SIGNAL (simulasi)</option><option value="leadintel">LEADINTEL — perusahaan saja (simulasi)</option></select>
+        </div>
         <fieldset className="flex flex-wrap gap-6 text-sm">
           <legend className="label">Mode eksekusi</legend>
           <label className="flex items-center gap-2"><input type="radio" name="mode" checked={mode === 'synthetic'} onChange={() => setMode('synthetic')} /> Synthetic (mock, 0 kredit)</label>
-          <label className="flex items-center gap-2"><input type="radio" name="mode" checked={mode === 'live'} onChange={() => setMode('live')} /> Live (Tavily; harus diaktifkan admin + batas kredit)</label>
+          <label className="flex items-center gap-2"><input type="radio" name="mode" disabled={!!profile} checked={mode === 'live'} onChange={() => setMode('live')} /> Live (Tavily; harus diaktifkan admin + batas kredit)</label>
           <label className="flex items-center gap-2"><input type="checkbox" checked={extract} disabled={mode !== 'live'} onChange={(e) => setExtract(e.target.checked)} /> Ekstrak sumber teratas (Firecrawl)</label>
           <label className="flex items-center gap-2">Anggaran kredit <input type="number" min={0} max={10} value={budget} onChange={(e) => setBudget(Number(e.target.value))} className="input w-20" /></label>
         </fieldset>

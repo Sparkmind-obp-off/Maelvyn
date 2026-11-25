@@ -31,13 +31,38 @@ export async function unitEconomics(env: Env, ventureId: string) {
   })
 }
 
+const Ref = z.string().min(1).max(100)
+const WorkContext = z.discriminatedUnion('kind', [
+  z.object({ kind: z.literal('customer_followup'), customer_id: Ref }).strict(),
+  z.object({ kind: z.literal('content_review'), research_artifact_id: Ref }).strict(),
+  z.object({ kind: z.literal('fulfillment_review'), order_id: Ref }).strict(),
+])
+type WorkContext = z.infer<typeof WorkContext>
+
+function contextOf(row: { kind: string | null; customer_id: string | null; research_artifact_id: string | null; order_id: string | null }): WorkContext | null {
+  const { kind, customer_id, research_artifact_id, order_id } = row
+  switch (kind) {
+    case 'customer_followup': return { kind, customer_id: customer_id! }
+    case 'content_review': return { kind, research_artifact_id: research_artifact_id! }
+    case 'fulfillment_review': return { kind, order_id: order_id! }
+    default: return null
+  }
+}
+
 export function registerOperationsRoutes(app: Hono<AppEnv>) {
   // ---- Milestones & work items ------------------------------------------------------
   app.get('/ventures/:vid/milestones', async (c) => {
     const { access } = await ventureCtx(c, 'venture.read')
     const ms = (await c.env.DB.prepare(`SELECT m.*, p.display_name AS owner FROM milestones m LEFT JOIN people p ON p.id = m.owner_person_id WHERE m.venture_id = ? ORDER BY COALESCE(m.due_date,'9999'), m.created_at`).bind(access.ventureId).all()).results
-    const items = (await c.env.DB.prepare(`SELECT w.*, p.display_name AS assignee FROM work_items w LEFT JOIN people p ON p.id = w.assignee_person_id WHERE w.venture_id = ? ORDER BY w.status, COALESCE(w.due_date,'9999')`).bind(access.ventureId).all()).results
-    return ok(c, { milestones: ms, work_items: items })
+    const items = (await c.env.DB.prepare(`SELECT w.*, p.display_name AS assignee,
+        x.kind, x.customer_id, x.research_artifact_id, x.order_id
+      FROM work_items w LEFT JOIN people p ON p.id = w.assignee_person_id
+      LEFT JOIN work_item_contexts x ON x.work_item_id = w.id
+      WHERE w.venture_id = ? ORDER BY w.status, COALESCE(w.due_date,'9999'), w.id`).bind(access.ventureId)
+      .all<Parameters<typeof contextOf>[0] & Record<string, unknown>>()).results
+    return ok(c, { milestones: ms, work_items: items.map(({ kind, customer_id, research_artifact_id, order_id, ...item }) => ({
+      ...item, context: contextOf({ kind, customer_id, research_artifact_id, order_id }),
+    })) })
   })
 
   app.post('/ventures/:vid/milestones', async (c) => {
@@ -68,18 +93,33 @@ export function registerOperationsRoutes(app: Hono<AppEnv>) {
     const { p, access } = await ventureCtx(c, 'venture.manage')
     const body = await parseJson(c, z.object({
       title: z.string().trim().min(2).max(200), description: z.string().trim().max(2000).optional(), milestone_id: z.string().optional(),
-      depends_on_id: z.string().optional(), assignee_person_id: z.string().optional(), due_date: z.string().regex(DATE).optional(),
+      depends_on_id: z.string().optional(), assignee_person_id: z.string().optional(), due_date: z.string().regex(DATE).optional(), context: WorkContext.optional(),
     }).strict())
     if (body.assignee_person_id && !(await isActiveVentureMember(c.env, access.ventureId, body.assignee_person_id))) throw new AppError('VALIDATION_ERROR', 'Assignee must have an active assignment in this venture.')
     for (const [col, table] of [[body.milestone_id, 'milestones'], [body.depends_on_id, 'work_items']] as const) {
       if (col && !(await c.env.DB.prepare(`SELECT 1 AS ok FROM ${table} WHERE id = ? AND venture_id = ?`).bind(col, access.ventureId).first())) throw new AppError('VALIDATION_ERROR', 'Referenced record is not in this venture.')
+    }
+    const context = body.context
+    const due = body.due_date ? new Date(`${body.due_date}T00:00:00Z`) : null
+    if (context && (!due || Number.isNaN(due.getTime()) || due.toISOString().slice(0, 10) !== body.due_date)) {
+      throw new AppError('VALIDATION_ERROR', 'Contextual work needs a valid UTC due date.')
+    }
+    if (context) {
+      const [table, ref] = context.kind === 'customer_followup' ? ['customers', context.customer_id]
+        : context.kind === 'content_review' ? ['research_artifacts', context.research_artifact_id]
+          : ['orders', context.order_id]
+      if (!(await c.env.DB.prepare(`SELECT 1 FROM ${table} WHERE id = ? AND venture_id = ? AND workspace_id = ?`)
+        .bind(ref, access.ventureId, access.workspaceId).first())) throw new AppError('VALIDATION_ERROR', 'Referenced record is not in this venture.')
     }
     const id = newId('wit')
     const ts = nowIso()
     await c.env.DB.batch([
       c.env.DB.prepare(`INSERT INTO work_items (id, workspace_id, venture_id, milestone_id, depends_on_id, title, description, assignee_person_id, due_date, status, created_by_person_id, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'todo', ?, ?, ?)`)
         .bind(id, access.workspaceId, access.ventureId, body.milestone_id ?? null, body.depends_on_id ?? null, body.title, body.description ?? null, body.assignee_person_id ?? null, body.due_date ?? null, p.personId, ts, ts),
-      auditStatement(c.env, { workspaceId: access.workspaceId, ventureId: access.ventureId, actorPersonId: p.personId, action: 'work_item.created', targetType: 'work_item', targetId: id, requestId: c.get('requestId') }),
+      ...(context ? [c.env.DB.prepare(`INSERT INTO work_item_contexts (work_item_id, kind, customer_id, research_artifact_id, order_id) VALUES (?, ?, ?, ?, ?)`)
+        .bind(id, context.kind, context.kind === 'customer_followup' ? context.customer_id : null,
+          context.kind === 'content_review' ? context.research_artifact_id : null, context.kind === 'fulfillment_review' ? context.order_id : null)] : []),
+      auditStatement(c.env, { workspaceId: access.workspaceId, ventureId: access.ventureId, actorPersonId: p.personId, action: 'work_item.created', targetType: 'work_item', targetId: id, requestId: c.get('requestId'), metadata: { kind: context?.kind ?? 'general' } }),
       ...(body.assignee_person_id && body.assignee_person_id !== p.personId ? notifyStatements(c.env, [body.assignee_person_id], { workspaceId: access.workspaceId, kind: 'task', title: `Assigned: ${body.title}`, link: `/w/${access.workspaceId}/v/${access.ventureId}/ops` }) : []),
     ])
     return ok(c, { work_item: { id } }, 201)

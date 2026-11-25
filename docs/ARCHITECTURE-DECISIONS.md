@@ -74,3 +74,15 @@
 **Decision date:** 2026-11-24  
 **Decision:** External AI, research, browser, design, app-building, and demo tools are optional adapters or workflow aids—not mandatory MAELVYN core dependencies.  
 **Consequences:** Keep Cloudflare/Workers/Hono/D1/R2 as the existing implementation baseline unless a new ADR approves a change. Evaluate each external tool for data access, security, cost, commercial terms, exportability, and measurable benefit before connection. No paid service or credit use is authorized by a mention in a document. See `docs/TOOLING-AND-INTEGRATION-STRATEGY.md`.
+
+## ADR-011 — Reserve research credits before dispatch
+
+**Decision date:** 2026-11-25
+**Decision:** Use one D1 statement to check and reserve daily workspace/provider credits before external research calls. Correlate the immutable usage entry with the reservation ID; preserve ambiguous calls as reservations and never auto-retry them.
+**Consequences:** An ambiguous reservation counts conservatively for its UTC day, not as a confirmed charge. No provider account or billing terms are verified by this change. A previous Worker can read the additive schema but does not enforce the new admission rule; pause live routing first if that rollback is ever approved.
+
+## ADR-012 — Reuse Core work items for internal follow-up and review
+
+**Decision date:** 2026-11-25
+**Decision:** An optional typed sidecar links the existing venture work item to one canonical customer, research artifact, or order, without creating a second task store. Existing venture authorization and audit apply.
+**Consequences:** These are manual internal jobs with UTC due dates, not authorization to send, publish, charge, provision or fulfill. Operational connectors, external approval grants, and marketplace entitlements remain separate acceptance gates.

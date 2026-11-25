@@ -11,6 +11,7 @@ type Brief = {
   gaps_and_unknowns: string[]
   suggested_validation_test: { hypothesis: string; method: string; stop_condition: string }
   security_notes: string[]
+  profile?: 'signal' | 'leadintel'
   sources: Array<{ n: number; url: string; title: string }>
 }
 type Resp = {
@@ -46,7 +47,7 @@ export default function ResearchPage() {
   const b = data!.artifact?.brief
   return (
     <div className="space-y-6">
-      <PageHeader title="Research brief" subtitle={<><Link className="text-sky-300 hover:underline" to={`/w/${wid}/v/${t.venture_id}`}>← kembali ke venture</Link> · <Badge value={t.execution_mode} /> <Badge value={t.status} /> · {t.autonomy_level} · kredit {t.credits_used}/{t.budget_credits}</>} />
+      <PageHeader title={b?.profile ? `${b.profile.toUpperCase()} — draf simulasi` : 'Research brief'} subtitle={<><Link className="text-sky-300 hover:underline" to={`/w/${wid}/v/${t.venture_id}`}>← kembali ke venture</Link> · <Badge value={t.execution_mode} /> <Badge value={t.status} /> · {t.autonomy_level} · kredit {t.credits_used}/{t.budget_credits}</>} />
       <section className="card"><p className="label">Objektif</p><p className="text-slate-100">{t.objective}</p>{t.status_reason && <p className="mt-2 text-sm text-orange-300">{t.status_reason}</p>}</section>
 
       {b && (
@@ -95,6 +96,7 @@ export default function ResearchPage() {
         {showContract && <pre className="mt-3 overflow-x-auto rounded-lg bg-slate-950 p-3 text-xs text-slate-300">{JSON.stringify(t.contract, null, 2)}</pre>}
       </section>
 
+      {data!.artifact && <p className="break-all text-xs text-slate-400">ID artefak untuk review internal: <code>{data!.artifact.id}</code></p>}
       <section className="card" aria-labelledby="evidence-heading">
         <h2 id="evidence-heading" className="mb-3 font-medium text-white">Provenance bukti ({data!.evidence.length})</h2>
         <ul className="space-y-2 text-sm">{data!.evidence.map((e) => (

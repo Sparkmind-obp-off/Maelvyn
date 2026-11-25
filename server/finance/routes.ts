@@ -246,6 +246,29 @@ export function registerFinanceRoutes(app: Hono<AppEnv>) {
   })
 
   // ---- Reconciliation & reports ------------------------------------------------------------
+  // A caller-supplied observation can be compared, never accepted as payment evidence.
+  app.post('/ventures/:vid/finance/order-match-preview', async (c) => {
+    const { access } = await ventureCtx(c, 'finance.read')
+    const body = await parseJson(c, z.object({
+      order_id: z.string().min(1).max(100), reference: z.string().trim().min(1).max(120),
+      currency: z.string().regex(/^[A-Z]{3}$/), amount_minor: z.string().regex(/^(0|[1-9][0-9]{0,21})$/),
+      observed_status: z.enum(['settled', 'pending', 'failed', 'refunded']),
+    }).strict())
+    const order = await c.env.DB.prepare(`SELECT currency, quantity, unit_price_minor, status FROM orders
+      WHERE id = ? AND workspace_id = ? AND venture_id = ?`).bind(body.order_id, access.workspaceId, access.ventureId)
+      .first<{ currency: string; quantity: number; unit_price_minor: number; status: string }>()
+    if (!order) throw new AppError('NOT_FOUND', 'Order not found.')
+    const expected = BigInt(order.quantity) * BigInt(order.unit_price_minor)
+    const discrepancies = [
+      ...(body.currency !== order.currency ? ['currency'] : []),
+      ...(BigInt(body.amount_minor) !== expected ? ['amount'] : []),
+      ...(body.observed_status !== 'settled' ? ['status'] : []),
+      ...(!['confirmed', 'fulfilled'].includes(order.status) ? ['order_status'] : []),
+    ]
+    return ok(c, { status: discrepancies.length ? 'difference' : 'candidate_match', verified_payment: false,
+      expected_amount_minor: String(expected), expected_currency: order.currency, discrepancies })
+  })
+
   app.get('/ventures/:vid/finance/reconciliations', async (c) => {
     const { access } = await ventureCtx(c, 'finance.read')
     const rows = (await c.env.DB.prepare(`SELECT r.*, a.code, a.name AS account_name FROM reconciliations r JOIN finance_accounts a ON a.id = r.account_id WHERE r.venture_id = ? ORDER BY r.created_at DESC LIMIT 100`).bind(access.ventureId).all()).results

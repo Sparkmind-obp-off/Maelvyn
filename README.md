@@ -242,3 +242,7 @@ The technical platform specification and Genspark execution prompt are maintaine
 | [Genspark Full-Stack Master Prompt](docs/GENSPARK-FULLSTACK-MASTER-PROMPT.md) | Copy-ready instruction for Genspark to inspect and continue this existing repository |
 
 These documents do not replace [Master System](docs/MASTER-SYSTEM.md). The latter remains authoritative for venture governance, participation, rights and ownership.
+
+### P0–P5 implementation evidence
+
+See the [50-item execution matrix](docs/MAELVYN-P0-P5-EXECUTION-STATUS.md) for verified local slices and remaining gates. In a locally migrated venture, use the research form to create a **synthetic** SIGNAL/LEADINTEL draft and Operations to create internal follow-up, content review, or fulfillment review work. The existing `GET /api/v1/research/:tid` exposes provenance digests on new rows; `GET /api/v1/ventures/:vid/execution-summary` returns scoped 30-day counts. `POST /api/v1/ventures/:vid/finance/order-match-preview` compares caller-supplied observations without attesting payment or writing the ledger. None of these changes has been released to Production. The production URL is [maelvyn.biz.id](https://maelvyn.biz.id); open release gates remain in the [production verification report](docs/MAELVYN-PRODUCTION-DEPLOYMENT-VERIFICATION.md).

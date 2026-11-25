@@ -4,6 +4,7 @@ import { ErrorBox, Loading } from '../components/ui'
 import { useLoad } from '../lib/hooks'
 
 type Rows = Record<string, unknown>[]
+const reviewLabels: Record<string, string> = { customer_followup: 'Tindak lanjut pelanggan', content_review: 'Review konten', fulfillment_review: 'Review pemenuhan order' }
 type Revenue = { customers: Rows; offers: Rows; orders: Rows; unit_economics: Rows }
 
 export default function VentureOps() {
@@ -34,11 +35,32 @@ export default function VentureOps() {
         <DataTable rows={ms.data!.milestones} cols={[{ key: 'title', label: 'Milestone' }, { key: 'due_date', label: 'Tenggat' }, { key: 'owner', label: 'Pemilik' },
           { key: 'status', label: 'Status', render: (m) => <select aria-label="Status milestone" className="input py-1" value={String(m.status)} disabled={r.busy} onChange={(e) => void r.run(() => api.patch(`/milestones/${m.id}`, { status: e.target.value }))}>{['planned', 'in_progress', 'done', 'blocked', 'cancelled'].map((s) => <option key={s}>{s}</option>)}</select> }]} empty="Belum ada milestone." />
         <DataTable rows={items} cols={[{ key: 'title', label: 'Item' }, { key: 'assignee', label: 'Penerima' }, { key: 'due_date', label: 'Tenggat' }, { key: 'depends_on_id', label: 'Bergantung pada', render: (w) => w.depends_on_id ? String(items.find((x) => x.id === w.depends_on_id)?.title ?? w.depends_on_id) : '—' },
-          { key: 'blocked_reason', label: 'Alasan blokir' },
+          { key: 'context', label: 'Jenis', render: (w) => {
+            const context = w.context as { kind: string } | null | undefined
+            return context ? (reviewLabels[context.kind] ?? 'Internal') : 'Umum'
+          } }, { key: 'blocked_reason', label: 'Alasan blokir' },
           { key: 'status', label: 'Status', render: (w) => <select aria-label="Status item" className="input py-1" value={String(w.status)} disabled={r.busy} onChange={(e) => setItem(w.id, e.target.value)}>{['todo', 'doing', 'blocked', 'done', 'cancelled'].map((s) => <option key={s}>{s}</option>)}</select> }]} empty="Belum ada item kerja." />
         <div className="grid gap-4 lg:grid-cols-2">
           <ActionForm title="Milestone baru" fields={[{ name: 'title', label: 'Judul', required: true }, { name: 'due_date', label: 'Tenggat', type: 'date' }, { name: 'description', label: 'Deskripsi', type: 'textarea' }]} submit={(b) => api.post(`/ventures/${vid}/milestones`, b)} onDone={reload} />
           <ActionForm title="Item kerja baru" fields={[{ name: 'title', label: 'Judul', required: true }, { name: 'due_date', label: 'Tenggat', type: 'date' }, { name: 'milestone_id', label: 'Milestone', type: 'select', options: msOpts }, { name: 'depends_on_id', label: 'Bergantung pada', type: 'select', options: itemOpts }]} submit={(b) => api.post(`/ventures/${vid}/work-items`, b)} onDone={reload} />
+        </div>
+      </Section>
+
+      <Section title="Antrean internal: tindak lanjut, konten, dan fulfillment">
+        <p className="text-sm text-slate-400">Tidak mengirim pesan, menerbitkan konten, mengubah order, atau menagih pembayaran. Tenggat dicatat sebagai tanggal UTC.</p>
+        <div className="grid gap-4 lg:grid-cols-3">
+          {(Object.keys(reviewLabels) as Array<keyof typeof reviewLabels>).map((kind) => {
+            const isCustomer = kind === 'customer_followup'
+            const isContent = kind === 'content_review'
+            const options = isCustomer ? (rv.data?.customers ?? []).map((o) => ({ value: String(o.id), label: String(o.name) }))
+              : (rv.data?.orders ?? []).map((o) => ({ value: String(o.id), label: `${o.offer_name} · ${o.order_date}` }))
+            return <ActionForm key={kind} title={reviewLabels[kind]!} fields={[
+              { name: 'title', label: 'Judul', required: true }, { name: 'due_date', label: 'Tenggat', type: 'date', required: true },
+              isContent ? { name: 'reference', label: 'ID artefak dari halaman riset', required: true }
+                : { name: 'reference', label: isCustomer ? 'Pelanggan' : 'Order', type: 'select', required: true, options: [{ value: '', label: 'Pilih referensi' }, ...options] },
+            ]} submit={({ reference, ...data }) => api.post(`/ventures/${vid}/work-items`, { ...data, context: isCustomer
+              ? { kind, customer_id: reference } : isContent ? { kind, research_artifact_id: reference } : { kind, order_id: reference } })} onDone={reload} />
+          })}
         </div>
       </Section>
 

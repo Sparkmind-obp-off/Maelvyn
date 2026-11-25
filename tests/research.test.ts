@@ -38,6 +38,40 @@ describe('Research Brief Agent — synthetic vertical slice', () => {
     expect(usage.body.usage[0]).toMatchObject({ provider_id: 'mock-search', credits: 0 })
   })
 
+  it('produces explicit SIGNAL and company-only LEADINTEL synthetic draft profiles', async () => {
+    const t = setup({ fetchImpl: async () => { throw new Error('Synthetic mode must not call external providers') } })
+    const { vid } = await bootstrap(t)
+    for (const profile of ['signal', 'leadintel']) {
+      const created = await research(t, vid, 'owner', { mode: 'synthetic', profile }, `idem-profile-${profile}`)
+      const detail = await t.call('GET', `/research/${created.body.task_id}`, 'owner')
+      expect(detail.body.task.contract.research_profile).toBe(profile)
+      expect(detail.body.artifact.brief).toMatchObject({ profile, synthetic: true })
+      expect(detail.body.artifact.brief.gaps_and_unknowns.join(' ')).toContain(profile === 'signal' ? 'trend' : 'company')
+      if (profile === 'leadintel') expect(detail.body.artifact.brief.suggested_validation_test.method).toContain('Do not contact')
+    }
+    const live = await research(t, vid, 'owner', { mode: 'live', profile: 'leadintel' }, 'idem-lead-live-01')
+    expect(live.status).toBe(400)
+  })
+
+  it('reports venture-scoped execution counts, separating synthetic from fixture-backed live mode', async () => {
+    const t = setup({ fetchImpl: async () => json({ results: [] }) })
+    const { wid, vid } = await bootstrap(t)
+    const { vid: other } = await bootstrap(t)
+    await grant(t, 'runtime-viewer', wid, 'viewer', vid)
+    await research(t, vid, 'owner', { mode: 'synthetic' }, 'idem-observe-01')
+    await t.call('PUT', `/workspaces/${wid}/providers/tavily`, 'owner', { live_enabled: true, daily_credit_cap: 5, per_task_credit_cap: 2 })
+    await research(t, vid, 'owner', { mode: 'live' }, 'idem-observe-live')
+    await research(t, other, 'owner', { mode: 'synthetic' }, 'idem-observe-02')
+    const r = await t.call('GET', `/ventures/${vid}/execution-summary`, 'runtime-viewer')
+    expect(r.status).toBe(200)
+    expect(r.body.runs).toEqual([
+      { execution_mode: 'live', status: 'awaiting_review', count: 1 },
+      { execution_mode: 'synthetic', status: 'awaiting_review', count: 1 },
+    ])
+    expect((await t.call('GET', `/ventures/${other}/execution-summary`, 'runtime-viewer')).status).toBe(404)
+    expect((await t.call('GET', `/ventures/${vid}/execution-summary`)).status).toBe(401)
+  })
+
   it('requires a valid Idempotency-Key; replays return the same task; different body conflicts', async () => {
     const t = setup()
     const { vid } = await bootstrap(t)
@@ -119,6 +153,47 @@ describe('Research Brief Agent — live routing policy', () => {
     // secrets never in audit
     const raw = await t.db.prepare(`SELECT group_concat(metadata_json, ' ') AS m FROM audit_events`).first<{ m: string }>()
     expect(raw!.m).not.toContain('tvly-TESTSECRET123')
+  })
+
+  it('deduplicates normalized sources and returns scoped content provenance', async () => {
+    const t = setup({ fetchImpl: async () => json({ results: [
+      { url: 'https://NEWS.test/a#top', title: 'First source', content: 'Report from a test source.' },
+      { url: 'https://news.test/a#bottom', title: 'Duplicate source', content: 'Same publication.' },
+    ] }) })
+    const { wid, vid } = await bootstrap(t)
+    await t.call('PUT', `/workspaces/${wid}/providers/tavily`, 'owner', { live_enabled: true, daily_credit_cap: 5, per_task_credit_cap: 2 })
+    const r = await research(t, vid, 'owner', { mode: 'live' }, 'idem-source-01')
+    expect((await t.call('GET', `/research/${r.body.task_id}`, 'outsider')).status).toBe(404)
+    const d = await t.call('GET', `/research/${r.body.task_id}`, 'owner')
+    expect(d.body.evidence).toHaveLength(1)
+    expect(d.body.evidence[0]).toMatchObject({ url: 'https://news.test/a', provider_id: 'tavily', content_sha256: expect.stringMatching(/^[a-f0-9]{64}$/) })
+    expect(d.body.artifact.brief.sources).toHaveLength(1)
+  })
+
+  it('reserves the daily credit before an in-flight call, without a second upstream request', async () => {
+    let calls = 0
+    let entered!: () => void
+    let release!: () => void
+    const started = new Promise<void>((resolve) => { entered = resolve })
+    const hold = new Promise<void>((resolve) => { release = resolve })
+    const t = setup({ fetchImpl: async () => {
+      calls += 1
+      if (calls === 1) { entered(); await hold }
+      return json({ results: [] })
+    } })
+    const { wid, vid } = await bootstrap(t)
+    await t.call('PUT', `/workspaces/${wid}/providers/tavily`, 'owner', { live_enabled: true, daily_credit_cap: 1, per_task_credit_cap: 1 })
+    const first = research(t, vid, 'owner', { mode: 'live' }, 'idem-overlap-01')
+    await started
+    try {
+      const second = await research(t, vid, 'owner', { mode: 'live' }, 'idem-overlap-02')
+      const result = await t.call('GET', `/research/${second.body.task_id}`, 'owner')
+      expect(result.body.task.status).toBe('blocked')
+      expect(result.body.task.status_reason).toContain('BUDGET_EXCEEDED')
+      expect(calls).toBe(1)
+    } finally { release(); await first }
+    const ledger = (await t.db.prepare(`SELECT outcome, error_class, estimated_credits, actual_credits FROM provider_usage`).all()).results
+    expect(ledger).toEqual([{ outcome: 'succeeded', error_class: null, estimated_credits: 1, actual_credits: null }])
   })
 
   it('daily credit cap and per-task budget are enforced before any call', async () => {

@@ -1,5 +1,7 @@
 # MAELVYN upgrade TODO
 
+- [x] **Verified local P0–P5 continuation slices:** concurrent research credit reservation, provenance digest and source dedup, synthetic SIGNAL/LEADINTEL drafts, venture-scoped internal follow-up/content/fulfillment work, read-only payment comparison and execution summary. No live provider or production claim. See the [50-task execution matrix](docs/MAELVYN-P0-P5-EXECUTION-STATUS.md) for work still open.
+
 - [x] **Brand shell and responsive navigation:** Preserve the existing route/auth behavior while applying `#00AFEC`, `#071B33`, white, Manrope/Inter-compatible stacks, clear public navigation, a skip link, visible keyboard focus, responsive workspace/venture subnavigation, and truthful MAELVYN descriptor/tagline.
 - [x] **Truthful public narrative:** Replace the old landing copy with sections that explain the venture studio and commerce ecosystem, discovery-to-review work loop, independent venture boundaries, operating principles, MAELVYN Connect, and real sign-in/documentation actions without fabricated metrics, testimonials, logos, investment claims, guaranteed outcomes, or unsupported ownership/funding claims.
 - [x] **Shared accessibility primitives:** Required fields must expose required semantics; field help must be associated; invalid/busy/success states must be announced; tables must use scoped headers and bounded responsive overflow; errors must be visible and safe.

@@ -3,6 +3,58 @@ import { bootstrap, grant, setup } from './helpers'
 
 type T = ReturnType<typeof setup>
 const today = new Date().toISOString().slice(0, 10)
+
+it('previews order reconciliation without attesting payment or mutating a ledger', async () => {
+  const t = setup()
+  const { wid, vid } = await bootstrap(t)
+  const { vid: other } = await bootstrap(t)
+  await grant(t, 'finance-reviewer', wid, 'finance_operator', vid)
+  const customer = (await t.call('POST', `/ventures/${vid}/customers`, 'owner', { name: 'Fixture buyer' })).body.customer.id
+  const offer = (await t.call('POST', `/ventures/${vid}/offers`, 'owner', { name: 'Fixture offer', currency: 'IDR', price_minor: 100 })).body.offer.id
+  const order = (await t.call('POST', `/ventures/${vid}/orders`, 'owner', { customer_id: customer, offer_id: offer, quantity: 2, order_date: today, evidence_note: 'Fixture order' })).body.order.id
+  const body = { order_id: order, reference: 'statement-ref-1', currency: 'IDR', amount_minor: '200', observed_status: 'settled' }
+  const check = (v: string, user: string, input = body) => t.call('POST', `/ventures/${v}/finance/order-match-preview`, user, input)
+  const match = await check(vid, 'finance-reviewer')
+  expect(match.status).toBe(200)
+  expect(match.body).toMatchObject({ status: 'candidate_match', verified_payment: false, expected_amount_minor: '200' })
+  const error = await check(vid, 'finance-reviewer', { ...body, currency: 'USD', amount_minor: '199', observed_status: 'pending' })
+  expect(error.body.discrepancies).toEqual(['currency', 'amount', 'status'])
+  expect((await check(other, 'finance-reviewer')).status).toBe(404)
+  expect((await check(other, 'owner')).status).toBe(404)
+  expect(await t.db.prepare(`SELECT payment_status FROM orders WHERE id = ?`).bind(order).first()).toMatchObject({ payment_status: 'unpaid' })
+  expect(await t.db.prepare(`SELECT COUNT(*) AS n FROM reconciliations`).first()).toMatchObject({ n: 0 })
+})
+
+it('keeps typed internal work linked to same-venture customers, briefs and orders', async () => {
+  const t = setup()
+  const { wid, vid } = await bootstrap(t)
+  const other = await bootstrap(t)
+  const otherVenture = (await t.call('POST', `/workspaces/${wid}/ventures`, 'owner', { name: 'Second venture', code: 'SECOND', category: 'digital' })).body.venture.id
+  await grant(t, 'flow-reader', wid, 'viewer', vid)
+  await grant(t, 'other-operator', wid, 'venture_operator', otherVenture)
+  const customer = (await t.call('POST', `/ventures/${vid}/customers`, 'owner', { name: 'Fixture company' })).body.customer.id
+  const offer = (await t.call('POST', `/ventures/${vid}/offers`, 'owner', { name: 'Fixture offer', currency: 'IDR', price_minor: 100 })).body.offer.id
+  const order = (await t.call('POST', `/ventures/${vid}/orders`, 'owner', { customer_id: customer, offer_id: offer, quantity: 1, order_date: today, evidence_note: 'Fixture order' })).body.order.id
+  const task = await t.call('POST', `/ventures/${vid}/research`, 'owner', { objective: 'Fixture content research for this venture' }, { 'Idempotency-Key': 'idem-content-01' })
+  const artifact = (await t.call('GET', `/research/${task.body.task_id}`, 'owner')).body.artifact.id
+  const followup = { kind: 'customer_followup', customer_id: customer }
+  const content = { kind: 'content_review', research_artifact_id: artifact }
+  const fulfillment = { kind: 'fulfillment_review', order_id: order }
+  const make = (v: string, user: string, context: unknown) => t.call('POST', `/ventures/${v}/work-items`, user, { title: 'Internal review', due_date: today, context })
+  for (const context of [followup, content, fulfillment]) {
+    expect((await make(vid, 'owner', context)).status).toBe(201)
+    expect((await make(other.vid, 'owner', context)).status).toBe(400)
+    expect((await make(otherVenture, 'other-operator', context)).status).toBe(400)
+  }
+  expect((await make(vid, 'flow-reader', followup)).status).toBe(403)
+  expect((await t.call('GET', `/ventures/${vid}/milestones`, 'other-operator')).status).toBe(404)
+  const list = await t.call('GET', `/ventures/${vid}/milestones`, 'flow-reader')
+  expect(list.body.work_items.map((item: { context: unknown }) => item.context)).toEqual(expect.arrayContaining([followup, content, fulfillment]))
+  const queueItem = list.body.work_items.find((item: { context: typeof fulfillment }) => item.context.kind === 'fulfillment_review')
+  expect((await t.call('PATCH', `/work-items/${queueItem.id}`, 'owner', { status: 'done' })).status).toBe(200)
+  const stored = await t.db.prepare(`SELECT status, payment_status FROM orders WHERE id = ?`).bind(order).first()
+  expect(stored).toMatchObject({ status: 'confirmed', payment_status: 'unpaid' })
+})
 const yearEnd = `${today.slice(0, 4)}-12-31`
 const yearStart = `${today.slice(0, 4)}-01-01`
 
