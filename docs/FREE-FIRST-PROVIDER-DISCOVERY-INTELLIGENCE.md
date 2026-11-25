@@ -164,7 +164,7 @@ Maintain separate columns:
 - `chatgpt_tool_available`
 - `provider_account_connected`
 - `provider_api_access_verified`
-- `ma elvyn_adapter_exists` (canonical field name in implementation: `ma elvyn_adapter_exists` must be normalized to `maelvyn_adapter_exists`)
+- `maelvyn_adapter_exists`
 - `gateway_bound`
 - `terms_cleared`
 - `free_quota_verified_at`
